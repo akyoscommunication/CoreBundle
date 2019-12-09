@@ -3,7 +3,7 @@
 namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\Post;
-use Artgris\Bundle\MediaBundle\Form\Type\MediaType;
+use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,8 +38,7 @@ class PostType extends AbstractType
                 'label' => 'Publié ?',
                 'help' => '( Un article non publié n\'apparaîtra pas sur le site )',
             ])
-            ->add('thumbnail', MediaType::class, [
-                'conf' => 'default',
+            ->add('thumbnail', FileManagerType::class, [
                 'label' => 'Image à la une',
             ])
             ->add('postCategories', null, [

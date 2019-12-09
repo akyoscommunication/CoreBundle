@@ -5,7 +5,7 @@ namespace Akyos\CoreBundle\Form;
 use Akyos\CoreBundle\Entity\CoreOptions;
 use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Repository\PageRepository;
-use Artgris\Bundle\MediaBundle\Form\Type\MediaType;
+use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,12 +24,12 @@ class CoreOptionsType extends AbstractType
                 'label' => 'Titre du site',
                 'required' => false
             ])
-            ->add('favicon', MediaType::class, [
+            ->add('favicon', FileManagerType::class, [
                 'label' => 'Favicon (format ico)',
                 'required' => false,
                 'conf' => 'default'
             ])
-            ->add('siteLogo', MediaType::class, [
+            ->add('siteLogo', FileManagerType::class, [
                 'label' => 'Logo du site',
                 'required' => false,
                 'conf' => 'default'

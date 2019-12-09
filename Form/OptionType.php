@@ -3,7 +3,7 @@
 namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\Option;
-use Artgris\Bundle\MediaBundle\Form\Type\MediaType;
+use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -89,9 +89,7 @@ class OptionType extends AbstractType
                 break;
 
             case 'image':
-                $builder->add('value',MediaType::class, [
-                    'conf' => 'default'
-                ]);
+                $builder->add('value',FileManagerType::class);
                 break;
 
             default:

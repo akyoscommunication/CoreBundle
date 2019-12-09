@@ -3,7 +3,7 @@
 namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\User;
-use Artgris\Bundle\MediaBundle\Form\Type\MediaType;
+use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -35,8 +35,7 @@ class UserType extends AbstractType
                 'label' => "Mot de passe",
                 'help' => "Renseignez un mot de passe temporaire, l'utilisateur pourra le modifier."
             ])
-            ->add('image', MediaType::class, [
-                'conf' => 'images',
+            ->add('image', FileManagerType::class, [
                 'label' => 'Image de profil',
             ])
         ;
