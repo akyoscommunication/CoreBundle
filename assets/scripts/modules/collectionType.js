@@ -1,5 +1,23 @@
 class initCollectionType {
 
+    static initDataPrototype(proto = '.collection_prototype', childs = '.card-header__title') {
+        const _this = this;
+
+        const collectionHolder = $(proto);
+        collectionHolder.after('<button id="add_component" class="btn btn-outline-primary">Ajouter un champ</button>');
+        const addFieldLink = $('#add_component');
+        collectionHolder.data('index', collectionHolder.children('.form-group').length);
+
+        collectionHolder.children(childs).each(function() {
+            _this.addCloneFormDeleteLink($(this));
+        });
+
+        addFieldLink.on('click', function(e) {
+            e.preventDefault();
+            _this.addCloneForm(collectionHolder);
+        });
+    }
+
     static addCloneForm($collectionHolder) {
         // get the new index
         const index = $collectionHolder.data('index');

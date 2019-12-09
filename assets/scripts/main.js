@@ -19,8 +19,8 @@ class Core {
         MenuItem.init();
         Seo.init();
         SubmitForm.init();
-        this.initDataPrototype();
         this.initCKEditorUpdates();
+        initCollectionType.initDataPrototype();
     }
 
     static toggleSidebar() {
@@ -28,7 +28,7 @@ class Core {
             $('#sidebar').toggleClass('active');
         });
     }
-    
+
     static initCKEditorUpdates() {
         if (typeof CKEDITOR !== 'undefined') {
             for (const instance in CKEDITOR.instances) {
@@ -48,22 +48,6 @@ class Core {
     static initAjaxPublished() {
         $('.custom-switch-published').on('change', function () {
             $(this).parents('.custom-switch-form').submit();
-        });
-    }
-
-    static initDataPrototype() {
-        const collectionHolder = $('.collection_prototype');
-        collectionHolder.after('<button id="add_component" class="btn btn-outline-primary">Ajouter un champ</button>');
-        const addFieldLink = $('#add_component');
-        collectionHolder.data('index', collectionHolder.children('.form-group').length);
-
-        collectionHolder.children('.card-header__title').each(function() {
-            initCollectionType.addCloneFormDeleteLink($(this));
-        });
-
-        addFieldLink.on('click', function(e) {
-            e.preventDefault();
-            initCollectionType.addCloneForm(collectionHolder);
         });
     }
 }

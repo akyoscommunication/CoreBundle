@@ -118,7 +118,6 @@ let webpackConfig = {
     plugins: [
         new CleanWebpackPlugin(config.paths.dist),
         new CopyWebpackPlugin([{from: 'assets/images', to: 'images' }]),
-        new CopyWebpackPlugin([{from: 'assets/fonts', to: 'fonts' }]),
         new ExtractTextPlugin({
             filename: '[name].css'
         }),
