@@ -81,12 +81,13 @@ class CoreExtension extends AbstractExtension
         $entityFullName = null;
         $meta = $this->em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $m->getName())) {
-                if(preg_match('//'.$entity.'$/i', $m->getName())) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
+                if(preg_match('/^'.$entity.'$/i', $entityName)) {
                     $entityFullName = $m->getName();
                 }
             }
-            dump($m->getName());
         }
         if(!$entityFullName) {
             return $entity;
