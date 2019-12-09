@@ -2,7 +2,7 @@
     {# LOGO #}
     <div class="sidebar-header">
         {% if core_options and core_options.siteLogo %}
-            <img src="{{ asset(core_options.siteLogo) }}" alt="{{ core_options.siteTitle }}">
+            <img src="{{ asset(getImagePathById(core_options.siteLogo)) }}" alt="{{ core_options.siteTitle }}">
         {% else %}
             <img src="{{ asset('/bundles/akyoscore/images/akyos.png') }}" alt="Akyos">
         {% endif %}

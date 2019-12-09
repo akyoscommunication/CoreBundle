@@ -27,12 +27,10 @@ class CoreOptionsType extends AbstractType
             ->add('favicon', FileManagerType::class, [
                 'label' => 'Favicon (format ico)',
                 'required' => false,
-                'conf' => 'default'
             ])
             ->add('siteLogo', FileManagerType::class, [
                 'label' => 'Logo du site',
                 'required' => false,
-                'conf' => 'default'
             ])
             ->add('backMainColor', ColorType::class, [
                 'label' => 'Couleur principale du back office',
