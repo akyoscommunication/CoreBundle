@@ -1,0 +1,63 @@
+.aky-toast-container {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    max-width: 20vw;
+
+    .aky-toast{
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+}
+
+.aky-toast{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $white;
+    width: 20vw;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    animation: slidein .3s forwards;
+    transform-origin: center center;
+
+    &-message{
+        flex: 1 0 80%;
+    }
+    &-ico{
+        flex: 1;
+    }
+    &-close{
+        flex: 1;
+        cursor: pointer;
+    }
+
+    &-el {
+        padding: 0 1rem;
+    }
+
+    &-info{
+        background-color: $info;
+    }
+    &-error{
+        background-color: $danger;
+    }
+    &-success{
+        background-color: $success;
+    }
+}
+
+@keyframes slidein {
+    from {
+        opacity: 0;
+        transform: translateY(10%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}

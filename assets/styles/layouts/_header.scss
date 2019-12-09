@@ -1,0 +1,35 @@
+// ------------------------
+// General CSS
+
+
+body {
+    #header {
+        position: sticky;
+        top: 1rem;
+        left: 0;
+        right: 0;
+        background-color: $grey;
+        box-shadow: 0 4px 20px 0 rgba(0,0,0,.05);
+        color: $second;
+        font-size: 12px;
+        z-index: 9;
+        padding: .5rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    #sidebarCollapse {
+        color: $second;
+        transform: scale(1);
+        transition: ease .3s;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}
+
+// ------------------------
+// Media queries
+

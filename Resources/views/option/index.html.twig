@@ -1,0 +1,56 @@
+{% extends '@AkyosCore/layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+    <div class="aky-header-page">
+        <h1 class="aky-header-page__title">{{ title }}</h1>
+        <div class="block-options">
+            {{ form_start(new_option_form, { 'attr' : { 'class' : 'form-inline' }}) }}
+                {{ form_widget(new_option_form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(new_option_form.optionCategory, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(new_option_form.type, {'attr': {'class': 'form-control'}}) }}
+                <input type="submit" class="btn btn-effect-ripple btn-primary" value="Ajouter"/>
+            {{ form_end(new_option_form) }}
+        </div>
+    </div>
+
+    <section id="akyOptions">
+        {% for option in options %}
+            <div class="aky-option mb-5">
+                <div class="mb-3 p-4 bg-white rounded shadow-lg">
+                    <h5 class="border-bottom border-gray pb-2 mb-3 font-weight-bold">
+                        {{ option.title }}
+                    </h5>
+                    <div id="accordion">
+                        {% for el in option.options %}
+                            <div class="card mb-2">
+                                <div class="d-flex justify-content-between align-items-center p-2">
+                                    <button class="btn btn-link flex-fill text-left" data-toggle="collapse" data-target="#collapse{{el.slug}}" aria-expanded="true" aria-controls="collapse{{el.slug}}">
+                                        {{el.title}}
+                                    </button>
+                                    <a href="{{ path('option_delete', {'id': el.id}) }}" data-toggle="tooltip" title="Supprimer le réglage" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+                                </div>
+
+                                <div id="collapse{{el.slug}}" class="collapse aky-option-collapse" aria-labelledby="heading{{el.slug}}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        {{ form_start(params[el.slug]) }}
+                                        <div class="form-group">
+                                            {{ form_widget(params[el.slug].value, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" class="option-submit btn btn-outline-primary" value="Mettre à jour"/>
+                                        </div>
+                                        {{ form_end(params[el.slug]) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <small><i>Aucuns réglages</i></small>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

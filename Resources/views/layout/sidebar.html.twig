@@ -1,0 +1,89 @@
+<nav id="sidebar">
+    {# LOGO #}
+    <div class="sidebar-header">
+        {% if core_options and core_options.siteLogo %}
+            <img src="{{ asset(core_options.siteLogo) }}" alt="{{ core_options.siteTitle }}">
+        {% else %}
+            <img src="{{ asset('/bundles/akyoscore/images/akyos.png') }}" alt="Akyos">
+        {% endif %}
+    </div>
+
+    {# SIDEBAR MENU #}
+    <ul class="list-unstyled components">
+        {# DASHBOARD #}
+        <li class="{{ 'core_index' in route ? "active" : "" }}">
+            <a href="{{ path('core_index') }}">Tableau de bord</a>
+        </li>
+        {# PAGES #}
+        <li class="{{ 'page_' in route ? "active" : "" }}">
+            <a href="{{ path('page_index') }}">Pages</a>
+        </li>
+        {# BLOG #}
+        {% if core_options and core_options.hasPosts %}
+            <li class="{{ 'post' in route ? "active" : "" }}">
+                <a href="#post" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Articles</a>
+                <ul class="collapse list-unstyled" id="post">
+                    {# POSTS #}
+                    <li class="{{ 'post_' in route and 'post_category_' not in route ? "active" : "" }}">
+                        <a href="{{ path('post_index') }}">Liste des articles</a>
+                    </li>
+                    {# POSTS CATEGORIES #}
+                    <li class="{{ 'post_category_' in route ? "active" : "" }}">
+                        <a href="{{ path('post_category_index') }}">Catégories d'articles</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+        {# MENUS #}
+        <li class="{{ 'menu_' in route ? "active" : "" }}">
+            <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Menus</a>
+            <ul class="collapse list-unstyled" id="menu">
+                {# MENUS #}
+                <li class="{{ 'menu_' in route and 'menu_area_' not in route ? "active" : "" }}">
+                    <a href="{{ path('menu_index') }}">Liste des menus</a>
+                </li>
+                {# MENUS AREAS #}
+                <li class="{{ 'menu_area_' in route ? "active" : "" }}">
+                    <a href="{{ path('menu_area_index') }}">Zones de menu</a>
+                </li>
+            </ul>
+        </li>
+        {# USERS #}
+        <li class="{{ 'user_' in route ? "active" : "" }}">
+            <a href="{{ path('user_index') }}">Utilisateurs</a>
+        </li>
+
+        <li class="divider"></li>
+        {# BUNDLES EXTENSIONS #}
+        {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getBundleSidebar', {'route': route})) }}
+
+        <li class="divider"></li>
+        {# CUSTOM EXTENSIONS #}
+        {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getCustomSidebar', {'route': route})) }}
+
+        <li class="divider"></li>
+        {# SETTINGS #}
+        <li class="{{ 'option' in route ? "active" : "" }}">
+            <a href="#option" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Réglages</a>
+            <ul class="collapse list-unstyled" id="option">
+                {# FRONT OPTIONS CATEGORIES #}
+                <li class="{{ 'option_category_index' in route ? "active" : "" }}">
+                    <a href="{{ path('option_category_index') }}">Zones de réglages</a>
+                </li>
+                {# FRONT OPTIONS #}
+                <li class="{{ 'option_index' in route ? "active" : "" }}">
+                    <a href="{{ path('option_index') }}">Options du site</a>
+                </li>
+                {# COREBUNDLE OPTIONS #}
+                <li class="{{ 'core_options' in route ? "active" : "" }}">
+                    <a href="{{ path('core_options') }}">CoreBundle</a>
+                </li>
+                {# BUNDLES OPTIONS EXTENSIONS #}
+                {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getOptionsSidebar', {'route': route})) }}
+            </ul>
+        </li>
+        <li class="{{ 'profile_' in route ? "active" : "" }}">
+            <a href="{{ path('profile_index') }}">Votre profil</a>
+        </li>
+    </ul>
+</nav>

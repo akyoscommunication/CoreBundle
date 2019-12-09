@@ -1,0 +1,12 @@
+{% extends '@AkyosCore/layout.html.twig' %}
+
+{% block title %}CoreBundle - Options{% endblock %}
+
+{% block page_content %}
+    <div class="aky-header-page">
+        <h1 class="aky-header-page__title">CoreBundle - Options</h1>
+    </div>
+    <div class="form mt20">
+        {{ include('@AkyosCore/core_options/_form.html.twig') }}
+    </div>
+{% endblock %}

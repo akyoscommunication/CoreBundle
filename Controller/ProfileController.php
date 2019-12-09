@@ -1,0 +1,46 @@
+<?php
+
+namespace Akyos\CoreBundle\Controller;
+
+use Akyos\CoreBundle\Entity\User;
+use Akyos\CoreBundle\Form\UserType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * @Route("/admin/profile", name="profile_")
+ */
+class ProfileController extends AbstractController
+{
+    /**
+     * @Route("/", name="index")
+     */
+    public function index()
+    {
+        return $this->render('@AkyosCore/profile/index.html.twig', [
+            'title' => 'Votre profil',
+            'user' => $this->getUser(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="edit")
+     */
+    public function edit(Request $request, User $user)
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('profile_index');
+        }
+
+        return $this->render('@AkyosCore/profile/edit.html.twig', [
+            'title' => 'votre profile',
+            'form' => $form->createView(),
+        ]);
+    }
+}

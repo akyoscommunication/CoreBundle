@@ -1,0 +1,16 @@
+@import "common/variables";
+
+/** Import everything from autoload */
+@import "./autoload/*.scss";
+
+/** Import theme styles */
+@import "common/mixins";
+@import "common/fonts";
+@import "common/shortcodes";
+@import "common/global";
+@import "layouts/bootstrap-form";
+@import "layouts/header";
+@import "layouts/footer";
+@import "layouts/index";
+@import "layouts/page";
+@import "layouts/table";

@@ -1,0 +1,7 @@
+{% block meta %}
+    <meta name="description" content="{{ seo.metaDescription is not null ? seo.metaDescription : element.content }}">
+{% endblock %}
+
+{% block title %}
+    {{ seo.metaTitle is not null ? seo.metaTitle : element.title }}
+{% endblock %}

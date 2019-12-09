@@ -1,0 +1,20 @@
+@import
+"_variables.scss"
+;
+
+/*******************************************************************************************/
+
+// FLEX
+
+@mixin flex($direction, $wrap, $justify-content, $align-items) {
+    display: flex;
+    flex-direction: $direction;
+    flex-wrap: $wrap;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+// CSS4 COLOR
+@function color($color-name) {
+    @return var(--color-#{$color-name});
+}

@@ -1,0 +1,43 @@
+#main {
+    padding: 2rem 4%;
+    width: 100%;
+    min-height: 100vh;
+    transition: all 0.3s;
+    .aky-header-page {
+        margin: 2rem 0 3rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        &__title {
+            font-weight: 600;
+            font-size: 2rem;
+            &:first-letter {
+                text-transform: uppercase;
+            }
+        }
+    }
+    >.table {
+        //background-color: $grey;
+        //border-radius: 25px;
+    }
+
+    .content {
+        .tab-content {
+            padding: 2rem 0;
+        }
+    }
+
+    #tabs {
+        border: none;
+        .nav-item {
+            .nav-link {
+                border: none;
+                border-radius: 0.25rem;
+                &.active {
+                    background-color: $primary;
+                    color: $white;
+                }
+            }
+        }
+    }
+}

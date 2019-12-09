@@ -1,0 +1,15 @@
+{% extends '@!AkyosCore/front/layouts/front_layout.html.twig' %}
+
+{% block meta %}
+    <meta name="description" content="{{ seo.metaDescription is not null ? seo.metaDescription : element.content }}">
+{% endblock %}
+
+{% block title %}
+    {{ seo.metaTitle is not null ? seo.metaTitle : element.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        Template single
+    </div>
+{% endblock %}

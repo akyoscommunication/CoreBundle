@@ -1,0 +1,12 @@
+{% extends '@AkyosCore/layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+    {% include '@AkyosCore/crud/elements/_header.html.twig' %}
+    {% include '@AkyosCore/crud/elements/_table.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block meta %}{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <header class="container">
+        <div class="row">
+            {% block header %}
+                <div class="col-md-4">
+                    {% block logo %} {% include '@AkyosCore/front/layouts/logo.html.twig' %} {% endblock %}
+                </div>
+                <div class="col-md-8">
+                    {% block menu %} {% include '@AkyosCore/front/layouts/menu.html.twig' %} {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    </header>
+    <main class="container">
+        {% block main %}
+            {% block titlebar %} {% include '@AkyosCore/front/layouts/titlebar.html.twig' %} {% endblock %}
+            {% block content %} CONTENT {% endblock %}
+        {% endblock %}
+    </main>
+    <footer id="Footer">
+        {% block footer %} {% include '@AkyosCore/front/layouts/footer.html.twig' %} {% endblock %}
+    </footer>
+
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}{% endblock %}
