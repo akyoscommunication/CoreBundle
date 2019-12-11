@@ -10,6 +10,7 @@ import MenuItem from  './modules/MenuItem';
 
 import Seo from "./modules/Seo";
 import SubmitForm from "./modules/SubmitForms";
+import FixCKEditor from "./modules/FixCKEditor";
 
 class Core {
     static init() {
@@ -19,7 +20,7 @@ class Core {
         MenuItem.init();
         Seo.init();
         SubmitForm.init();
-        this.initCKEditorUpdates();
+        FixCKEditor.init();
         initCollectionType.initDataPrototype();
     }
 
@@ -27,16 +28,6 @@ class Core {
         $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
         });
-    }
-
-    static initCKEditorUpdates() {
-        if (typeof CKEDITOR !== 'undefined') {
-            for (const instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].on('change', function(e) {
-                    this.updateElement();
-                })
-            }
-        }
     }
 
     static initSelect2() {
