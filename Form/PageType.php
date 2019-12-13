@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\Page;
+use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +21,6 @@ class PageType extends AbstractType
             ->add('published', null, [
                 'label' => 'Publiée ?',
             ])
-//            ->add('position')
             ->add('template', TextType::class, [
                 'label' => 'Template de la page',
                 'required' => false
@@ -36,6 +36,9 @@ class PageType extends AbstractType
                     'entities_latin' => false,
                 ),
                 'label' => 'Contenu de la page'
+            ])
+            ->add('thumbnail', FileManagerType::class, [
+                'label' => 'Image de mise en avant',
             ])
         ;
     }

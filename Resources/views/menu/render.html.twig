@@ -9,8 +9,20 @@
                     {% if menuItem.menuItemsChilds is not empty %}
                         <ul class="nav-sub">
                             {% for subMenuItem in menuItem.menuItemsChilds %}
+                                {% set details = '' %}
+                                {% if subMenuItem.type is defined %}
+                                    {% if subMenuItem.type == 'Page' and subMenuItem.idType is not null %}
+                                        {% set details = path('page', {'slug': getElementSlug(subMenuItem.type, subMenuItem.idType)}) %}
+                                    {% elseif subMenuItem.type != 'Page' and subMenuItem.idType is not null %}
+                                        {% set details = path('single', {'entitySlug': getEntitySlug(subMenuItem.type), 'slug': getElementSlug(subMenuItem.type, subMenuItem.idType)}) %}
+                                    {% elseif subMenuItem.type != 'Page' and subMenuItem.isParent %}
+                                        {% set details = path('archive', {'entitySlug': getEntitySlug(subMenuItem.type)}) %}
+                                    {% else %}
+                                        {% set details = null %}
+                                    {% endif %}
+                                {% endif %}
                                 <li class="nav-sub-item">
-                                    <a href="{{ subMenuItem.url }}" class="nav-sub-item__link">{{ subMenuItem.title }}</a>
+                                    <a href="{{ details }}" class="nav-sub-item__link">{{ subMenuItem.title }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
