@@ -13078,7 +13078,7 @@ body h4 {
 .wrapper #sidebar .components li a {
   padding: .5rem 1rem;
   display: block;
-  color: var(--color-white);
+  color: var(--color-back-main-contrast-color);
   background-color: transparent;
   -webkit-transform: translateY(0%);
        -o-transform: translateY(0%);
@@ -13098,7 +13098,7 @@ body h4 {
   color: var(--color-back-main-color);
   -webkit-box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
           box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  background-color: var(--color-grey);
+  background-color: var(--color-back-main-contrast-color);
   -webkit-transform: translateY(-2px);
        -o-transform: translateY(-2px);
           transform: translateY(-2px);
@@ -13109,7 +13109,7 @@ body h4 {
   color: var(--color-back-main-color);
   -webkit-box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
           box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  background-color: var(--color-grey);
+  background-color: var(--color-back-main-contrast-color);
   -webkit-transform: translateY(-2px);
        -o-transform: translateY(-2px);
           transform: translateY(-2px);
