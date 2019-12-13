@@ -24,7 +24,7 @@ class FrontController extends AbstractController
     /**
      * @Route("/", name="home", methods={"GET"})
      */
-    public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository): Response
+    public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository, SeoRepository $seoRepository): Response
     {
         // FIND HOMEPAGE
         $coreOptions = $coreOptionsRepository->findAll();
@@ -52,8 +52,12 @@ class FrontController extends AbstractController
             $view = '@AkyosCore/front/content.html.twig';
         }
 
+        // GET SEO
+        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $homePage->getId()));
+
         // RENDER
         return $this->render($view, [
+            'seo' => $seo,
             'page' => $homePage,
             'components' => $components,
             'content' => $content,
@@ -64,7 +68,7 @@ class FrontController extends AbstractController
     /**
      * @Route("/{slug}", name="page", methods={"GET"}, requirements={"slug"="^(?!admin|login|archive|details|categorie).+"})
      */
-    public function page(PageRepository $pageRepository, $slug): Response
+    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
@@ -87,9 +91,13 @@ class FrontController extends AbstractController
             $view = '@AkyosCore/front/content.html.twig';
         }
 
+        // GET SEO
+        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
+
         if ($page->getPublished()) {
             // RENDER
             return $this->render($view, [
+                'seo' => $seo,
                 'page' => $page,
                 'components' => $components,
                 'content' => $content,
@@ -103,7 +111,7 @@ class FrontController extends AbstractController
     /**
      * @Route("page_preview/{slug}", name="page_preview", methods={"GET"}, requirements={"slug"="^(?!admin|login|archive|details|categorie).+"})
      */
-    public function pagePreview(PageRepository $pageRepository, $slug): Response
+    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
@@ -125,9 +133,13 @@ class FrontController extends AbstractController
             $view = '@AkyosCore/front/content.html.twig';
         }
 
+        // GET SEO
+        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
+
         if ($page->getPublished()) {
             // RENDER
             return $this->render($view, [
+                'seo' => $seo,
                 'page' => $page,
                 'components' => $components,
                 'slug' => $slug
