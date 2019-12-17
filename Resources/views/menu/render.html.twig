@@ -2,27 +2,15 @@
     <ul class="nav">
         {% if menu is not null %}
             {% for menuItem in menu.menu.menuItems if menu.menu is not null and menuItem.menuItemParent is null %}
-                <li class="nav-item {{ menuItem.menuItemsChilds is not empty ? 'nav-item-parent' : '' }}">
+                <li class="nav-item {{ menuItem.menuItemsChilds is not empty ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
-                        <a class="nav-item__link" href="{{ menuItem.url }}">{{ menuItem.title }}</a>
+                        <a class="nav-item__link" href="{{ getPermalink(menuItem) }}">{{ menuItem.title }}</a>
                     {% endif %}
                     {% if menuItem.menuItemsChilds is not empty %}
                         <ul class="nav-sub">
                             {% for subMenuItem in menuItem.menuItemsChilds %}
-                                {% set details = '' %}
-                                {% if subMenuItem.type is defined %}
-                                    {% if subMenuItem.type == 'Page' and subMenuItem.idType is not null %}
-                                        {% set details = path('page', {'slug': getElementSlug(subMenuItem.type, subMenuItem.idType)}) %}
-                                    {% elseif subMenuItem.type != 'Page' and subMenuItem.idType is not null %}
-                                        {% set details = path('single', {'entitySlug': getEntitySlug(subMenuItem.type), 'slug': getElementSlug(subMenuItem.type, subMenuItem.idType)}) %}
-                                    {% elseif subMenuItem.type != 'Page' and subMenuItem.isParent %}
-                                        {% set details = path('archive', {'entitySlug': getEntitySlug(subMenuItem.type)}) %}
-                                    {% else %}
-                                        {% set details = null %}
-                                    {% endif %}
-                                {% endif %}
-                                <li class="nav-sub-item">
-                                    <a href="{{ details }}" class="nav-sub-item__link">{{ subMenuItem.title }}</a>
+                                <li class="nav-sub-item {{ currentPage == getElement(subMenuItem.type, subMenuItem.idType) ? 'active' : '' }}">
+                                    <a href="{{ getPermalink(subMenuItem) }}" class="nav-sub-item__link">{{ subMenuItem.title }}</a>
                                 </li>
                             {% endfor %}
                         </ul>

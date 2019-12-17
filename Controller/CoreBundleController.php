@@ -131,11 +131,12 @@ class CoreBundleController extends AbstractController
         } else return new Response("false");
     }
 
-    public function renderMenu($menu)
+    public function renderMenu($menu, $page)
     {
         $menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]);
         return $this->renderView('@AkyosCore/menu/render.html.twig', [
-            'menu' => $menuArea
+            'menu' => $menuArea,
+            'currentPage' => $page,
         ]);
     }
 }
