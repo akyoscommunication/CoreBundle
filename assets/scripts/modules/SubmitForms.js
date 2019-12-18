@@ -1,25 +1,37 @@
 class SubmitForm {
     static init() {
-        $('#submitForms').click(function () {
-            let valid = false;
-            $('form:not(".not-submit")').each(function (i) {
-                $.post(
-                    $(this).attr('action'),
-                    $(this).serialize(),
-                    function (res) {
-                        console.log(res);
-                        if (res === 'valid') {
-                            valid = true;
-                        }
-                        if (i+1 === $('form:not(".not-submit")').length) {
-                            console.log(valid);
-                            if (valid === true) {
-                                window.location.reload();
-                            }
-                        }
+        var that = this;
+        $('#submitForms').click( function () {
+            const forms = [...document.querySelectorAll('form:not(.not-submit)')];
+            console.log(forms);
+            forms.reduce((previous, next) => previous.then(() => { return that.post(next); }), that.initSubmit())
+                .then(() => {window.location.reload();})
+                .catch( (err) => {console.log(err);});
+        });
+    }
+    
+    static initSubmit() {
+        return new Promise( (resolve, reject) => {
+            $('body').append('<div class="submitLoader"><i class="fas fa-spinner"></i></div>');
+            resolve();
+        });
+    }
+    
+    static post(form) {
+        return new Promise( (resolve, reject) => {
+            $.post(
+                $(form).attr('action'),
+                $(form).serialize(),
+                function (res) {
+                    console.log(form);
+                    console.log(res);
+                    if (res === 'valid') {
+                        resolve(res);
+                    } else {
+                        reject(res);
                     }
-                );
-            });
+                }
+            );
         });
     }
 }
