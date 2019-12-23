@@ -76,10 +76,10 @@ class Option
         return $this;
     }
 
-    public function getValue(): ?string
+    public function getValue()
     {
         $testJson = json_decode($this->value);
-        if (json_last_error() === 0) {
+        if (json_last_error() === JSON_ERROR_NONE) {
             return $testJson;
         }
 
