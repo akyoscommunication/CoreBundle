@@ -30,6 +30,7 @@ class NewOptionType extends AbstractType
                     'Texte' => 'text',
                     'Zone de texte' => 'textarea',
                     'Image' => 'image',
+                    "Galerie d'images" => 'gallery',
                     'Lien interne' => 'pagelink',
                     'Lien externe' => 'link',
                     'Téléphone' => 'tel',
