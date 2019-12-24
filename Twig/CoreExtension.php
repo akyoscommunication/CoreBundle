@@ -177,7 +177,11 @@ class CoreExtension extends AbstractExtension
             }
         }
 
-        $slug = $this->em->getRepository($entityFullName)->find($typeId);
+        if($entityFullName) {
+            $slug = $this->em->getRepository($entityFullName)->find($typeId);
+        } else {
+            $slug = "page_externe";
+        }
 
         return $slug;
     }
@@ -185,7 +189,9 @@ class CoreExtension extends AbstractExtension
     public function getPermalink($item)
     {
         $link = '';
-        if ($item->getType()) {
+        if($item->getUrl()) {
+            $link = $item->getUrl();
+        } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
                 $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
             } elseif ( ($item->getType() != 'Page') && $item->getIdType() ) {
