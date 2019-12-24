@@ -23,17 +23,20 @@ class MenuItemType extends AbstractType
             ])
             ->add('url', UrlType::class, [
                 'label' => 'Lien',
-                'help' => 'Insérez un lien'
+                'help' => 'Insérez un lien',
+                'required' => false
             ])
             ->add('isParent', null, [
                 'label' => 'Votre élément est-il un élément parent ?'
             ])
             ->add('type', null, [
                 'label' => 'Le type de l\'élément',
-                'help' => '( Page, Post ... )'
+                'help' => '( Page, Post ... )',
+                'required' => false
             ])
             ->add('idType', null, [
                 'label' => 'Identifiant de votre Type',
+                'required' => false
             ])
             ->add('isList', null, [
                 'label' => 'Votre élément est-il le listing des éléments du type choisi ?',
