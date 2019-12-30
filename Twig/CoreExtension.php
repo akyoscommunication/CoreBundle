@@ -7,6 +7,9 @@ use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\OptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -15,11 +18,13 @@ class CoreExtension extends AbstractExtension
 {
     private $corebundleController;
     private $em;
+    private $router;
 
-    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager)
+    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router)
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;
+        $this->router = $router;
     }
 
     public function getFilters(): array
@@ -42,6 +47,10 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('instanceOf', [$this, 'isInstanceOf']),
             new TwigFunction('getOption', [$this, 'getOption']),
             new TwigFunction('getOptions', [$this, 'getOptions']),
+            new TwigFunction('getElementSlug', [$this, 'getElementSlug']),
+            new TwigFunction('getElement', [$this, 'getElement']),
+            new TwigFunction('getPermalink', [$this, 'getPermalink']),
+            new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
         ];
     }
 
@@ -95,9 +104,9 @@ class CoreExtension extends AbstractExtension
         return $entityFullName::ENTITY_SLUG;
     }
 
-    public function getMenu($menuSlug)
+    public function getMenu($menuSlug, $page)
     {
-        $menu = $this->corebundleController->renderMenu($menuSlug);
+        $menu = $this->corebundleController->renderMenu($menuSlug, $page);
         return $menu;
     }
 
@@ -125,5 +134,87 @@ class CoreExtension extends AbstractExtension
         }
 
         return $result;
+    }
+
+    public function getElementSlug($type, $typeId)
+    {
+        if(preg_match('/Category/i', $type)) {
+            $entity = str_replace('Category', '', $type);
+        }
+
+        $entityFullName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
+                if(preg_match('/^'.$type.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                }
+            }
+        }
+
+        $slug = $this->em->getRepository($entityFullName)->find($typeId)->getSlug();
+
+        return $slug;
+    }
+
+    public function getElement($type, $typeId)
+    {
+        if(preg_match('/Category/i', $type)) {
+            $entity = str_replace('Category', '', $type);
+        }
+
+        $entityFullName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
+                if(preg_match('/^'.$type.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                }
+            }
+        }
+
+        if($entityFullName) {
+            $slug = $this->em->getRepository($entityFullName)->find($typeId);
+        } else {
+            $slug = "page_externe";
+        }
+
+        return $slug;
+    }
+
+    public function getPermalink($item)
+    {
+        $link = '';
+        if($item->getUrl()) {
+            $link = $item->getUrl();
+        } elseif ($item->getType()) {
+            if ( ($item->getType() == 'Page') && $item->getIdType() ) {
+                $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+            } elseif ( ($item->getType() != 'Page') && $item->getIdType() ) {
+                $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+            } elseif ( ($item->getType() != 'Page') && $item->getIsParent() ) {
+                $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($item->getType())]);
+            } else {
+                $link = null;
+            }
+        }
+
+        return $link;
+    }
+
+    public function checkChildActive($item, $current)
+    {
+        foreach ($item->getMenuItemsChilds() as $child){
+            if ($child) {
+                if ($current == $this->getElement($child->getType(), $child->getIdType())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

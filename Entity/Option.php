@@ -76,13 +76,21 @@ class Option
         return $this;
     }
 
-    public function getValue(): ?string
+    public function getValue()
     {
+        $testJson = json_decode($this->value);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $testJson;
+        }
+
         return $this->value;
     }
 
-    public function setValue(string $value): self
+    public function setValue($value): self
     {
+        if(is_array($value)) {
+            $value = json_encode($value);
+        }
         $this->value = $value;
 
         return $this;

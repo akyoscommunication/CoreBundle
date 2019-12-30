@@ -13078,7 +13078,7 @@ body h4 {
 .wrapper #sidebar .components li a {
   padding: .5rem 1rem;
   display: block;
-  color: var(--color-white);
+  color: var(--color-back-main-contrast-color);
   background-color: transparent;
   -webkit-transform: translateY(0%);
        -o-transform: translateY(0%);
@@ -13098,7 +13098,7 @@ body h4 {
   color: var(--color-back-main-color);
   -webkit-box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
           box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  background-color: var(--color-grey);
+  background-color: var(--color-back-main-contrast-color);
   -webkit-transform: translateY(-2px);
        -o-transform: translateY(-2px);
           transform: translateY(-2px);
@@ -13109,7 +13109,7 @@ body h4 {
   color: var(--color-back-main-color);
   -webkit-box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
           box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  background-color: var(--color-grey);
+  background-color: var(--color-back-main-contrast-color);
   -webkit-transform: translateY(-2px);
        -o-transform: translateY(-2px);
           transform: translateY(-2px);
@@ -13124,6 +13124,83 @@ body h4 {
 
 .wrapper #sidebar .components ul {
   padding-left: 25px;
+}
+
+.submitLoader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.submitLoader svg {
+  -webkit-animation-name: loaderRotate;
+       -o-animation-name: loaderRotate;
+          animation-name: loaderRotate;
+  -webkit-animation-iteration-count: infinite;
+       -o-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-duration: 600ms;
+       -o-animation-duration: 600ms;
+          animation-duration: 600ms;
+  -webkit-animation-timing-function: ease;
+       -o-animation-timing-function: ease;
+          animation-timing-function: ease;
+}
+
+@-webkit-keyframes loaderRotate {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes loaderRotate {
+  from {
+    -o-transform: rotate(0deg);
+       transform: rotate(0deg);
+  }
+
+  to {
+    -o-transform: rotate(360deg);
+       transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderRotate {
+  from {
+    -webkit-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 
 /* ---------------------------------------------------

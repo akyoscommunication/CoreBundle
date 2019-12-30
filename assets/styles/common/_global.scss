@@ -52,7 +52,7 @@
                 a {
                     padding: .5rem 1rem;
                     display: block;
-                    color: color(white);
+                    color: color(back-main-contrast-color);
                     background-color: transparent;
                     transform: translateY(0%);
                     transition: ease .3s;
@@ -61,10 +61,11 @@
                     font-size: .8rem;
                     font-weight: 300;
                     box-shadow: none;
+
                     &:hover {
                         color: color(back-main-color);
                         box-shadow: 0 4px 20px 0 rgba(0,0,0,.05);
-                        background-color: color(grey);
+                        background-color: color(back-main-contrast-color);
                         transform: translateY(-2px);
                         text-decoration: none;
                     }
@@ -73,7 +74,7 @@
                     > a {
                         color: color(back-main-color);
                         box-shadow: 0 4px 20px 0 rgba(0,0,0,.05);
-                        background-color: color(grey);
+                        background-color: color(back-main-contrast-color);
                         transform: translateY(-2px);
                         text-decoration: none;
                     }
@@ -89,6 +90,32 @@
                 padding-left: 25px;
             }
         }
+    }
+}
+
+.submitLoader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255,255,255,0.5);
+    @include flex(row, nowrap, center, center);
+
+    svg {
+        animation-name: loaderRotate;
+        animation-iteration-count: infinite;
+        animation-duration: 600ms;
+        animation-timing-function: ease;
+    }
+}
+
+@keyframes loaderRotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }
 

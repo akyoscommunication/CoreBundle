@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\Option;
+use Akyos\FileManagerBundle\Form\Type\FileManagerCollectionType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
@@ -89,7 +90,13 @@ class OptionType extends AbstractType
                 break;
 
             case 'image':
-                $builder->add('value',FileManagerType::class);
+                $builder->add('value',FileManagerType::class, [
+                    'config' => 'full'
+                ]);
+                break;
+
+            case 'gallery':
+                $builder->add('value',FileManagerCollectionType::class);
                 break;
 
             default:

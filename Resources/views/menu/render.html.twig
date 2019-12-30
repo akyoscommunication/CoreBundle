@@ -2,15 +2,15 @@
     <ul class="nav">
         {% if menu is not null %}
             {% for menuItem in menu.menu.menuItems if menu.menu is not null and menuItem.menuItemParent is null %}
-                <li class="nav-item {{ menuItem.menuItemsChilds is not empty ? 'nav-item-parent' : '' }}">
+                <li class="nav-item {{ menuItem.menuItemsChilds is not empty ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
-                        <a class="nav-item__link" href="{{ menuItem.url }}">{{ menuItem.title }}</a>
+                        <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
                     {% endif %}
                     {% if menuItem.menuItemsChilds is not empty %}
                         <ul class="nav-sub">
                             {% for subMenuItem in menuItem.menuItemsChilds %}
-                                <li class="nav-sub-item">
-                                    <a href="{{ subMenuItem.url }}" class="nav-sub-item__link">{{ subMenuItem.title }}</a>
+                                <li class="nav-sub-item {{ currentPage == getElement(subMenuItem.type, subMenuItem.idType) ? 'active' : '' }}">
+                                    <a href="{{ getPermalink(subMenuItem) }}" class="nav-sub-item__link" {{ subMenuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ subMenuItem.title }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
