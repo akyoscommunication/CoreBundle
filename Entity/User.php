@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+//use App\Entity\TeamUser;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\UserRepository")
@@ -26,7 +27,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
