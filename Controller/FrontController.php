@@ -179,7 +179,7 @@ class FrontController extends AbstractController
         // GET ELEMENTS
         $elements = $this->getDoctrine()->getRepository($entityFullName)->findAll();
         if(!$elements) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException('Aucun élément pour cette entité! ');
         }
 
         // GET TEMPLATE
