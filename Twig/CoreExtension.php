@@ -161,6 +161,10 @@ class CoreExtension extends AbstractExtension
 
     public function getElement($type, $typeId)
     {
+        if ($typeId == null) {
+            return false;
+        }
+
         if(preg_match('/Category/i', $type)) {
             $entity = str_replace('Category', '', $type);
         }
