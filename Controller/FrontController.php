@@ -66,7 +66,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET"}, requirements={"slug"="^(?!admin|login|archive|details|categorie).+"})
+     * @Route("/{slug}", name="page", methods={"GET"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
      */
     public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
@@ -109,7 +109,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET"}, requirements={"slug"="^(?!admin|login|archive|details|categorie).+"})
+     * @Route("page_preview/{slug}", name="page_preview", methods={"GET"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
      */
     public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
