@@ -29,7 +29,7 @@ class MenuItem
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $url;
 
@@ -39,7 +39,7 @@ class MenuItem
     private $isParent;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $type;
 
@@ -81,6 +81,11 @@ class MenuItem
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $target;
+
     public function __construct()
     {
         $this->menuItemsChilds = new ArrayCollection();
@@ -108,7 +113,7 @@ class MenuItem
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 
@@ -132,7 +137,7 @@ class MenuItem
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
 
@@ -243,6 +248,18 @@ class MenuItem
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getTarget(): ?string
+    {
+        return $this->target;
+    }
+
+    public function setTarget(?string $target): self
+    {
+        $this->target = $target;
 
         return $this;
     }
