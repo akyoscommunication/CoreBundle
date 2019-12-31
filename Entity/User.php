@@ -5,11 +5,12 @@ namespace Akyos\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-//use App\Entity\TeamUser;
+use App\Entity\TeamUser;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\UserRepository")
  */
+
 class User implements UserInterface
 {
     use TimestampableEntity;
