@@ -22,7 +22,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/", name="home", methods={"GET", "POST"})
+     * @Route("/", name="home", methods={"GET","POST"})
      */
     public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository, SeoRepository $seoRepository): Response
     {
@@ -66,7 +66,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET", "POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
+     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
      */
     public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
@@ -109,7 +109,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET", "POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
+     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
      */
     public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
@@ -150,7 +150,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/archive/{entitySlug}", name="archive", methods={"GET", "POST"})
+     * @Route("/archive/{entitySlug}", name="archive", methods={"GET","POST"})
      */
     public function archive(Filesystem $filesystem, $entitySlug): Response
     {
@@ -198,7 +198,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET", "POST"})
+     * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
      */
     public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository): Response
     {
@@ -260,7 +260,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET", "POST"})
+     * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
      */
     public function singlePreview(Filesystem $filesystem, $entitySlug, $slug): Response
     {
@@ -314,7 +314,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/categorie/{entitySlug}/{category}", name="taxonomy", methods={"GET", "POST"})
+     * @Route("/categorie/{entitySlug}/{category}", name="taxonomy", methods={"GET","POST"})
      */
     public function category(Filesystem $filesystem, $entitySlug, $category): Response
     {

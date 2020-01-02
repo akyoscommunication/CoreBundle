@@ -17,7 +17,7 @@
             {% for name, field in fields %}
                 {% if field == 'Published' %}
                     <td>
-                        <form action="{{ path('core_change_status', {'route' : route, 'el' : entity, 'id' : el.id }) }}" class="custom-switch-form" method="post">
+                        <form action="{{ path('core_change_status', {'route' : route, 'el' : entity, 'id' : el.id, 'bundle' : (bundle ? bundle : null) }) }}" class="custom-switch-form" method="post">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input custom-switch-published" id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="switch_{{ el.id }}"></label>
@@ -26,7 +26,7 @@
                     </td>
                 {% elseif field == 'Position' %}
                     <td>
-                        <form action="{{ path('core_change_position', {'route' : route, 'el' : entity, 'id' : el.id }) }}" method="post">
+                        <form action="{{ path('core_change_position', {'route' : route, 'el' : entity, 'id' : el.id, 'bundle' : (bundle is defined ? bundle : null) }) }}" method="post">
                             <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0" max="{{ els|length - 1 }}">
                         </form>
                     </td>

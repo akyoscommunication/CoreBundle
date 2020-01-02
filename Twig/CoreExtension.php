@@ -49,6 +49,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getOptions', [$this, 'getOptions']),
             new TwigFunction('getElementSlug', [$this, 'getElementSlug']),
             new TwigFunction('getElement', [$this, 'getElement']),
+            new TwigFunction('getElementsList', [$this, 'getElementsList']),
             new TwigFunction('getPermalink', [$this, 'getPermalink']),
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
         ];
@@ -188,6 +189,35 @@ class CoreExtension extends AbstractExtension
         }
 
         return $slug;
+    }
+
+    public function getElementsList($type)
+    {
+        if ($type == null) {
+            return false;
+        }
+
+        if(preg_match('/Category/i', $type)) {
+            $entity = str_replace('Category', '', $type);
+        }
+
+        $entityFullName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
+                if(preg_match('/^'.$type.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                }
+            }
+        }
+
+        if($entityFullName) {
+            $elements = $this->em->getRepository($entityFullName)->findAll();
+        }
+
+        return ($elements ?? null);
     }
 
     public function getPermalink($item)
