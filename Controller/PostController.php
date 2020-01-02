@@ -43,6 +43,7 @@ class PostController extends AbstractController
             'entity' => 'Post',
             'view' => 'single',
             'route' => 'post',
+            'bundle' => 'CoreBundle',
             'fields' => array(
                 'Title' => 'Title',
                 'ID' => 'Id',

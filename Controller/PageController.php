@@ -39,6 +39,7 @@ class PageController extends AbstractController
             'entity' => 'Page',
             'view' => 'page',
             'route' => 'page',
+            'bundle' => 'CoreBundle',
             'fields' => array(
                 'ID' => 'Id',
                 'Titre' => 'Title',

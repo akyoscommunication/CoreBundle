@@ -28,20 +28,24 @@ class CoreBundleController extends AbstractController
     /**
      * @Route("/change-position/{route}/{el}/{id}/{bundle}", name="change_position", methods={"POST"})
      */
-    public function changePosition($route, $el, $id, Request $request, $bundle = 'CoreBundle')
+    public function changePosition($route, $el, $id, Request $request, $bundle)
     {
-        $entity = $this->getDoctrine()->getRepository('Akyos\\'.$bundle.'\Entity\\'.$el);
+        if($bundle) {
+            $repository = $this->getDoctrine()->getRepository('Akyos\\'.$bundle.'\Entity\\'.$el);
+        } else {
+            $repository = $this->getDoctrine()->getRepository('App\\Entity\\'.$el);
+        }
 
-        $entityOne = $entity->find($id);
+        $entityOne = $repository->find($id);
 
         if ($entityOne->getPosition() < $request->get('position')) {
             for ($i = $entityOne->getPosition()+1; $i <= $request->get('position'); $i++) {
-                $entityTwo = $entity->findOneBy(array('position' => $i));
+                $entityTwo = $repository->findOneBy(array('position' => $i));
                 $entityTwo->setPosition($i-1);
             }
         } elseif ($entityOne->getPosition() > $request->get('position')) {
             for ($i = $request->get('position'); $i < $entityOne->getPosition(); $i++) {
-                $entityTwo = $entity->findOneBy(array('position' => $i));
+                $entityTwo = $repository->findOneBy(array('position' => $i));
                 $entityTwo->setPosition($i+1);
             }
         }
@@ -68,14 +72,24 @@ class CoreBundleController extends AbstractController
 //    }
 
     /**
-     * @Route("/change-status/{route}/{el}/{id}", name="change_status", methods={"POST"})
+     * @Route("/change-status/{route}/{el}/{id}/{bundle}", name="change_status", methods={"POST"})
+     * @param $route
+     * @param $el
+     * @param $id
+     * @param $bundle
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function changeStatus($route, $el, $id, Request $request)
+    public function changeStatus($route, $el, $id, $bundle = null, Request $request)
     {
-        $entity = $this->getDoctrine()->getRepository('Akyos\CoreBundle\Entity\\'.$el)->find($id);
+        if($bundle) {
+            $repository = $this->getDoctrine()->getRepository('Akyos\\'.$bundle.'\Entity\\'.$el)->find($id);
+        } else {
+            $repository = $this->getDoctrine()->getRepository('App\Entity\\'.$el)->find($id);
+        }
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entity->setPublished(!$entity->getPublished());
+        $repository->setPublished(!$repository->getPublished());
         $entityManager->flush();
 
         return $this->redirectToRoute($route.'_index');

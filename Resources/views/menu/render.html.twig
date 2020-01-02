@@ -15,6 +15,15 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
+                    {% if menuItem.isList %}
+                        <ul class="nav-sub">
+                            {% for element in getElementsList(menuItem.type) %}
+                                <li class="nav-sub-item {{ currentPage == element.slug ? 'active' : '' }}">
+                                    <a href="details/{{ menuItem.type }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </li>
             {% endfor %}
         {% endif %}
