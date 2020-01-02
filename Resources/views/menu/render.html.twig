@@ -19,7 +19,7 @@
                         <ul class="nav-sub">
                             {% for element in getElementsList(menuItem.type) %}
                                 <li class="nav-sub-item {{ currentPage == element.slug ? 'active' : '' }}">
-                                    <a href="details/{{ menuItem.type }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title }}</a>
+                                    <a href="details/{{ getEntitySlug(menuItem.type) }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
