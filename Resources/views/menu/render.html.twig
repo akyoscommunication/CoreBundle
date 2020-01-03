@@ -4,7 +4,11 @@
             {% for menuItem in menu.menu.menuItems if menu.menu is not null and menuItem.menuItemParent is null %}
                 <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
-                        <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                        {% if menuItem.isList %}
+                            <a class="nav-item__link" href="{{ path('archive', {'entitySlug': getEntitySlug(menuItem.type)}) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                        {% else %}
+                            <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                        {% endif %}
                     {% endif %}
                     {% if menuItem.menuItemsChilds is not empty %}
                         <ul class="nav-sub">
@@ -19,7 +23,7 @@
                         <ul class="nav-sub">
                             {% for element in getElementsList(menuItem.type) %}
                                 <li class="nav-sub-item {{ currentPage == element.slug ? 'active' : '' }}">
-                                    <a href="details/{{ getEntitySlug(menuItem.type) }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
+                                    <a href="{{ path('single', {'entitySlug' : getEntitySlug(menuItem.type), 'slug' : element.slug}) }}" class="nav-sub-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
