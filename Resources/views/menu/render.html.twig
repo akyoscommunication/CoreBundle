@@ -2,7 +2,7 @@
     <ul class="nav">
         {% if menu is not null %}
             {% for menuItem in menu.menu.menuItems if menu.menu is not null and menuItem.menuItemParent is null %}
-                <li class="nav-item {{ menuItem.menuItemsChilds is not empty ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
+                <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
                         <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
                     {% endif %}
@@ -19,7 +19,7 @@
                         <ul class="nav-sub">
                             {% for element in getElementsList(menuItem.type) %}
                                 <li class="nav-sub-item {{ currentPage == element.slug ? 'active' : '' }}">
-                                    <a href="details/{{ menuItem.type }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title }}</a>
+                                    <a href="details/{{ getEntitySlug(menuItem.type) }}/{{ element.slug }}" class="nav-sub-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
                                 </li>
                             {% endfor %}
                         </ul>

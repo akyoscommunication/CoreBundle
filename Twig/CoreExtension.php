@@ -205,7 +205,7 @@ class CoreExtension extends AbstractExtension
         $meta = $this->em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
-            $entityName = $entityName[sizeof($entityName)-1];
+            $entityName = $entityName[count($entityName)-1];
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
                 if(preg_match('/^'.$type.'$/i', $entityName)) {
                     $entityFullName = $m->getName();

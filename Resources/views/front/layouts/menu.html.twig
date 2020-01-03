@@ -1,1 +1,2 @@
-{{ getMenu('menu-principal', page)|raw }}
+{% set current = (element is defined ? element : page is defined ? page : elements) %}
+{{ getMenu('menu-principal', current)|raw }}
