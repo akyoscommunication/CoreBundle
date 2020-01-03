@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Twig;
 use Akyos\CoreBundle\Controller\CoreBundleController;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
+use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\OptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,12 +20,14 @@ class CoreExtension extends AbstractExtension
     private $corebundleController;
     private $em;
     private $router;
+    private $coreOptionsRepository;
 
-    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router)
+    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router, CoreOptionsRepository $coreOptionsRepository)
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;
         $this->router = $router;
+        $this->coreOptionsRepository = $coreOptionsRepository;
     }
 
     public function getFilters(): array
@@ -227,10 +230,22 @@ class CoreExtension extends AbstractExtension
             $link = $item->getUrl();
         } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
-                $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+                $coreOptions = $this->coreOptionsRepository->findAll();
+                $homepage = $coreOptions[0]->getHomepage();
+                $isHome = false;
+                if($homepage) {
+                    if($homepage->getId() === $item->getIdType()) {
+                        $isHome = true;
+                    }
+                }
+                if($isHome) {
+                    $link = $this->router->generate('home');
+                } else {
+                    $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+                }
             } elseif ( ($item->getType() != 'Page') && $item->getIdType() ) {
                 $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
-            } elseif ( ($item->getType() != 'Page') && $item->getIsParent() ) {
+            } elseif ( ($item->getType() != 'Page') &&  !$item->getIdType()) {
                 $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($item->getType())]);
             } else {
                 $link = null;

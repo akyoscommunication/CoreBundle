@@ -5,7 +5,13 @@
                 <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
                         {% if menuItem.isList %}
-                            <a class="nav-item__link" href="{{ path('archive', {'entitySlug': getEntitySlug(menuItem.type)}) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                            {% if menuItem.url == null %}
+                                <a class="nav-item__link" href="{{ path('archive', {'entitySlug': getEntitySlug(menuItem.type)}) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                            {% elseif menuItem.url == "http://#" %}
+                                <span class="nav-item__link">{{ menuItem.title|raw }}</span>
+                            {% else %}
+                                <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
+                            {% endif %}
                         {% else %}
                             <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
                         {% endif %}
