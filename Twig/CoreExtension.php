@@ -52,6 +52,9 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('dynamicVariable', [$this, 'dynamicVariable']),
             new TwigFunction('hasSeo', [$this, 'hasSeo']),
             new TwigFunction('getEntitySlug', [$this, 'getEntitySlug']),
+            new TwigFunction('getEntityNameSpace', [$this, 'getEntityNameSpace']),
+            new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']),
+            new TwigFunction('isArchive', [$this, 'isArchive']),
             new TwigFunction('getMenu', [$this, 'getMenu']),
             new TwigFunction('instanceOf', [$this, 'isInstanceOf']),
             new TwigFunction('getOption', [$this, 'getOption']),
@@ -112,6 +115,41 @@ class CoreExtension extends AbstractExtension
             return $entity;
         }
         return $entityFullName::ENTITY_SLUG;
+    }
+
+    public function getEntityNameSpace($entity)
+    {
+        $entityFullName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
+                if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                }
+            }
+        }
+        if(!$entityFullName) {
+            return $entity;
+        }
+        return $entityFullName;
+    }
+
+    public function matchSameEntity($str, $entity) {
+        if (!is_object($entity)) {
+            return false;
+        }
+        return ($str == get_class($entity) ? true : false);
+    }
+
+    public function isArchive($entity, $page) {
+        if (!is_array($page)) {
+            return false;
+        } elseif (!is_object($page[0])) {
+            return false;
+        }
+        return ( $entity == get_class($page[0]) ? true : false );
     }
 
     public function getMenu($menuSlug, $page)
