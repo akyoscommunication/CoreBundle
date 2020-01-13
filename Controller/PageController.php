@@ -43,6 +43,7 @@ class PageController extends AbstractController
             'fields' => array(
                 'ID' => 'Id',
                 'Titre' => 'Title',
+                'Slug' => 'Slug',
                 'Position' => 'Position',
                 'Status' => 'Published',
             ),

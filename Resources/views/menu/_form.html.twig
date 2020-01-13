@@ -15,7 +15,7 @@
         {% endif %}
         <div id="menuItemsForms" data-menu="{{ form.vars.value.id }}">
             <ul class="aky-menuitem-connectedSortable aky-menuitem-parent">
-                {% for parentkey, item in menuItems if item.menuItemParent is null and menuItems is not null %}
+                {% for parentkey, item in menuItems|filter(item => item.menuItemParent is null and menuItems is not null) %}
                     <li class="aky-menuitem" data-position="{{ parentkey }}" data-id="{{ item.id }}">
                         <div class="aky-menuitem-el" data-id="{{ item.id }}" data-menu="{{ form.vars.value.id }}">
                             {{ item.title }}
@@ -24,17 +24,19 @@
                             </button>
                         </div>
                         <ul class="aky-menuitem-connectedSortable aky-menuitem-child">
-                            {% for childkey, itemChild in item.menuItemsChilds if item.menuItemsChilds is not empty %}
-                                <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
-                                    <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
-                                        {{ itemChild.title }}
-                                        <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </button>
-                                    </div>
-                                    <ul id="sortable" class="connectedSortable aky-menuitem-child"></ul>
-                                </li>
-                            {% endfor %}
+                            {% if item.menuItemsChilds is not empty %}
+                                {% for childkey, itemChild in item.menuItemsChilds %}
+                                    <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
+                                        <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
+                                            {{ itemChild.title }}
+                                            <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                        </div>
+                                        <ul id="sortable" class="connectedSortable aky-menuitem-child"></ul>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
                         </ul>
                     </li>
                 {% endfor %}

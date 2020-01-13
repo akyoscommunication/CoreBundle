@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Twig;
 use Akyos\CoreBundle\Controller\CoreBundleController;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
+use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\OptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,12 +20,14 @@ class CoreExtension extends AbstractExtension
     private $corebundleController;
     private $em;
     private $router;
+    private $coreOptionsRepository;
 
-    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router)
+    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router, CoreOptionsRepository $coreOptionsRepository)
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;
         $this->router = $router;
+        $this->coreOptionsRepository = $coreOptionsRepository;
     }
 
     public function getFilters(): array
@@ -34,7 +37,13 @@ class CoreExtension extends AbstractExtension
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']),
+            new TwigFilter('truncate', [$this, 'truncate']),
         ];
+    }
+
+    public function truncate($value, int $length, string $after)
+    {
+        return substr($value, 0, $length).$after;
     }
 
     public function getFunctions(): array
@@ -43,6 +52,9 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('dynamicVariable', [$this, 'dynamicVariable']),
             new TwigFunction('hasSeo', [$this, 'hasSeo']),
             new TwigFunction('getEntitySlug', [$this, 'getEntitySlug']),
+            new TwigFunction('getEntityNameSpace', [$this, 'getEntityNameSpace']),
+            new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']),
+            new TwigFunction('isArchive', [$this, 'isArchive']),
             new TwigFunction('getMenu', [$this, 'getMenu']),
             new TwigFunction('instanceOf', [$this, 'isInstanceOf']),
             new TwigFunction('getOption', [$this, 'getOption']),
@@ -103,6 +115,41 @@ class CoreExtension extends AbstractExtension
             return $entity;
         }
         return $entityFullName::ENTITY_SLUG;
+    }
+
+    public function getEntityNameSpace($entity)
+    {
+        $entityFullName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[sizeof($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
+                if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                }
+            }
+        }
+        if(!$entityFullName) {
+            return $entity;
+        }
+        return $entityFullName;
+    }
+
+    public function matchSameEntity($str, $entity) {
+        if (!is_object($entity)) {
+            return false;
+        }
+        return ($str == get_class($entity) ? true : false);
+    }
+
+    public function isArchive($entity, $page) {
+        if (!is_array($page)) {
+            return false;
+        } elseif (!is_object($page[0])) {
+            return false;
+        }
+        return ( $entity == get_class($page[0]) ? true : false );
     }
 
     public function getMenu($menuSlug, $page)
@@ -227,10 +274,22 @@ class CoreExtension extends AbstractExtension
             $link = $item->getUrl();
         } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
-                $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+                $coreOptions = $this->coreOptionsRepository->findAll();
+                $homepage = $coreOptions[0]->getHomepage();
+                $isHome = false;
+                if($homepage) {
+                    if($homepage->getId() === $item->getIdType()) {
+                        $isHome = true;
+                    }
+                }
+                if($isHome) {
+                    $link = $this->router->generate('home');
+                } else {
+                    $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+                }
             } elseif ( ($item->getType() != 'Page') && $item->getIdType() ) {
                 $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
-            } elseif ( ($item->getType() != 'Page') && $item->getIsParent() ) {
+            } elseif ( ($item->getType() != 'Page') &&  !$item->getIdType()) {
                 $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($item->getType())]);
             } else {
                 $link = null;
