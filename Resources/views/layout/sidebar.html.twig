@@ -42,10 +42,12 @@
                 <li class="{{ 'menu_' in route and 'menu_area_' not in route ? "active" : "" }}">
                     <a href="{{ path('menu_index') }}">Liste des menus</a>
                 </li>
-                {# MENUS AREAS #}
-                <li class="{{ 'menu_area_' in route ? "active" : "" }}">
-                    <a href="{{ path('menu_area_index') }}">Zones de menu</a>
-                </li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    {# MENUS AREAS #}
+                    <li class="{{ 'menu_area_' in route ? "active" : "" }}">
+                        <a href="{{ path('menu_area_index') }}">Zones de menu</a>
+                    </li>
+                {% endif %}
             </ul>
         </li>
         {# USERS #}
@@ -54,8 +56,11 @@
         </li>
 
         <li class="divider"></li>
-        {# BUNDLES EXTENSIONS #}
-        {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getBundleSidebar', {'route': route})) }}
+
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {# BUNDLES EXTENSIONS #}
+            {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getBundleSidebar', {'route': route})) }}
+        {% endif %}
 
         <li class="divider"></li>
         {# CUSTOM EXTENSIONS #}
@@ -66,24 +71,28 @@
         <li class="{{ 'option' in route ? "active" : "" }}">
             <a href="#option" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Réglages</a>
             <ul class="collapse list-unstyled" id="option">
-                {# FRONT OPTIONS CATEGORIES #}
-                <li class="{{ 'option_category_index' in route ? "active" : "" }}">
-                    <a href="{{ path('option_category_index') }}">Zones de réglages</a>
-                </li>
                 {# FRONT OPTIONS #}
                 <li class="{{ 'option_index' in route ? "active" : "" }}">
                     <a href="{{ path('option_index') }}">Options du site</a>
                 </li>
-                {# COREBUNDLE OPTIONS #}
-                <li class="{{ 'core_options' in route ? "active" : "" }}">
-                    <a href="{{ path('core_options') }}">CoreBundle</a>
-                </li>
-                {# BUNDLES OPTIONS EXTENSIONS #}
-                {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getOptionsSidebar', {'route': route})) }}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    {# FRONT OPTIONS CATEGORIES #}
+                    <li class="{{ 'option_category_index' in route ? "active" : "" }}">
+                        <a href="{{ path('option_category_index') }}">Zones de réglages</a>
+                    </li>
+                    {# COREBUNDLE OPTIONS #}
+                    <li class="{{ 'core_options' in route ? "active" : "" }}">
+                        <a href="{{ path('core_options') }}">CoreBundle</a>
+                    </li>
+                    {# BUNDLES OPTIONS EXTENSIONS #}
+                    {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getOptionsSidebar', {'route': route})) }}
+                {% endif %}
             </ul>
         </li>
-        <li class="{{ 'profile_' in route ? "active" : "" }}">
-            <a href="{{ path('profile_index') }}">Votre profil</a>
-        </li>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <li class="{{ 'profile_' in route ? "active" : "" }}">
+                <a href="{{ path('profile_index') }}">Votre profil</a>
+            </li>
+        {% endif %}
     </ul>
 </nav>
