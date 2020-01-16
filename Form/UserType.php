@@ -33,7 +33,7 @@ class UserType extends AbstractType
             ])
             ->add('password', PasswordType::class, [
                 'label' => "Mot de passe",
-                'help' => "Renseignez un mot de passe temporaire, l'utilisateur pourra le modifier."
+                'help' => "Renseignez un mot de passe pour l'utilisateur."
             ])
             ->add('image', FileManagerType::class, [
                 'label' => 'Image de profil',

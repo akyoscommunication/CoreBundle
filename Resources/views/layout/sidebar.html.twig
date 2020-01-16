@@ -55,9 +55,9 @@
             <a href="{{ path('user_index') }}">Utilisateurs</a>
         </li>
 
-        <li class="divider"></li>
 
         {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <li class="divider"></li>
             {# BUNDLES EXTENSIONS #}
             {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getBundleSidebar', {'route': route})) }}
         {% endif %}
