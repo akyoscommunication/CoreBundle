@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Controller;
 
 use Akyos\CoreBundle\Entity\User;
 use Akyos\CoreBundle\Form\UserType;
+use Akyos\CoreBundle\Form\UserEditType;
 use Akyos\CoreBundle\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -88,7 +89,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
