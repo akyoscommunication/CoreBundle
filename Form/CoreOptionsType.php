@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -77,6 +78,14 @@ class CoreOptionsType extends AbstractType
                 },
                 'multiple' => true,
                 'expanded' => true
+            ])
+            ->add('agencyName', TextType::class, [
+                'label' => 'Nom de l\'agence',
+                'required' => true
+            ])
+            ->add('agencyLink', UrlType::class, [
+                'label' => 'Lien vers le site de l\'agence',
+                'required' => true
             ])
         ;
     }

@@ -5,6 +5,8 @@
     <span>
         <a href="{{ path('home') }}" target="_blank">Voir le site</a>
         <span class="divider"> | </span>
-        <a href="https://akyos.com">Made with <i class="fas fa-heart"></i>, by Akyos</a>
+        <a href="{{ path('app_logout') }}" target="_blank">Déconnexion</a>
+        <span class="divider"> | </span>
+        <a href="{{ core_options.agencyLink }}">Made with <i class="fas fa-heart"></i>, by {{ core_options.agencyName }}</a>
     </span>
 </div>

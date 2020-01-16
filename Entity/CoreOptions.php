@@ -61,6 +61,16 @@ class CoreOptions
      */
     private $hasSeoEntities = [];
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $agencyLink;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $agencyName;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -170,6 +180,30 @@ class CoreOptions
     public function setHasSeoEntities(?array $hasSeoEntities): self
     {
         $this->hasSeoEntities = $hasSeoEntities;
+
+        return $this;
+    }
+
+    public function getAgencyLink(): ?string
+    {
+        return $this->agencyLink;
+    }
+
+    public function setAgencyLink(string $agencyLink): self
+    {
+        $this->agencyLink = $agencyLink;
+
+        return $this;
+    }
+
+    public function getAgencyName(): ?string
+    {
+        return $this->agencyName;
+    }
+
+    public function setAgencyName(string $agencyName): self
+    {
+        $this->agencyName = $agencyName;
 
         return $this;
     }
