@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+    <div class="wrapperLogin">
+        <h1 class="mb-3 font-weight-bolder text-left">Réinitialisez votre mot de passe</h1>
+        <div id="formContent">
+            {% if message and message != "" %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+            {% if new_password_request and new_password_request.isMailSent %}
+                <div class="alert alert-success">Un email vous a été envoyé avec les instructions à suivre afin de réinitialiser votre mot de passe. Si vous ne le voyez pas dans votre boite de réception, veuillez vérifier vos spams ou demander un nouvel envoi.</div>
+            {% else %}
+                {{ form_start(form) }}
+                    <div class="label">Veuillez renseigner votre adresse email</div>
+                    <div class="input mt-2">{{ form_widget(form.userEmail) }}</div>
+                    <button class="btn btn-lg btn-outline-primary mt-4" type="submit">
+                        Valider
+                    </button>
+                {{ form_end(form) }}
+            {% endif %}
+            <div class="mt-4">
+                <a href="{{ path(new_password_request.userRoute) }}">Retour</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/8af8fd2758.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('bundles/akyoscore/main.js') }}" defer async></script>
+{% endblock %}
+
+ {% block stylesheets %}
+     <link rel="stylesheet" href="{{ asset('bundles/akyoscore/main.css') }}">
+ {% endblock %}
