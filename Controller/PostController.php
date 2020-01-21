@@ -115,6 +115,7 @@ class PostController extends AbstractController
             'title' => 'Article',
             'entity' => 'Post',
             'route' => 'post',
+            'view' => 'single',
             'form' => $form->createView(),
         ]);
     }

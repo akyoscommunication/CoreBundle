@@ -1,0 +1,18 @@
+{% set details = '' %}
+{% if view is defined %}
+    {% if view == 'page' %}
+        {% set details = path(view, {'slug': el.slug}) %}
+    {% elseif view == 'single' %}
+        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'slug': el.slug}) %}
+    {% elseif view == 'taxonomy' %}
+        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'category': el.slug}) %}
+    {% else %}
+        {% set details = null %}
+    {% endif %}
+{% endif %}
+<div class="aky-sidebar-form">
+    <button type="button" class="btn btn-primary" id="submitForms">Mettre à jour</button>
+    {% if details != '' %}
+        <a class="btn btn-sm" target="_blank" href="{{ details }}"><i class="fas fa-eye"></i></a>
+    {% endif %}
+</div>

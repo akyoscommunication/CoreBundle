@@ -86,6 +86,7 @@ class PostCategoryController extends AbstractController
             'title' => 'Catégorie d\'article',
             'entity' => 'PostCategory',
             'route' => 'post_category',
+            'view' => 'archive',
             'form' => $form->createView(),
         ]);
     }
