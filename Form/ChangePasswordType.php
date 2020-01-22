@@ -17,9 +17,7 @@ class ChangePasswordType extends AbstractType
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux entrées doivent être identiques',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmez votre mot de passe'],
+                'required' => true
             ])
         ;
     }
