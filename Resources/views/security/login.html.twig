@@ -44,6 +44,12 @@
                     Se connecter
                 </button>
             </form>
+            <div class="mt-4">
+                <a href="{{ path('new_password', {'type' : 'User', 'route' : 'app_login'}) }}">Mot de passe oublié ?</a>
+            </div>
+            <div class="mt-2">
+                <a href="{{ path('home') }}">Retour à l'accueil</a>
+            </div>
         </div>
     </div>
 {% endblock %}

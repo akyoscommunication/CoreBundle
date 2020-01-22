@@ -105,6 +105,7 @@ class PageController extends AbstractController
             'title' => 'Page',
             'entity' => 'Page',
             'route' => 'page',
+            'view' => 'page',
             'form' => $form->createView(),
         ]);
     }
