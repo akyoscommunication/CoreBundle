@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Controller;
 
 use Akyos\CoreBundle\Entity\NewPasswordRequest;
 use Akyos\CoreBundle\Form\NewPasswordRequestType;
+use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\NewPasswordRequestRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +27,14 @@ class NewPasswordRequestController extends AbstractController
      * @param TokenGeneratorInterface $tokenGenerator
      * @param \Swift_Mailer $mailer
      * @param RequestStack $requestStack
+     * @param CoreOptionsRepository $coreOptionsRepository
      * @return Response
      * @throws \Exception
      */
-    public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer, RequestStack $requestStack): Response
+    public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository): Response
     {
+        $coreOptions = $coreOptionsRepository->findAll()[0];
+
         $newPasswordRequest = new NewPasswordRequest();
         $newPasswordRequest->setUserType($type);
         $newPasswordRequest->setUserRoute($route);
@@ -69,7 +73,7 @@ class NewPasswordRequestController extends AbstractController
                     $token = $tokenGenerator->generateToken();
                     $newPasswordRequest->setToken($token);
 
-                    $resetPasswordEmail = new \Swift_Message();
+                    $resetPasswordEmail = new \Swift_Message($coreOptions->getSiteTitle().' - Réinitialisation du mot de passe');
                     $resetPasswordEmail
                         ->setFrom('noreply@' . $requestStack->getCurrentRequest()->getHost())
 //						->setTo($newPasswordRequest->getUserEmail())
