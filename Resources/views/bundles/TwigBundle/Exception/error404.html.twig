@@ -1,0 +1,18 @@
+{% extends '/bundles/AkyosCoreBundle/front/layouts/front_layout.html.twig' %}
+
+{% block title %}Erreur 404{% endblock %}
+
+{% block content %}
+    <div class="container" style="height: 50vh;display: flex;flex-direction: column;justify-content: center;">
+        <h1 class="mb-2 font-weight-bolder text-center">Désolé,</h1>
+        <h2 class="mb-5 text-center">Cette page n'existe pas !</h2>
+        <p class="text-center">La page sur à laquelle vous essayez d'accéder n'existe pas, veuillez vérifier votre URL.</p>
+        <div class="text-center">
+            <a href="{{ path('home') }}" class="mt-5 text-center"><i class="fas fa-long-arrow-alt-left"></i> Retour à l'accueil</a>
+        </div>
+        <div class="mt-5 small ">
+            <div>Message d'origine:</div>
+            <p>{{ exception.message~' '~exception.statusCode~' '~exception.statusText }}</p>
+        </div>
+    </div>
+{% endblock %}

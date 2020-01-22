@@ -10,7 +10,7 @@
                 <div class="alert alert-danger">{{ message }}</div>
             {% endif %}
             {% if new_password_request and new_password_request.isMailSent %}
-                <div class="alert alert-success">Un email vous a été envoyé avec les instructions à suivre afin de réinitialiser votre mot de passe. Si vous ne le voyez pas dans votre boite de réception, veuillez vérifier vos spams ou demander un nouvel envoi.</div>
+                <div class="alert alert-success">Un email vous a été envoyé avec les instructions à suivre afin de réinitialiser votre mot de passe. Si vous ne le voyez pas dans votre boite de réception, veuillez vérifier vos spams.</div>
             {% else %}
                 {{ form_start(form) }}
                     <div class="label">Veuillez renseigner votre adresse email</div>
@@ -25,10 +25,6 @@
             </div>
         </div>
     </div>
-{% endblock %}
-{% block javascripts %}
-    <script src="https://kit.fontawesome.com/8af8fd2758.js" crossorigin="anonymous"></script>
-    <script src="{{ asset('bundles/akyoscore/main.js') }}" defer async></script>
 {% endblock %}
 
  {% block stylesheets %}

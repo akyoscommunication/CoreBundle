@@ -1,0 +1,18 @@
+{% extends '/bundles/AkyosCoreBundle/front/layouts/front_layout.html.twig' %}
+
+{% block title %}Erreur 403{% endblock %}
+
+{% block content %}
+    <div class="container" style="height: 50vh;display: flex;flex-direction: column;justify-content: center;">
+        <h1 class="mb-2 font-weight-bolder text-center">Désolé,</h1>
+        <h2 class="mb-5 text-center">l'accès vous est refusé !</h2>
+        <p class="text-center">Vous n'avez pas l'autorisation d'accéder à ce contenu.</p>
+        <div class="text-center">
+            <a href="{{ path('home') }}" class="mt-5 text-center"><i class="fas fa-long-arrow-alt-left"></i> Retour à l'accueil</a>
+        </div>
+        <div class="mt-5 small ">
+            <div>Message d'origine:</div>
+            <p>{{ exception.message~' '~exception.statusCode~' '~exception.statusText }}</p>
+        </div>
+    </div>
+{% endblock %}

@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class CoreBundleExtension extends Extension implements PrependExtensionInterface
 {
@@ -21,10 +22,10 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
-//        $container->loadFromExtension('twig', array(
-//            'paths' => array(
-//                '%kernel.project_dir%/lib/CoreBundle/Resources/views/' => 'Twig',
-//            ),
-//        ));
+        $container->loadFromExtension('twig', array(
+            'paths' => array(
+                'lib/CoreBundle/Resources/views/bundles/TwigBundle/' => 'Twig',
+            ),
+        ));
     }
 }
