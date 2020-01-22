@@ -117,7 +117,7 @@ class NewPasswordRequestController extends AbstractController
     public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $coreOptions = $coreOptionsRepository->findAll()[0];
-        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['id' => $id, 'token' => $token], ['createdAt' => 'DESC']);
+        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
         $message = '';
 
         $form = $this->createForm(ChangePasswordType::class);
