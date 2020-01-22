@@ -98,7 +98,7 @@ class NewPasswordRequestController extends AbstractController
     }
 
     /**
-     * @Route("/{token}", name="_change", methods={"GET", "POST"})
+     * @Route("/{id}/{token}", name="_change", methods={"GET", "POST"})
      * @param string $token
      * @param NewPasswordRequestRepository $newPasswordRequestRepository
      * @param Request $request
@@ -107,9 +107,9 @@ class NewPasswordRequestController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function changePassword(string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, \Swift_Mailer $mailer, RequestStack $requestStack): Response
+    public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, \Swift_Mailer $mailer, RequestStack $requestStack): Response
     {
-        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['token' => $token]);
+        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['id' => $id, 'token' => $token]);
 
         return $this->render('@AkyosCore/new_password_request/index.html.twig', []);
     }
