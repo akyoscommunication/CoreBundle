@@ -2,7 +2,7 @@
     <ul class="nav">
         {% if menu is not null %}
             {% for menuItem in menu.menu.menuItems|filter(menuItem => menu.menu is not null and menuItem.menuItemParent is null) %}
-                <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage == getElement(menuItem.type, menuItem.idType) or checkChildActive(menuItem, currentPage) or ( menuItem.isList and matchSameEntity(getEntityNameSpace(menuItem.type), currentPage) ) or isArchive(getEntityNameSpace(menuItem.type), currentPage) ? 'active' : '' }}">
+                <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage is same as(getElement(menuItem.type, menuItem.idType)) or checkChildActive(menuItem, currentPage) or ( menuItem.isList and matchSameEntity(getEntityNameSpace(menuItem.type), currentPage) ) or isArchive(getEntityNameSpace(menuItem.type), currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
                         {% if menuItem.isList %}
                             {% if menuItem.url == null %}
