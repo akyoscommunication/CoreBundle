@@ -102,7 +102,7 @@ class NewPasswordRequestController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/{token}", name="_change", methods={"GET", "POST"})
+     * @Route("/reset/{id}/{token}", name="_change", methods={"GET", "POST"})
      * @param int $id
      * @param string $token
      * @param NewPasswordRequestRepository $newPasswordRequestRepository
