@@ -256,6 +256,7 @@ class CoreExtension extends AbstractExtension
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
                 if(preg_match('/^'.$type.'$/i', $entityName)) {
                     $entityFullName = $m->getName();
+                    dump($m->getFieldNames());
                 }
             }
         }
