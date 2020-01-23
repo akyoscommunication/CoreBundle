@@ -263,8 +263,8 @@ class CoreExtension extends AbstractExtension
         }
 
         if($entityFullName) {
-            if(array_search('position', $entityFields)) {
-                $elements = $this->em->getRepository($entityFullName)->findBy([], ['order' => 'ASC']);
+            if(in_array('position', $entityFields, true)) {
+                $elements = $this->em->getRepository($entityFullName)->findBy([], ['position' => 'ASC']);
             } else {
                 $elements = $this->em->getRepository($entityFullName)->findAll();
             }
