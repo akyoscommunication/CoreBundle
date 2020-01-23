@@ -17,7 +17,7 @@ let webpackConfig = {
     entry: config.entry,
     output: {
         path: config.paths.dist,
-        filename: "main.js"
+        filename: "[name].js"
     },
     stats: {
         hash: false,
@@ -118,6 +118,7 @@ let webpackConfig = {
     plugins: [
         new CleanWebpackPlugin(config.paths.dist),
         new CopyWebpackPlugin([{from: 'assets/images', to: 'images' }]),
+        new CopyWebpackPlugin([{from: 'assets/tarteaucitronjs', to: 'tarteaucitronjs' }]),
         new ExtractTextPlugin({
             filename: '[name].css'
         }),

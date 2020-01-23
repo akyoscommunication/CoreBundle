@@ -9,6 +9,7 @@ import initCollectionType from  './modules/collectionType';
 import MenuItem from  './modules/MenuItem';
 
 import Seo from "./modules/Seo";
+import Rgpd from "./front/modules/Rgpd";
 import SubmitForm from "./modules/SubmitForms";
 import FixCKEditor from "./modules/FixCKEditor";
 
@@ -19,6 +20,7 @@ class Core {
         this.initAjaxPublished();
         MenuItem.init();
         Seo.init();
+        Rgpd.init();
         SubmitForm.init();
         FixCKEditor.init();
         initCollectionType.initDataPrototype();

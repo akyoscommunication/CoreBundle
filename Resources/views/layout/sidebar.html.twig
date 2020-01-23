@@ -84,6 +84,10 @@
                     <li class="{{ 'core_options' in route ? "active" : "" }}">
                         <a href="{{ path('core_options') }}">CoreBundle</a>
                     </li>
+                    {# RGPD OPTIONS #}
+                    <li class="{{ 'rgpd_options' in route ? "active" : "" }}">
+                        <a href="{{ path('rgpd_options') }}">RGPD et tracking</a>
+                    </li>
                     {# BUNDLES OPTIONS EXTENSIONS #}
                     {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getOptionsSidebar', {'route': route})) }}
                 {% endif %}

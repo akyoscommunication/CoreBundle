@@ -8,10 +8,16 @@ const config = {
         assets: path.join(rootPath, 'assets'),
         dist: path.join(rootPath, 'Resources/public')
     },
-    entry: [
-        "./assets/scripts/main.js",
-        "./assets/styles/main.scss",
-    ],
+    entry: {
+        "main" : [
+            "./assets/scripts/main.js",
+            "./assets/styles/main.scss"
+        ],
+        "front" : [
+            "./assets/scripts/front/front.js",
+            "./assets/styles/front/front.scss"
+        ]
+    },
     manifest: {},
     minify: (process.env.NODE_ENV === 'production')
 };
