@@ -146,10 +146,10 @@ class CoreExtension extends AbstractExtension
     public function isArchive($entity, $page) {
         if (!is_array($page)) {
             return false;
-        } elseif (!is_object($page[0])) {
+        } elseif (!empty($page) && !is_object($page[0])) {
             return false;
         }
-        return ( $entity == get_class($page[0]) ? true : false );
+        return ( !empty($page) ? ($entity == get_class($page[0]) ? true : false) : false );
     }
 
     public function getMenu($menuSlug, $page)
