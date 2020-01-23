@@ -249,6 +249,7 @@ class CoreExtension extends AbstractExtension
         }
 
         $entityFullName = null;
+        $entityFields = null;
         $meta = $this->em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
@@ -256,13 +257,17 @@ class CoreExtension extends AbstractExtension
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
                 if(preg_match('/^'.$type.'$/i', $entityName)) {
                     $entityFullName = $m->getName();
-                    dump($m->getFieldNames());
+                    $entityFields = $m->getFieldNames();
                 }
             }
         }
 
         if($entityFullName) {
-            $elements = $this->em->getRepository($entityFullName)->findAll();
+            if(array_search('order', $entityFields)) {
+                $elements = $this->em->getRepository($entityFullName)->findBy([], ['order' => 'ASC']);
+            } else {
+                $elements = $this->em->getRepository($entityFullName)->findAll();
+            }
         }
 
         return ($elements ?? null);
