@@ -35,7 +35,10 @@ class NewPasswordRequestController extends AbstractController
      */
     public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository): Response
     {
-        $coreOptions = $coreOptionsRepository->findAll()[0];
+        $coreOptions = $coreOptionsRepository->findAll();
+        if($coreOptions) {
+            $coreOptions = $coreOptions[0];
+        }
 
         $newPasswordRequest = new NewPasswordRequest();
         $newPasswordRequest->setUserType($type);
@@ -80,7 +83,7 @@ class NewPasswordRequestController extends AbstractController
 
                     $resetPasswordEmail = new \Swift_Message($coreOptions->getSiteTitle().' - Réinitialisation du mot de passe');
                     $resetPasswordEmail
-                        ->setFrom('noreply@' . $requestStack->getCurrentRequest()->getHost())
+                        ->setFrom(['noreply@' . $requestStack->getCurrentRequest()->getHost() => ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply')])
 //						->setTo($newPasswordRequest->getUserEmail())
                         ->setTo('thomas.sebert.akyos@gmail.com')
                         ->setBody($this->renderView('@AkyosCore/new_password_request/reset_password_email.html.twig', [
@@ -116,7 +119,10 @@ class NewPasswordRequestController extends AbstractController
      */
     public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $coreOptions = $coreOptionsRepository->findAll()[0];
+        $coreOptions = $coreOptionsRepository->findAll();
+        if($coreOptions) {
+            $coreOptions = $coreOptions[0];
+        }
         $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
         $message = '';
 
@@ -162,7 +168,7 @@ class NewPasswordRequestController extends AbstractController
 
             $resetPasswordEmail = new \Swift_Message($coreOptions->getSiteTitle().' - Mot de passe réinitialisé');
             $resetPasswordEmail
-                ->setFrom('noreply@' . $requestStack->getCurrentRequest()->getHost())
+                ->setFrom(['noreply@' . $requestStack->getCurrentRequest()->getHost() => ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply') ])
 //						->setTo($newPasswordRequest->getUserEmail())
                 ->setTo('thomas.sebert.akyos@gmail.com')
                 ->setBody($this->renderView('@AkyosCore/new_password_request/changed_password_email.html.twig', [
