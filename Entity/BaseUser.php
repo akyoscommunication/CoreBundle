@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping\MappedSuperclass;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @MappedSuperclass
@@ -18,6 +19,10 @@ class BaseUser implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+	 * @Assert\NotBlank()
+	 * @Assert\Email(
+	 *     message = "The email '{{ value }}' is not a valid email."
+	 * )
      */
     protected $email;
 
@@ -29,6 +34,7 @@ class BaseUser implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+	 * @Assert\NotBlank()
      */
     protected $password;
 
