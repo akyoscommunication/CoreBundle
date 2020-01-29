@@ -7,6 +7,6 @@
         <span class="divider"> | </span>
         <a href="{{ path('app_logout') }}" target="_blank">Déconnexion</a>
         <span class="divider"> | </span>
-        <a href="{{ core_options.agencyLink }}">Made with <i class="fas fa-heart"></i>, by {{ core_options.agencyName }}</a>
+        <a href="{{ core_options.agencyLink is defined ? core_options.agencyLink : "" }}">Made with <i class="fas fa-heart"></i>, by {{ core_options.agencyName is defined ? core_options.agencyName : ""}}</a>
     </span>
 </div>
