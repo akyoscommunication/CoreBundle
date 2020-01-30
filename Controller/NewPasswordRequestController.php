@@ -39,9 +39,10 @@ class NewPasswordRequestController extends AbstractController
         if($coreOptions) {
             $coreOptions = $coreOptions[0];
         }
-
+        
+        $type = explode(';', $type);
+        
         $newPasswordRequest = new NewPasswordRequest();
-        $newPasswordRequest->setUserType($type);
         $newPasswordRequest->setUserRoute($route);
 
         $form = $this->createForm(NewPasswordRequestType::class, $newPasswordRequest);
@@ -50,22 +51,26 @@ class NewPasswordRequestController extends AbstractController
         $message = "";
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $user = null;
-            if (class_exists('Akyos\\CoreBundle\\Entity\\' . $type)) {
-                $user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $type)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-            }
-            if (!$user) {
-                if (class_exists('App\\Entity\\' . $type)) {
-                    $user = $this->getDoctrine()->getRepository('App\\Entity\\' . $type)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-                }
-            }
+			$entityManager = $this->getDoctrine()->getManager();
+	
+			$user = null;
+			foreach ($type as $testedType) {
+				if (class_exists('Akyos\\CoreBundle\\Entity\\' . $testedType)) {
+					$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+					$newPasswordRequest->setUserType($testedType);
+				}
+				if (!$user) {
+					if (class_exists('App\\Entity\\' . $testedType)) {
+						$user = $this->getDoctrine()->getRepository('App\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+						$newPasswordRequest->setUserType($testedType);
+					}
+				}
+			}
             if (!$user) {
                 $message = "Cet email ne correspond à aucun compte, veuillez vérifier votre saisie.";
             } else {
                 $isAlreadyRequested = false;
-                $oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $type], ['createdAt' => 'DESC']);
+                $oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $newPasswordRequest->getUserType()], ['createdAt' => 'DESC']);
                 if ($oldRequest) {
                     $now = new \DateTime();
                     $interval = $now->getTimestamp() - $oldRequest->getCreatedAt()->getTimestamp();
