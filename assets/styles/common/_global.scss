@@ -80,8 +80,9 @@
                     }
                 }
                 &.divider {
+                    color: color(back-main-contrast-color);
                     width: 100%;
-                    border-bottom: 1px solid color(white);
+                    border-bottom: 1px solid color(back-main-contrast-color);
                     opacity: 0.4;
                 }
             }

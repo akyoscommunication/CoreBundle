@@ -6,7 +6,9 @@
         <a href="{{ path('home') }}" target="_blank">Voir le site</a>
         <span class="divider"> | </span>
         <a href="{{ path('app_logout') }}" target="_blank">Déconnexion</a>
-        <span class="divider"> | </span>
-        <a href="{{ core_options.agencyLink }}">Made with <i class="fas fa-heart"></i>, by {{ core_options.agencyName }}</a>
+        {% if core_options %}
+            <span class="divider"> | </span>
+            <a href="{{ core_options.agencyLink }}">Made with <i class="fas fa-heart"></i>, by {{ core_options.agencyName }}</a>
+        {% endif %}
     </span>
 </div>
