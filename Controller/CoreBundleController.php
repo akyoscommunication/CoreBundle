@@ -27,8 +27,14 @@ class CoreBundleController extends AbstractController
 
     /**
      * @Route("/change-position/{route}/{el}/{id}/{bundle}", name="change_position", methods={"POST"})
+     * @param $route
+     * @param $el
+     * @param $id
+     * @param Request $request
+     * @param $bundle
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function changePosition($route, $el, $id, Request $request, $bundle)
+    public function changePosition($route, $el, $id, Request $request, $bundle = null)
     {
         if($bundle) {
             $repository = $this->getDoctrine()->getRepository('Akyos\\'.$bundle.'\Entity\\'.$el);

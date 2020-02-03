@@ -1,0 +1,12 @@
+{% extends '@AkyosCore/layout.html.twig' %}
+
+{% block title %}RGPD - Options{% endblock %}
+
+{% block page_content %}
+    <div class="aky-header-page">
+        <h1 class="aky-header-page__title">RGPD - Options</h1>
+    </div>
+    <div class="form mt20">
+        {{ include('@AkyosCore/crud/_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -146,10 +146,10 @@ class CoreExtension extends AbstractExtension
     public function isArchive($entity, $page) {
         if (!is_array($page)) {
             return false;
-        } elseif (!is_object($page[0])) {
+        } elseif (!empty($page) && !is_object($page[0])) {
             return false;
         }
-        return ( $entity == get_class($page[0]) ? true : false );
+        return ( !empty($page) ? ($entity == get_class($page[0]) ? true : false) : false );
     }
 
     public function getMenu($menuSlug, $page)
@@ -249,6 +249,7 @@ class CoreExtension extends AbstractExtension
         }
 
         $entityFullName = null;
+        $entityFields = null;
         $meta = $this->em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
@@ -256,12 +257,17 @@ class CoreExtension extends AbstractExtension
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
                 if(preg_match('/^'.$type.'$/i', $entityName)) {
                     $entityFullName = $m->getName();
+                    $entityFields = $m->getFieldNames();
                 }
             }
         }
 
         if($entityFullName) {
-            $elements = $this->em->getRepository($entityFullName)->findAll();
+            if(in_array('position', $entityFields, true)) {
+                $elements = $this->em->getRepository($entityFullName)->findBy([], ['position' => 'ASC']);
+            } else {
+                $elements = $this->em->getRepository($entityFullName)->findAll();
+            }
         }
 
         return ($elements ?? null);

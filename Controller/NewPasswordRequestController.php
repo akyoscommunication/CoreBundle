@@ -35,10 +35,14 @@ class NewPasswordRequestController extends AbstractController
      */
     public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository): Response
     {
-        $coreOptions = $coreOptionsRepository->findAll()[0];
-
+        $coreOptions = $coreOptionsRepository->findAll();
+        if($coreOptions) {
+            $coreOptions = $coreOptions[0];
+        }
+        
+        $type = explode(';', $type);
+        
         $newPasswordRequest = new NewPasswordRequest();
-        $newPasswordRequest->setUserType($type);
         $newPasswordRequest->setUserRoute($route);
 
         $form = $this->createForm(NewPasswordRequestType::class, $newPasswordRequest);
@@ -47,22 +51,26 @@ class NewPasswordRequestController extends AbstractController
         $message = "";
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $user = null;
-            if (class_exists('Akyos\\CoreBundle\\Entity\\' . $type)) {
-                $user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $type)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-            }
-            if (!$user) {
-                if (class_exists('App\\Entity\\' . $type)) {
-                    $user = $this->getDoctrine()->getRepository('App\\Entity\\' . $type)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-                }
-            }
+			$entityManager = $this->getDoctrine()->getManager();
+	
+			$user = null;
+			foreach ($type as $testedType) {
+				if (class_exists('Akyos\\CoreBundle\\Entity\\' . $testedType)) {
+					$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+					$newPasswordRequest->setUserType($testedType);
+				}
+				if (!$user) {
+					if (class_exists('App\\Entity\\' . $testedType)) {
+						$user = $this->getDoctrine()->getRepository('App\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+						$newPasswordRequest->setUserType($testedType);
+					}
+				}
+			}
             if (!$user) {
                 $message = "Cet email ne correspond à aucun compte, veuillez vérifier votre saisie.";
             } else {
                 $isAlreadyRequested = false;
-                $oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $type], ['createdAt' => 'DESC']);
+                $oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $newPasswordRequest->getUserType()], ['createdAt' => 'DESC']);
                 if ($oldRequest) {
                     $now = new \DateTime();
                     $interval = $now->getTimestamp() - $oldRequest->getCreatedAt()->getTimestamp();
@@ -80,9 +88,8 @@ class NewPasswordRequestController extends AbstractController
 
                     $resetPasswordEmail = new \Swift_Message($coreOptions->getSiteTitle().' - Réinitialisation du mot de passe');
                     $resetPasswordEmail
-                        ->setFrom('noreply@' . $requestStack->getCurrentRequest()->getHost())
-//						->setTo($newPasswordRequest->getUserEmail())
-                        ->setTo('thomas.sebert.akyos@gmail.com')
+                        ->setFrom(['noreply@' . $requestStack->getCurrentRequest()->getHost() => ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply')])
+						->setTo($newPasswordRequest->getUserEmail())
                         ->setBody($this->renderView('@AkyosCore/new_password_request/reset_password_email.html.twig', [
                             'newPasswordRequest' => $newPasswordRequest,
                         ]), 'text/html');
@@ -116,7 +123,10 @@ class NewPasswordRequestController extends AbstractController
      */
     public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, \Swift_Mailer $mailer, RequestStack $requestStack, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $coreOptions = $coreOptionsRepository->findAll()[0];
+        $coreOptions = $coreOptionsRepository->findAll();
+        if($coreOptions) {
+            $coreOptions = $coreOptions[0];
+        }
         $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
         $message = '';
 
@@ -162,9 +172,9 @@ class NewPasswordRequestController extends AbstractController
 
             $resetPasswordEmail = new \Swift_Message($coreOptions->getSiteTitle().' - Mot de passe réinitialisé');
             $resetPasswordEmail
-                ->setFrom('noreply@' . $requestStack->getCurrentRequest()->getHost())
-//						->setTo($newPasswordRequest->getUserEmail())
-                ->setTo('thomas.sebert.akyos@gmail.com')
+                ->setFrom(['noreply@' . $requestStack->getCurrentRequest()->getHost() => ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply') ])
+                ->setTo($newPasswordRequest->getUserEmail())
+//                ->setTo('thomas.sebert.akyos@gmail.com')
                 ->setBody($this->renderView('@AkyosCore/new_password_request/changed_password_email.html.twig', [
                     'newPasswordRequest' => $newPasswordRequest,
                 ]), 'text/html');

@@ -1,0 +1,263 @@
+#tarteaucitronRoot{
+	position: fixed;
+	z-index: 999999999;
+	#tarteaucitron {
+		//top: 0 !important;
+		background-color: rgba(0,0,0, .85);
+		position: fixed;
+		z-index: 9;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		display: none;
+
+		.tarteaucitronSelfLink {
+			//display: none;
+		}
+
+		&ClosePanel {
+			position: absolute;
+			right: 1rem;
+			top: 1rem;
+			background: none;
+			border: none;
+			text-decoration: underline;
+			color: $white;
+		}
+
+		#tarteaucitronServices {
+			padding: 4rem 5rem;
+			margin: 5rem auto 0;
+			background-color: $white;
+			width: 50%;
+			max-height: 85vh !important;
+			overflow-y: scroll;
+			position: relative;
+
+			> .tarteaucitron {
+				&Line {
+					border-bottom: 1px solid $grey;
+					padding-bottom: 2rem;
+					.tarteaucitronH1 {
+						font-size: 2rem;
+						font-weight: bolder;
+						letter-spacing: 0;
+						display: block;
+						margin-bottom: 2rem;
+						color: $black;
+					}
+					.tarteaucitronH2 {
+						font-size: 1.3rem;
+						font-weight: 600;
+						letter-spacing: 1px;
+						display: block;
+						margin-bottom: 1rem;
+						color: $black;
+					}
+				}
+				&Border {
+					padding-top: 2rem;
+					.tarteaucitron {
+						&Hidden {
+							display: none;
+						}
+						&Title {
+
+						}
+						&InfoBox {
+							display: none;
+							position: absolute;
+							background-color: $grey;
+							color: $white;
+							left: 0;
+							max-width: 50%;
+							border-radius: 20px;
+							padding: 1rem 2rem;
+							font-size: .8rem;
+							line-height: 1.2;
+							z-index: 9;
+						}
+					}
+					> ul {
+						position: relative;
+						padding: 0;
+						> li {
+							> ul {
+								> li {
+									list-style-type: none;
+									display: flex;
+									justify-content: space-between;
+									align-items: center;
+									position: relative;
+									padding: 1rem 0 1rem 1rem;
+									&:after {
+										content: '';
+										height: 2px;
+										position: absolute;
+										width: 100%;
+										left: 0;
+										bottom: 0;
+										transform-origin: left center;
+										transform: scaleX(0);
+										transition: ease .3s;
+										background-color: $grey;
+									}
+									&:hover {
+										&:after {
+											transform: scaleX(1);
+										}
+									}
+									.tarteaucitronAsk {
+										display: flex;
+										flex-direction: column;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.tarteaucitronAlertBigTop {
+		background-color: $white;
+		position: fixed;
+		bottom: 1rem;
+		border-radius: 20px;
+		box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
+		left: 1rem;
+		color: $grey;
+		padding: 3rem;
+
+	}
+	#tarteaucitron {
+		&Personalize,
+		&CloseAlert,
+		&PrivacyUrl,
+		&AllAllowed,
+		&AllDenied,
+		&Allow,
+		&Deny,
+		button{
+			border-radius: 6px;
+			margin: 0 10px 10px 0;
+			padding: .3rem 1rem;
+			border: 1px solid grey;
+		}
+		&AllAllowed, &Allow {
+			background-color: $green;
+		}
+		&AllDenied, &Deny {
+			background-color: $red;
+		}
+		&DisclaimerAlert {
+			display: block;
+			margin-bottom: 1rem;
+			color: $darkgrey;
+		}
+		&Personalize {
+			background-color: #000;
+			color: $white;
+		}
+		&CloseAlert {
+
+		}
+		&PrivacyUrl{
+			background: none;
+			text-decoration: underline;
+		}
+		.tarteaucitronIsAllowed {
+			.tarteaucitronAllow {
+				background-color: $green;
+			}
+			.tarteaucitronDeny {
+				background-color: transparent;
+			}
+		}
+		.tarteaucitronIsDenied {
+			.tarteaucitronAllow {
+				background-color: transparent;
+			}
+			.tarteaucitronDeny {
+				background-color: $red;
+			}
+		}
+
+	}
+}
+
+#akyCookiesGestion {
+	cursor: pointer;
+	position: fixed;
+	bottom: -10rem;
+	left: 1rem;
+	z-index: 1;
+	background: white;
+	border-radius: 100%;
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+	height: 50px;
+	width: 50px;
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: ease .3s;
+	img {
+		width: 25px;
+	}
+	&.active {
+		bottom: 1rem;
+	}
+	&.hidden {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	#tarteaucitronRoot{
+		#tarteaucitron {
+			#tarteaucitronServices {
+				width: 80%;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#tarteaucitronRoot{
+		#tarteaucitron {
+			#tarteaucitronServices {
+				width: 100%;
+				padding: 4rem 2rem;
+
+				> .tarteaucitron {
+					&Border {
+						.tarteaucitron {
+							&InfoBox {
+								max-width: 100%;
+							}
+						}
+						> ul {
+							> li {
+								> ul {
+									padding: 0;
+									> li {
+										padding: 1rem;
+										flex-direction: column;
+										.tarteaucitronAsk {
+											flex-direction: row;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		.tarteaucitronAlertBigTop {
+			right: 1rem;
+		}
+	}
+}
