@@ -69,6 +69,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getElement', [$this, 'getElement']),
             new TwigFunction('getElementsList', [$this, 'getElementsList']),
             new TwigFunction('getPermalink', [$this, 'getPermalink']),
+            new TwigFunction('getPermalinkById', [$this, 'getPermalinkById']),
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
         ];
     }
@@ -277,6 +278,35 @@ class CoreExtension extends AbstractExtension
         }
 
         return ($elements ?? null);
+    }
+
+    public function getPermalinkById($type, $id)
+    {
+        $link = '';
+        if ( $type == 'Page' && $id ) {
+            $coreOptions = $this->coreOptionsRepository->findAll();
+            $homepage = $coreOptions[0]->getHomepage();
+            $isHome = false;
+            if($homepage) {
+                if($homepage->getId() === $id) {
+                    $isHome = true;
+                }
+            }
+            if($isHome) {
+                $link = $this->router->generate('home');
+            } else {
+                $link = $this->router->generate('page', ['slug' => $this->getElementSlug($type, $id)]);
+            }
+        } elseif ( ($type != 'Page') && $id ) {
+            $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($type), 'slug' => $this->getElementSlug($type, $id)]);
+        } elseif ( ($type != 'Page') &&  !$id) {
+            $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($type)]);
+        } else {
+            $link = null;
+        }
+
+
+        return $link;
     }
 
     public function getPermalink($item)

@@ -13400,8 +13400,9 @@ body h4 {
 }
 
 .wrapper #sidebar .components li.divider {
+  color: var(--color-back-main-contrast-color);
   width: 100%;
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: 1px solid var(--color-back-main-contrast-color);
   opacity: 0.4;
 }
 

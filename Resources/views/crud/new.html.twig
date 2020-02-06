@@ -15,21 +15,6 @@
             <li class="nav-item">
                 <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">Général</a>
             </li>
-            {# BUNDLES #}
-            {{ render(controller(
-                'Akyos\\CoreBundle\\Controller\\CrudController::getBundleTab',
-                { 'objectType': entity }
-            )) }}
-            {# SEO #}
-            {% if hasSeo(entity) %}
-                <li class="nav-item">
-                    <a class="nav-link" id="seo-tab" data-toggle="tab" href="#seo" role="tab" aria-controls="seo" aria-selected="true">Référencement</a>
-                </li>
-            {% endif %}
-            {# OPTIONS #}
-            <li class="nav-item">
-                <a class="nav-link" id="options-tab" data-toggle="tab" href="#options" role="tab" aria-controls="options" aria-selected="true">Options</a>
-            </li>
         </ul>
 
         <div class="tab-content" id="tabsContent">
@@ -37,22 +22,6 @@
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                 {{ include('@AkyosCore/crud/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
             </div>
-            {# BUNDLES #}
-            {{ render(controller(
-                'Akyos\\CoreBundle\\Controller\\CrudController::getBundleTabContent',
-                { 'objectType': entity, 'objectId': el.id }
-            )) }}
-            {# SEO #}
-            {% if hasSeo(entity) %}
-                <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="seo-tab">
-                    {{ render(controller(
-                        'Akyos\\CoreBundle\\Controller\\SeoController::index',
-                        { 'type': entity, 'typeId': el.id, 'route' : route }
-                    )) }}
-                </div>
-            {% endif %}
-            {# OPTIONS #}
-            <div class="tab-pane fade" id="options" role="tabpanel" aria-labelledby="options-tab"></div>
         </div>
 
     </div>
