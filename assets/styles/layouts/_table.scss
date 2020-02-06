@@ -7,6 +7,14 @@
                     background-color: $grey;
                     border-bottom: 2px solid $black;
                 }
+                .sortable {
+                    @include flex(row-reverse, nowrap, flex-end, center);
+
+                    span {
+                        float: none;
+                        margin-left: 10px;
+                    }
+                }
             }
         }
     }
