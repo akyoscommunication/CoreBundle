@@ -38,12 +38,18 @@ class CoreExtension extends AbstractExtension
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']),
             new TwigFilter('truncate', [$this, 'truncate']),
+            new TwigFilter('lcfirst', [$this, 'lcfirst']),
         ];
     }
 
     public function truncate($value, int $length, string $after)
     {
         return substr($value, 0, $length).$after;
+    }
+
+    public function lcfirst($value)
+    {
+        return lcfirst($value);
     }
 
     public function getFunctions(): array
