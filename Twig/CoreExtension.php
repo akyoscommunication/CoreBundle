@@ -38,12 +38,18 @@ class CoreExtension extends AbstractExtension
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']),
             new TwigFilter('truncate', [$this, 'truncate']),
+            new TwigFilter('lcfirst', [$this, 'lcfirst']),
         ];
     }
 
     public function truncate($value, int $length, string $after)
     {
         return substr($value, 0, $length).$after;
+    }
+
+    public function lcfirst($value)
+    {
+        return lcfirst($value);
     }
 
     public function getFunctions(): array
@@ -71,7 +77,13 @@ class CoreExtension extends AbstractExtension
     public function dynamicVariable($el, $field)
     {
         $getter = 'get'.$field;
-        $value = $el->$getter();
+        if(count(explode(';', $field)) > 1) {
+            $getter1 = 'get'.explode(';', $field)[0];
+            $getter2 = 'get'.explode(';', $field)[1];
+            $value = $el->$getter1()->$getter2();
+        } else {
+            $value = $el->$getter();
+        }
         if(is_array($value)) {
             $arrayValue = "";
             foreach ($value as $key => $item) {
