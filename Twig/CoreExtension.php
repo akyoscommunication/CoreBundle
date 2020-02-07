@@ -314,7 +314,6 @@ class CoreExtension extends AbstractExtension
             }else{
                 $link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$item->getUrl());
             }
-            dump($link);
         } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
                 $coreOptions = $this->coreOptionsRepository->findAll();
