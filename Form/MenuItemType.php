@@ -6,6 +6,7 @@ use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Repository\MenuItemRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +23,7 @@ class MenuItemType extends AbstractType
                 'label' => 'Titre',
                 'help' => 'Insérez votre titre ici'
             ])
-            ->add('url', UrlType::class, [
+            ->add('url', TextType::class, [
                 'label' => 'Lien',
                 'help' => 'Insérez un lien',
                 'required' => false

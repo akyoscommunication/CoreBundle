@@ -305,9 +305,16 @@ class CoreExtension extends AbstractExtension
 
     public function getPermalink($item)
     {
+        $urlPaterne = "/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:_\/?#[\]@!\$&'\(\)\*\+,;=.]+$/";
+
         $link = '';
         if($item->getUrl()) {
-            $link = $item->getUrl();
+            if(preg_match($urlPaterne, $item->getUrl())){
+                $link = $item->getUrl();
+            }else{
+                $link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$item->getUrl());
+            }
+            dump($link);
         } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
                 $coreOptions = $this->coreOptionsRepository->findAll();
