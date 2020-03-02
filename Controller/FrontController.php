@@ -173,7 +173,7 @@ class FrontController extends AbstractController
         }
 
         if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfArchiveEnable', ['entity' => $entity])->getContent() === "false") {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
         }
 
         // GET ELEMENTS

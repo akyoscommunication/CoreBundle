@@ -38,12 +38,18 @@ class CoreExtension extends AbstractExtension
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']),
             new TwigFilter('truncate', [$this, 'truncate']),
+            new TwigFilter('lcfirst', [$this, 'lcfirst']),
         ];
     }
 
     public function truncate($value, int $length, string $after)
     {
         return substr($value, 0, $length).$after;
+    }
+
+    public function lcfirst($value)
+    {
+        return lcfirst($value);
     }
 
     public function getFunctions(): array
@@ -63,6 +69,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getElement', [$this, 'getElement']),
             new TwigFunction('getElementsList', [$this, 'getElementsList']),
             new TwigFunction('getPermalink', [$this, 'getPermalink']),
+            new TwigFunction('getPermalinkById', [$this, 'getPermalinkById']),
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
         ];
     }
@@ -70,7 +77,13 @@ class CoreExtension extends AbstractExtension
     public function dynamicVariable($el, $field)
     {
         $getter = 'get'.$field;
-        $value = $el->$getter();
+        if(count(explode(';', $field)) > 1) {
+            $getter1 = 'get'.explode(';', $field)[0];
+            $getter2 = 'get'.explode(';', $field)[1];
+            $value = $el->$getter1()->$getter2();
+        } else {
+            $value = $el->$getter();
+        }
         if(is_array($value)) {
             $arrayValue = "";
             foreach ($value as $key => $item) {
@@ -273,11 +286,46 @@ class CoreExtension extends AbstractExtension
         return ($elements ?? null);
     }
 
-    public function getPermalink($item)
+    public function getPermalinkById($type, $id)
     {
         $link = '';
+        if ( $type == 'Page' && $id ) {
+            $coreOptions = $this->coreOptionsRepository->findAll();
+            $homepage = $coreOptions[0]->getHomepage();
+            $isHome = false;
+            if($homepage) {
+                if($homepage->getId() === $id) {
+                    $isHome = true;
+                }
+            }
+            if($isHome) {
+                $link = $this->router->generate('home');
+            } else {
+                $link = $this->router->generate('page', ['slug' => $this->getElementSlug($type, $id)]);
+            }
+        } elseif ( ($type != 'Page') && $id ) {
+            $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($type), 'slug' => $this->getElementSlug($type, $id)]);
+        } elseif ( ($type != 'Page') &&  !$id) {
+            $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($type)]);
+        } else {
+            $link = null;
+        }
+
+
+        return $link;
+    }
+
+    public function getPermalink($item)
+    {
+        $urlPaterne = "/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:_\/?#[\]@!\$&'\(\)\*\+,;=.]+$/";
+
+        $link = '';
         if($item->getUrl()) {
-            $link = $item->getUrl();
+            if(preg_match($urlPaterne, $item->getUrl())){
+                $link = $item->getUrl();
+            }else{
+                $link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$item->getUrl());
+            }
         } elseif ($item->getType()) {
             if ( ($item->getType() == 'Page') && $item->getIdType() ) {
                 $coreOptions = $this->coreOptionsRepository->findAll();
