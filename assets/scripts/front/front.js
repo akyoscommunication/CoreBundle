@@ -7,6 +7,7 @@ import LazyLoad from "../../../../FileManagerBundle/assets/scripts/modules/lazyL
 class Front {
 	static init() {
 		LazyLoad.init();
+		console.log('changed');
 		Rgpd.init();
 	}
 }
