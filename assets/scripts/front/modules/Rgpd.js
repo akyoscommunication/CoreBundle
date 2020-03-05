@@ -1,5 +1,3 @@
-import '../../../tarteaucitronjs/tarteaucitron';
-
 class Rgpd {
     static init() {
         const akyCookiesgestion = $('#akyCookiesGestion');
