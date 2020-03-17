@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Repository;
 use Akyos\CoreBundle\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,24 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param $cat
+     * @return Query
+     */
+    public function findByCategory($cat): Query
+    {
+        $query = $this->createQueryBuilder('p');
+
+        if ($cat) {
+            $query = $query
+                ->innerJoin('p.postCategories', 'pc')
+                ->andWhere('pc.slug LIKE :cat')
+                ->setParameter('cat', $cat);
+        }
+
+        return $query
+            ->getQuery()
+            ;
+    }
 }
