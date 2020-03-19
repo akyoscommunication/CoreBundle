@@ -55,7 +55,8 @@ class PostRepository extends ServiceEntityRepository
      */
     public function findByCategory($cat): Query
     {
-        $query = $this->createQueryBuilder('p');
+        $query = $this->createQueryBuilder('p')
+            ->where('p.published = true');
 
         if ($cat) {
             $query = $query
