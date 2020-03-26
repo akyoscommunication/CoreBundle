@@ -50,6 +50,7 @@ class PostType extends AbstractType
             ])
             ->add('createdAt', DateType::class, [
                 'widget' => 'single_text',
+                'label' => 'Date de publication'
             ])
         ;
     }
