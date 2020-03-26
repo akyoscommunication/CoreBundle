@@ -6,6 +6,7 @@ use Akyos\CoreBundle\Entity\Post;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,6 +47,9 @@ class PostType extends AbstractType
                 'attr' => ['class' => 'form-control js-select2'],
                 'label' => 'Catégorie(s) liée(s)',
                 'help' => '( Sélectionnez les catégories de l\'article )',
+            ])
+            ->add('createdAt', DateType::class, [
+                'widget' => 'single_text',
             ])
         ;
     }
