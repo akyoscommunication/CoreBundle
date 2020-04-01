@@ -17,6 +17,7 @@ class UserType extends AbstractType
     {
         $roles = User::ROLES;
         unset($roles['Akyos']);
+        unset($roles['Super Admin']);
 
         $builder
             ->add('email', EmailType::class, [
