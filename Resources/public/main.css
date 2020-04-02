@@ -13146,15 +13146,24 @@ body h4 {
 }
 
 #tarteaucitronRoot .tarteaucitronAlertBigTop {
-  background-color: white;
-  position: fixed;
-  bottom: 1rem;
-  border-radius: 20px;
-  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
-  left: 1rem;
-  color: #F3F3F3;
-  padding: 3rem;
+  background-color: white !important;
+  position: fixed !important;
+  bottom: 1rem !important;
+  border-radius: 20px !important;
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1) !important;
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1) !important;
+  left: 1rem !important;
+  color: #F3F3F3 !important;
+  padding: 3rem !important;
+  -webkit-transform: none !important;
+       -o-transform: none !important;
+          transform: none !important;
+  top: auto !important;
+  width: auto !important;
+}
+
+#tarteaucitronRoot .tarteaucitronAlertBigTop:before {
+  display: none;
 }
 
 #tarteaucitronRoot #tarteaucitronPersonalize,
@@ -13183,8 +13192,10 @@ body h4 {
 
 #tarteaucitronRoot #tarteaucitronDisclaimerAlert {
   display: block;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem !important;
   color: #252525;
+  padding: 0;
+  font-size: 1rem !important;
 }
 
 #tarteaucitronRoot #tarteaucitronPersonalize {

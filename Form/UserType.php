@@ -24,9 +24,12 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $roles = User::ROLES;
-        unset($roles['Akyos']);
+
         if(!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')){
             unset($roles['Super Admin']);
+        }
+        if(!$this->authorizationChecker->isGranted('ROLE_AKYOS')){
+            unset($roles['Akyos']);
         }
 
         $builder

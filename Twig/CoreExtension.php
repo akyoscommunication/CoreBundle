@@ -44,7 +44,7 @@ class CoreExtension extends AbstractExtension
 
     public function truncate($value, int $length, string $after)
     {
-        return substr($value, 0, $length).$after;
+        return mb_substr($value, 0, $length, 'UTF-8').$after;
     }
 
     public function lcfirst($value)
