@@ -55,6 +55,7 @@ class NewPasswordRequestController extends AbstractController
 	
 			$user = null;
 			foreach ($type as $testedType) {
+			    $testedType = implode('\\', explode('_', $testedType));
 				if (class_exists('Akyos\\CoreBundle\\Entity\\' . $testedType)) {
 					$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
 					$newPasswordRequest->setUserType($testedType);

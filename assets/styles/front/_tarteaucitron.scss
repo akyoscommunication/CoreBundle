@@ -121,15 +121,21 @@
 		}
 	}
 	.tarteaucitronAlertBigTop {
-		background-color: $white;
-		position: fixed;
-		bottom: 1rem;
-		border-radius: 20px;
-		box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
-		left: 1rem;
-		color: $grey;
-		padding: 3rem;
+		background-color: $white !important;
+		position: fixed !important;
+		bottom: 1rem !important;
+		border-radius: 20px !important;
+		box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1) !important;
+		left: 1rem !important;
+		color: $grey !important;
+		padding: 3rem !important;
+		transform: none !important;
+		top: auto !important;
+		width: auto !important;
 
+		&:before {
+			display: none;
+		}
 	}
 	#tarteaucitron {
 		&Personalize,
@@ -153,8 +159,10 @@
 		}
 		&DisclaimerAlert {
 			display: block;
-			margin-bottom: 1rem;
+			margin: 0 0 1rem !important;
 			color: $darkgrey;
+			padding: 0;
+			font-size: 1rem !important;
 		}
 		&Personalize {
 			background-color: #000;

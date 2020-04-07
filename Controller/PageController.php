@@ -45,7 +45,7 @@ class PageController extends AbstractController
                 'Titre' => 'Title',
                 'Slug' => 'Slug',
                 'Position' => 'Position',
-                'Status' => 'Published',
+                'Actif ?' => 'Published',
             ),
         ]);
     }
