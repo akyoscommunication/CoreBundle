@@ -324,6 +324,7 @@ class FrontController extends AbstractController
         $em =$this->getDoctrine()->getManager();
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
+            dump($m);
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
                 if($m->getName()::ENTITY_SLUG === $entitySlug) {
                     $entityFullName = $m->getName();
