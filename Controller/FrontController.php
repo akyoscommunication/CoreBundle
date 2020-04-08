@@ -161,7 +161,7 @@ class FrontController extends AbstractController
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
             if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                if(isset($m->getName()::ENTITY_SLUG)) {
+                if(null !== $m->getName()::ENTITY_SLUG) {
                     if($m->getName()::ENTITY_SLUG === $entitySlug) {
                         $entityFullName = $m->getName();
                         $entity = array_reverse(explode('\\', $entityFullName))[0];
