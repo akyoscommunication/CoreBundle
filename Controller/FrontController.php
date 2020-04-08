@@ -160,11 +160,12 @@ class FrontController extends AbstractController
         $em =$this->getDoctrine()->getManager();
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            dump($m);
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName()) && ($m['namespace'] === 'App\\Entity' || strpos($m->namespace, 'Akyos') !== false )) {
-                if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                    $entityFullName = $m->getName();
-                    $entity = array_reverse(explode('\\', $entityFullName))[0];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
+                if(isset($m->getName()::ENTITY_SLUG)) {
+                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
+                        $entityFullName = $m->getName();
+                        $entity = array_reverse(explode('\\', $entityFullName))[0];
+                    }
                 }
             }
         }
