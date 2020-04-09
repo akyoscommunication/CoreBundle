@@ -66,7 +66,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!.*(admin|app|archive|file-manager|details|categorie)$)"})
+     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|categorie\/|file-manager\/).+"})
      */
     public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
     {
