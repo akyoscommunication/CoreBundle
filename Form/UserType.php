@@ -10,13 +10,27 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserType extends AbstractType
 {
+    private $authorizationChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $roles = User::ROLES;
-        unset($roles['Akyos']);
+
+        if(!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')){
+            unset($roles['Super Admin']);
+        }
+        if(!$this->authorizationChecker->isGranted('ROLE_AKYOS')){
+            unset($roles['Akyos']);
+        }
 
         $builder
             ->add('email', EmailType::class, [
