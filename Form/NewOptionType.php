@@ -22,6 +22,12 @@ class NewOptionType extends AbstractType
                 ),
                 'label'                 => false
             ])
+            ->add('slug', null, [
+                'attr'              => array(
+                    'placeholder'       => "Slug du réglage",
+                ),
+                'label'                 => false
+            ])
             ->add('optionCategory', null, [
                 'placeholder' => 'Choisissez une zone',
             ])

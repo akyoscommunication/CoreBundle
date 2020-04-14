@@ -8,6 +8,7 @@
         <div class="block-options">
             {{ form_start(new_option_form, { 'attr' : { 'class' : 'form-inline' }}) }}
                 {{ form_widget(new_option_form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(new_option_form.slug, {'attr': {'class': 'form-control'}}) }}
                 {{ form_widget(new_option_form.optionCategory, {'attr': {'class': 'form-control'}}) }}
                 {{ form_widget(new_option_form.type, {'attr': {'class': 'form-control'}}) }}
                 <input type="submit" class="btn btn-effect-ripple btn-primary" value="Ajouter"/>
