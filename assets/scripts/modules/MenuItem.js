@@ -70,20 +70,23 @@ class MenuItem {
     }
     static ajaxMenuForm() {
         const _this = this;
-        document.querySelector('#editMenuPosition').addEventListener('click', async function (e) {
-            e.preventDefault();
-            const endpoint = this.getAttribute('data-endpoint');
-            $('#menuItemsForms > .aky-menuitem-parent > .aky-menuitem').each(function (i) {
-                const result = _this.subItem($(this));
-                resultMenuItem.push(result);
+        const btn = document.querySelector('#editMenuPosition');
+        if(btn) {
+            btn.addEventListener('click', async function (e) {
+                e.preventDefault();
+                const endpoint = this.getAttribute('data-endpoint');
+                $('#menuItemsForms > .aky-menuitem-parent > .aky-menuitem').each(function (i) {
+                    const result = _this.subItem($(this));
+                    resultMenuItem.push(result);
+                });
+                await jsonFetch(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        resultMenuItem
+                    })
+                }).then(r => console.log(r))
             });
-            await jsonFetch(endpoint, {
-                method: 'POST',
-                body: JSON.stringify({
-                    resultMenuItem
-                })
-            }).then(r => console.log(r))
-        });
+        }
     }
 
     static subItem(item) {
