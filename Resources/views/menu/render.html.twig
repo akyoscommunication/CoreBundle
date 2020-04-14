@@ -1,3 +1,5 @@
+{% import _self as macros %}
+
 <nav id="{{ menu.slug }}">
     <ul class="nav">
         {% if menu is not null %}
@@ -16,26 +18,51 @@
                             <a class="nav-item__link" href="{{ getPermalink(menuItem) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
                         {% endif %}
                     {% endif %}
-                    {% if menuItem.menuItemsChilds is not empty %}
-                        <ul class="nav-sub">
-                            {% for subMenuItem in menuItem.menuItemsChilds %}
-                                <li class="nav-sub-item {{ currentPage == getElement(subMenuItem.type, subMenuItem.idType) ? 'active' : '' }}">
-                                    <a href="{{ getPermalink(subMenuItem) }}" class="nav-sub-item__link" {{ subMenuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ subMenuItem.title }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if menuItem.isList %}
-                        <ul class="nav-sub">
-                            {% for element in getElementsList(menuItem.type) %}
-                                <li class="nav-sub-item {{ (currentPage == element) ? 'active' : '' }}">
-                                    <a href="{{ path('single', {'entitySlug' : getEntitySlug(menuItem.type), 'slug' : element.slug}) }}" class="nav-sub-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
+                    {{ _self.subItems(menuItem, currentPage, 0) }}
                 </li>
             {% endfor %}
         {% endif %}
     </ul>
 </nav>
+
+{% macro subItems(menuItem, currentPage, depth) %}
+    {% set depthToClasse = ''  %}
+    {% for k, e in 0..depth %}
+        {% set depthToClasse = depthToClasse~'sub'  %}
+        {% if not k is same as(depth) %}
+            {% set depthToClasse = depthToClasse~'-'  %}
+        {% endif %}
+    {% endfor %}
+    {% if menuItem.menuItemsChilds is not empty %}
+        {% set depth = depth + 1 %}
+        <ul class="nav-{{ depthToClasse }}">
+            {% for subMenuItem in menuItem.menuItemsChilds %}
+                <li class="nav-{{ depthToClasse }}-item {{ subMenuItem.menuItemsChilds is not empty or subMenuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage == getElement(subMenuItem.type, subMenuItem.idType) ? 'active' : '' }}">
+                    {% if not subMenuItem.isParent %}
+                        {% if subMenuItem.isList %}
+                            {% if subMenuItem.url == null %}
+                                <a class="nav-{{ depthToClasse }}-item__link" href="{{ path('archive', {'entitySlug': getEntitySlug(subMenuItem.type)}) }}"  {{ subMenuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ subMenuItem.title|raw }}</a>
+                            {% elseif subMenuItem.url == "http://#" %}
+                                <span class="nav-{{ depthToClasse }}-item__link">{{ menuItem.title|raw }}</span>
+                            {% else %}
+                                <a class="nav-{{ depthToClasse }}-item__link" href="{{ getPermalink(subMenuItem) }}"  {{ subMenuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ subMenuItem.title|raw }}</a>
+                            {% endif %}
+                        {% else %}
+                            <a class="nav-{{ depthToClasse }}-item__link" href="{{ getPermalink(subMenuItem) }}"  {{ subMenuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ subMenuItem.title|raw }}</a>
+                        {% endif %}
+                    {% endif %}
+                    {{ _self.subItems(subMenuItem, currentPage, depth) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if menuItem.isList %}
+        <ul class="nav-{{ depthToClasse }}">
+            {% for element in getElementsList(menuItem.type) %}
+                <li class="nav-{{ depthToClasse }}-item {{ (currentPage == element) ? 'active' : '' }}">
+                    <a href="{{ path('single', {'entitySlug' : getEntitySlug(menuItem.type), 'slug' : element.slug}) }}" class="nav-{{ depthToClasse }}-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}

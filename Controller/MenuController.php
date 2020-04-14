@@ -20,6 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MenuController extends AbstractController
 {
+    /** @var MenuItemRepository */
+    private $menuItemRepository;
+    /** @var MenuRepository */
+    private $menuRepository;
+
+    public function __construct(MenuItemRepository $menuItemRepository, MenuRepository $menuRepository)
+    {
+        $this->menuItemRepository = $menuItemRepository;
+        $this->menuRepository = $menuRepository;
+    }
+
     /**
      * @Route("/", name="menu_index", methods={"GET"})
      */
@@ -135,22 +146,19 @@ class MenuController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function changePositionMenuItem(Request $request, int $id, MenuItemRepository $menuItemRepository, MenuRepository $menuRepository): JsonResponse
+    public function changePositionMenuItem(Request $request, int $id): JsonResponse
     {
-        $menu = $menuItemRepository->findBy(array('id' => $id));
+        $newPositions = json_decode((string)$request->getContent(), true);
 
-        if ($request->request->get('data')) {
-            foreach ($request->request->get('data') as $key => $item) {
-                $menuParentItem = $menuItemRepository->findOneBy(array('id' => $item['parent']));
+        if ($newPositions) {
+            foreach ($newPositions['resultMenuItem'] as $key => $item) {
+                $menuParentItem = $this->menuItemRepository->findOneBy(array('id' => $item['parent']));
                 $menuParentItem->setPosition($key);
                 $menuParentItem->setMenuItemParent(NULL);
                 $this->getDoctrine()->getManager()->persist($menuParentItem);
-                if (isset($item['childs'])) {
+                if (!empty($item['childs'])) {
                     foreach ($item['childs'] as $subKey => $subItem) {
-                        $menuChildItem = $menuItemRepository->findOneBy(array('id' => $subItem));
-                        $menuChildItem->setPosition($subKey);
-                        $menuChildItem->setMenuItemParent($menuParentItem);
-                        $this->getDoctrine()->getManager()->persist($menuChildItem);
+                        $this->subItemChangePostion($subKey, $subItem, $menuParentItem);
                     }
                 }
             }
@@ -158,5 +166,18 @@ class MenuController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         return new JsonResponse('valid');
+    }
+
+    public function subItemChangePostion ($key, $item, $parent)
+    {
+        $menuChildItem = $this->menuItemRepository->findOneBy(array('id' => $item));
+        $menuChildItem->setPosition($key);
+        $menuChildItem->setMenuItemParent($parent);
+        $this->getDoctrine()->getManager()->persist($menuChildItem);
+        if (!empty($item['childs'])) {
+            foreach ($item['childs'] as $subKey => $subItem) {
+                $this->subItemChangePostion($subKey, $subItem, $menuChildItem);
+            }
+        }
     }
 }

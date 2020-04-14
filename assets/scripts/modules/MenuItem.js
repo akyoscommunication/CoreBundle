@@ -1,3 +1,8 @@
+import {jsonFetch} from "../functions/api";
+
+let resultMenuItem = [];
+let isParent = null;
+
 class MenuItem {
     static init() {
         this.changePosition();
@@ -64,38 +69,41 @@ class MenuItem {
         // })
     }
     static ajaxMenuForm() {
-        $('#editMenuPosition').click(function (e) {
+        const _this = this;
+        document.querySelector('#editMenuPosition').addEventListener('click', async function (e) {
             e.preventDefault();
-            let arrayMenuItem = [];
+            const endpoint = this.getAttribute('data-endpoint');
             $('#menuItemsForms > .aky-menuitem-parent > .aky-menuitem').each(function (i) {
-                let arrayParent = {};
-                let arrayChild = {};
-                $(this).children('.aky-menuitem-child').children('.aky-menuitem').each(function (subIndex) {
-                    arrayChild[subIndex] = $(this).data('id');
-                });
-                arrayParent['parent'] = $(this).children('.aky-menuitem-el').data('id');
-                arrayParent['childs'] = arrayChild;
-                arrayMenuItem.push(arrayParent);
+                const result = _this.subItem($(this));
+                resultMenuItem.push(result);
             });
-            $.ajax({
+            await jsonFetch(endpoint, {
                 method: 'POST',
-                url: '/admin/menu/'+$('#menuItemsForms').data('menu')+'/item/change-position',
-                data: {
-                    data: arrayMenuItem,
-                },
-                success: function (res) {
-                    console.log(res, 'success');
-                    if ( res === 'valid'){
-                        window.location.reload();
-                    } else {
-                        // TODO : error
-                    }
-                },
-                error: function(er) {
-                    console.log(er, 'error');
-                }
-            });
+                body: JSON.stringify({
+                    resultMenuItem
+                })
+            }).then(r => console.log(r))
         });
+    }
+
+    static subItem(item) {
+        const _this = this;
+        let array = {};
+        array['parent'] = item.data('id');
+
+        let arrayChild = {};
+        const children = item.children('.aky-menuitem-child').children('.aky-menuitem');
+
+        if (children.length > 0) {
+            children.each(function (subIndex) {
+                let arrayResult = _this.subItem($(this));
+                arrayChild[subIndex] = arrayResult;
+            });
+        }
+
+        array['childs'] = arrayChild;
+
+        return array;
     }
 }
 

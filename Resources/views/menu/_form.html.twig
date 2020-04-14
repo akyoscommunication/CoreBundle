@@ -1,4 +1,5 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% import _self as macros %}
 
 {{ form_start(form) }}
     {{ form_rest(form) }}
@@ -11,7 +12,7 @@
             <h2 class="aky-header-page__title">Liste des éléments</h2>
         </div>
         {% if menuItems is not empty %}
-            <button class="btn btn-outline-success" id="editMenuPosition">Mettre à jour les positions</button>
+            <button class="btn btn-outline-success" id="editMenuPosition" data-endpoint="{{ path('menu_change_position_menu_item', { 'id' : form.vars.value.id }) }}">Mettre à jour les positions</button>
         {% endif %}
         <div id="menuItemsForms" data-menu="{{ form.vars.value.id }}">
             <ul class="aky-menuitem-connectedSortable aky-menuitem-parent">
@@ -24,19 +25,7 @@
                             </button>
                         </div>
                         <ul class="aky-menuitem-connectedSortable aky-menuitem-child">
-                            {% if item.menuItemsChilds is not empty %}
-                                {% for childkey, itemChild in item.menuItemsChilds %}
-                                    <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
-                                        <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
-                                            {{ itemChild.title }}
-                                            <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </button>
-                                        </div>
-                                        <ul id="sortable" class="connectedSortable aky-menuitem-child"></ul>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
+                            {{ _self.subItems(item, form) }}
                         </ul>
                     </li>
                 {% endfor %}
@@ -69,3 +58,21 @@
         {{ form_end(formItem) }}
     </div>
 </div>
+
+{% macro subItems(item, form) %}
+    {% if item.menuItemsChilds is not empty %}
+        {% for childkey, itemChild in item.menuItemsChilds %}
+            <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
+                <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
+                    {{ itemChild.title }}
+                    <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </div>
+                <ul id="sortable" class="aky-menuitem-connectedSortable aky-menuitem-child">
+                    {{ _self.subItems(itemChild, form) }}
+                </ul>
+            </li>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
