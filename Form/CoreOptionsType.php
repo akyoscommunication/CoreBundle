@@ -52,6 +52,22 @@ class CoreOptionsType extends AbstractType
                 'choice_label' => 'title',
                 'placeholder' => "Choisissez une page"
             ])
+            ->add('agencyName', TextType::class, [
+                'label' => 'Nom de l\'agence',
+                'required' => true
+            ])
+            ->add('agencyLink', UrlType::class, [
+                'label' => 'Lien vers le site de l\'agence',
+                'required' => true
+            ])
+            ->add('recaptchaPublicKey', TextType::class, [
+                'label' => 'Clé publique reCaptcha',
+                'required' => false
+            ])
+            ->add('recaptchaPrivateKey', TextType::class, [
+                'label' => 'Clé privée reCaptcha',
+                'required' => false
+            ])
             ->add('hasArchiveEntities', ChoiceType::class, [
                 'label' => 'Activer la page archive sur les entités :',
                 'choices' => $options['entities'],
@@ -78,14 +94,6 @@ class CoreOptionsType extends AbstractType
                 },
                 'multiple' => true,
                 'expanded' => true
-            ])
-            ->add('agencyName', TextType::class, [
-                'label' => 'Nom de l\'agence',
-                'required' => true
-            ])
-            ->add('agencyLink', UrlType::class, [
-                'label' => 'Lien vers le site de l\'agence',
-                'required' => true
             ])
         ;
     }

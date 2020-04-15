@@ -71,6 +71,16 @@ class CoreOptions
      */
     private $agencyName;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $recaptchaPublicKey;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $recaptchaPrivateKey;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -204,6 +214,30 @@ class CoreOptions
     public function setAgencyName(string $agencyName): self
     {
         $this->agencyName = $agencyName;
+
+        return $this;
+    }
+
+    public function getRecaptchaPublicKey(): ?string
+    {
+        return $this->recaptchaPublicKey;
+    }
+
+    public function setRecaptchaPublicKey(string $recaptchaPublicKey): self
+    {
+        $this->recaptchaPublicKey = $recaptchaPublicKey;
+
+        return $this;
+    }
+
+    public function getRecaptchaPrivateKey(): ?string
+    {
+        return $this->recaptchaPrivateKey;
+    }
+
+    public function setRecaptchaPrivateKey(string $recaptchaPrivateKey): self
+    {
+        $this->recaptchaPrivateKey = $recaptchaPrivateKey;
 
         return $this;
     }

@@ -2,11 +2,11 @@
 
 namespace Akyos\CoreBundle\Controller\Recaptcha;
 
-use Akyos\CoreBundle\Entity\MenuArea;
-use Akyos\CoreBundle\Entity\MenuItem;
-use Akyos\CoreBundle\Repository\MenuItemRepository;
+use Akyos\CoreBundle\Entity\RgpdOptions;
+use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use ReCaptcha\ReCaptcha;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,30 +17,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class RecaptchaController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
-     */
-    public function index()
-    {
-        return $this->render('@AkyosCore/core_bundle/recaptcha.html.twig', [
-            'title' => 'Tableau de Bord',
-        ]);
-    }
-
-    /**
-     * @Route("/recaptcha-v3-verify", name="v3_verify")
+     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify")
+     * @param string $action
+     * @param string $token
      * @param Request $request
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @return JsonResponse
      */
-    public function recaptchaV3Verify(Request $request)
+    public function recaptchaV3Verify(string $action, string $token, Request $request, CoreOptionsRepository $coreOptionsRepository)
     {
-        $recaptcha = new ReCaptcha($request->get('token'));
-        $res = $recaptcha
-            ->setExpectedAction('verify')
-            ->verify($request->get('token'));
+        $coreOptions = $coreOptionsRepository->findAll();
+        if($coreOptions) {
+            $coreOptions = $coreOptions[0];
+        }
 
-        if ($res->isSuccess()) {
-
+        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_private = ($coreOptions->getRecaptchaPrivateKey() ? $coreOptions->getRecaptchaPrivateKey() : null);
+        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_private . '&response=' . $token);
+        $recaptcha = json_decode($recaptcha);
+        if($recaptcha->success) {
+            if ($recaptcha->score >= 0.5) {
+                return new JsonResponse(['error' => false]);
+            } else {
+                return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement.']);
+            }
         } else {
-            dd($res->getErrorCodes());
+            return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement: '.json_encode($recaptcha)]);
         }
     }
 }
