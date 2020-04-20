@@ -1,0 +1,34 @@
+{% if core_options.recaptchaPublicKey and core_options.recaptchaPrivateKey %}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ core_options.recaptchaPublicKey }}"></script>
+    <script>
+        grecaptcha.ready(function() {
+            const key = '{{ core_options.recaptchaPublicKey }}';
+            grecaptcha.execute(key, {action: 'verify'}).then(token => {
+                let path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+                path = path.replace("tokenHash", token);
+
+                const forms = document.querySelectorAll('form');
+
+                forms.forEach(el => {
+                    const submitButton = el.querySelector('.form-submit button');
+                    if(submitButton) {
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            fetch(path).then(res => res.json()).then(res => {
+                                if(res.error) {
+                                    alert(res.message);
+                                } else {
+                                    el.submit();
+                                }
+                                grecaptcha.execute(key, {action: 'verify'}).then(token => {
+                                    path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+                                    path = path.replace("tokenHash", token);
+                                })
+                            });
+                        })
+                    }
+                })
+            });
+        });
+    </script>
+{% endif %}
