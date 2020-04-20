@@ -60,6 +60,11 @@ class Post
      */
     private $position;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $thumbnailArchive;
+
     public function __construct()
     {
         $this->postCategories = new ArrayCollection();
@@ -166,6 +171,18 @@ class Post
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getThumbnailArchive(): ?string
+    {
+        return $this->thumbnailArchive;
+    }
+
+    public function setThumbnailArchive(?string $thumbnailArchive): self
+    {
+        $this->thumbnailArchive = $thumbnailArchive;
 
         return $this;
     }

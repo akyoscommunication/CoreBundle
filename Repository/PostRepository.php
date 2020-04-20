@@ -66,6 +66,7 @@ class PostRepository extends ServiceEntityRepository
         }
 
         return $query
+            ->orderBy('p.createdAt', 'DESC')
             ->getQuery()
             ;
     }

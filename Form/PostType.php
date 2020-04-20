@@ -42,6 +42,9 @@ class PostType extends AbstractType
             ->add('thumbnail', FileManagerType::class, [
                 'label' => 'Image à la une',
             ])
+            ->add('thumbnailArchive', FileManagerType::class, [
+                'label' => 'Image à la une ( archive )',
+            ])
             ->add('postCategories', null, [
                 'by_reference' => false,
                 'attr' => ['class' => 'form-control js-select2'],
