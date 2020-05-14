@@ -7,14 +7,11 @@ use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Templating\PhpEngine;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 class FrontController extends AbstractController
 {
