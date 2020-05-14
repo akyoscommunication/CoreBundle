@@ -61,7 +61,7 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $homePage->getId()));
 
-        $environment->addGlobal('page', $homePage);
+        $environment->addGlobal('global_page', $homePage);
 
         // RENDER
         return $this->render($view, [
@@ -107,7 +107,7 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
 
-        $environment->addGlobal('page', $page);
+        $environment->addGlobal('global_page', $page);
 
         if ($page->getPublished()) {
             // RENDER
@@ -156,7 +156,7 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
 
-        $environment->addGlobal('page', $page);
+        $environment->addGlobal('global_page', $page);
 
         if ($page->getPublished()) {
             // RENDER
@@ -297,7 +297,7 @@ class FrontController extends AbstractController
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
         }
 
-        $environment->addGlobal('element', $element);
+        $environment->addGlobal('global_element', $element);
 
         // RENDER
         return $this->render($view, [
@@ -368,7 +368,7 @@ class FrontController extends AbstractController
             $view = '@AkyosCore/front/single.html.twig';
         }
 
-        $environment->addGlobal('element', $element);
+        $environment->addGlobal('global_element', $element);
 
         // RENDER
         return $this->render($view, [
