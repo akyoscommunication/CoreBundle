@@ -7,10 +7,14 @@ use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Templating\PhpEngine;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class FrontController extends AbstractController
 {
@@ -23,8 +27,13 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/", name="home", methods={"GET","POST"})
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @param PageRepository $pageRepository
+     * @param SeoRepository $seoRepository
+     * @param Environment $environment
+     * @return Response
      */
-    public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository, SeoRepository $seoRepository): Response
+    public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository, SeoRepository $seoRepository, Environment $environment): Response
     {
         // FIND HOMEPAGE
         $coreOptions = $coreOptionsRepository->findAll();
@@ -55,6 +64,8 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $homePage->getId()));
 
+        $environment->addGlobal('page', $homePage);
+
         // RENDER
         return $this->render($view, [
             'seo' => $seo,
@@ -67,8 +78,13 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|categorie\/|file-manager\/).+"})
+     * @param PageRepository $pageRepository
+     * @param SeoRepository $seoRepository
+     * @param $slug
+     * @param Environment $environment
+     * @return Response
      */
-    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
+    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug, Environment $environment): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
@@ -94,6 +110,8 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
 
+        $environment->addGlobal('page', $page);
+
         if ($page->getPublished()) {
             // RENDER
             return $this->render($view, [
@@ -110,8 +128,13 @@ class FrontController extends AbstractController
 
     /**
      * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
+     * @param PageRepository $pageRepository
+     * @param SeoRepository $seoRepository
+     * @param $slug
+     * @param Environment $environment
+     * @return Response
      */
-    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug): Response
+    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug, Environment $environment): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
@@ -136,6 +159,8 @@ class FrontController extends AbstractController
         // GET SEO
         $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
 
+        $environment->addGlobal('page', $page);
+
         if ($page->getPublished()) {
             // RENDER
             return $this->render($view, [
@@ -151,6 +176,9 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/archive/{entitySlug}", name="archive", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param $entitySlug
+     * @return Response
      */
     public function archive(Filesystem $filesystem, $entitySlug): Response
     {
@@ -207,8 +235,14 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param $entitySlug
+     * @param $slug
+     * @param SeoRepository $seoRepository
+     * @param Environment $environment
+     * @return Response
      */
-    public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository): Response
+    public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository, Environment $environment): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -265,6 +299,9 @@ class FrontController extends AbstractController
         if ($element instanceof Post && !$element->getPublished()) {
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
         }
+
+        $environment->addGlobal('element', $element);
+
         // RENDER
         return $this->render($view, [
             'seo' => $seo,
@@ -277,8 +314,13 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param $entitySlug
+     * @param $slug
+     * @param Environment $environment
+     * @return Response
      */
-    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug): Response
+    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Environment $environment): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -329,6 +371,8 @@ class FrontController extends AbstractController
             $view = '@AkyosCore/front/single.html.twig';
         }
 
+        $environment->addGlobal('element', $element);
+
         // RENDER
         return $this->render($view, [
             'element' => $element,
@@ -339,6 +383,10 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/categorie/{entitySlug}/{category}", name="taxonomy", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param $entitySlug
+     * @param $category
+     * @return Response
      */
     public function category(Filesystem $filesystem, $entitySlug, $category): Response
     {
