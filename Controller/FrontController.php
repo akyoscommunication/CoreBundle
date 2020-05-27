@@ -5,9 +5,11 @@ namespace Akyos\CoreBundle\Controller;
 use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
+use Akyos\CoreBundle\Repository\Redirect301Repository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -77,14 +79,24 @@ class FrontController extends AbstractController
      * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|categorie\/|file-manager\/).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
+     * @param Redirect301Repository $redirect301Repository
      * @param $slug
      * @param Environment $environment
      * @return Response
      */
-    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, $slug, Environment $environment): Response
+    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, $slug, Environment $environment): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
+
+        if(!$page) {
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => 'Akyos\CoreBundle\Entity\Page']);
+            if($redirect301) {
+                $page = $pageRepository->find($redirect301->getObjectId());
+                $redirectUrl = $this->generateUrl('page', ['slug' => $page->getSlug()]);
+                return new RedirectResponse($redirectUrl, 301);
+            }
+        }
 
         if(!$page) {
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
@@ -127,14 +139,24 @@ class FrontController extends AbstractController
      * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
+     * @param Redirect301Repository $redirect301Repository
      * @param $slug
      * @param Environment $environment
      * @return Response
      */
-    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, $slug, Environment $environment): Response
+    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, $slug, Environment $environment): Response
     {
         // FIND PAGE
         $page = $pageRepository->findOneBy(['slug' => $slug]);
+
+        if(!$page) {
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => 'Akyos\CoreBundle\Entity\Page']);
+            if($redirect301) {
+                $page = $pageRepository->find($redirect301->getObjectId());
+                $redirectUrl = $this->generateUrl('page_preview', ['slug' => $page->getSlug()]);
+                return new RedirectResponse($redirectUrl, 301);
+            }
+        }
 
         if(!$page) {
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
@@ -236,10 +258,11 @@ class FrontController extends AbstractController
      * @param $entitySlug
      * @param $slug
      * @param SeoRepository $seoRepository
+     * @param Redirect301Repository $redirect301Repository
      * @param Environment $environment
      * @return Response
      */
-    public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository, Environment $environment): Response
+    public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, Environment $environment): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -273,6 +296,16 @@ class FrontController extends AbstractController
 
         // GET ELEMENT
         $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
+
+        if(!$element) {
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
+            if($redirect301) {
+                $element = $this->getDoctrine()->getRepository($entityFullName)->find($redirect301->getObjectId());
+                $redirectUrl = $this->generateUrl('single', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
+                return new RedirectResponse($redirectUrl, 301);
+            }
+        }
+
         if(!$element) {
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
         }
@@ -314,10 +347,11 @@ class FrontController extends AbstractController
      * @param Filesystem $filesystem
      * @param $entitySlug
      * @param $slug
+     * @param Redirect301Repository $redirect301Repository
      * @param Environment $environment
      * @return Response
      */
-    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Environment $environment): Response
+    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -351,6 +385,16 @@ class FrontController extends AbstractController
 
         // GET ELEMENT
         $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
+
+        if(!$element) {
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
+            if($redirect301) {
+                $element = $this->getDoctrine()->getRepository($entityFullName)->find($redirect301->getObjectId());
+                $redirectUrl = $this->generateUrl('single_preview', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
+                return new RedirectResponse($redirectUrl, 301);
+            }
+        }
+
         if(!$element) {
             throw $this->createNotFoundException('Cette page n\'existe pas! ');
         }
