@@ -77,7 +77,7 @@ class PageController extends AbstractController
     public function edit(Request $request, Page $page): Response
     {
         $em = $this->getDoctrine()->getManager();
-
+        $slug = $page->getSLug();
         $form = $this->createForm(PageType::class, $page);
         $form->handleRequest($request);
 
@@ -92,6 +92,9 @@ class PageController extends AbstractController
             if ($this->forward('Akyos\CoreBundle\Controller\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Page'])->getContent() === "true") {
                 $this->forward('Akyos\BuilderBundle\Controller\BuilderController::tempToProd', ['type' => 'Page', 'typeId' => $page->getId()]);
             }
+
+            $page = $form->getData();
+
 
             $em->flush();
 

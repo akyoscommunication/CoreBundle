@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Akyos\CoreBundle\Annotations\SlugRedirect;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -29,6 +30,7 @@ class Page
 
     /**
      * @Gedmo\Slug(fields={"title"})
+     * @SlugRedirect
      * @ORM\Column(type="string", length=255)
      */
     private $slug;

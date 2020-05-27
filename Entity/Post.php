@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Entity;
 
+use Akyos\CoreBundle\Annotations\SlugRedirect;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,6 +32,7 @@ class Post
 
     /**
      * @Gedmo\Slug(fields={"title"})
+     * @SlugRedirect
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
