@@ -1,4 +1,6 @@
 <div class="aky-header-page">
     <h1 class="aky-header-page__title">{{ title }}</h1>
-    <a class="btn btn-outline-success" href="{{ path(route~'_new', parameters is defined ? parameters : {}) }}">Ajouter un élément <i class="fas fa-plus"></i></a>
+    {% if button_add is not defined or button_add %}
+        <a class="btn btn-outline-success" href="{{ path(route~'_new', parameters is defined ? parameters : {}) }}">Ajouter un élément <i class="fas fa-plus"></i></a>
+    {% endif %}
 </div>
