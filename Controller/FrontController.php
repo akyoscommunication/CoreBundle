@@ -76,7 +76,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|categorie\/|file-manager\/).+"})
+     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
      * @param Redirect301Repository $redirect301Repository
@@ -136,7 +136,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|categorie).+"})
+     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|details_preview|categorie).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
      * @param Redirect301Repository $redirect301Repository
@@ -297,6 +297,10 @@ class FrontController extends AbstractController
         // GET ELEMENT
         $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
 
+        if (property_exists($element, 'published') and !$element->getPublished()) {
+            return $this->redirectToRoute('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]);
+        }
+
         if(!$element) {
             $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
             if($redirect301) {
@@ -349,9 +353,11 @@ class FrontController extends AbstractController
      * @param $slug
      * @param Redirect301Repository $redirect301Repository
      * @param Environment $environment
+     * @param SeoRepository $seoRepository
+     *
      * @return Response
      */
-    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment): Response
+    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment, SeoRepository $seoRepository): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -414,11 +420,16 @@ class FrontController extends AbstractController
 
         $environment->addGlobal('global_element', $element);
 
+        // GET SEO
+        $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId()));
+
         // RENDER
         return $this->render($view, [
+            'seo' => $seo,
             'element' => $element,
             'components' => $components,
-            'entity' => $entity
+            'entity' => $entity,
+            'slug' => $slug
         ]);
     }
 
