@@ -16,6 +16,8 @@
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
                             fetch(path).then(res => {
+                                console.log(res);
+                                console.log(res.json());
                                     return res.json().then(res => {
                                         if(res.error) {
                                             alert(res.message);
