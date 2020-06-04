@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RecaptchaController extends AbstractController
 {
     /**
-     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify", options={"expose"=true})
+     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify", methods={"GET"}, options={"expose"=true})
      * @param string $action
      * @param string $token
      * @param Request $request
