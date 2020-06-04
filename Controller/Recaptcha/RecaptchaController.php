@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/recaptcha", name="recaptcha_")
+ * @Route("/recaptcha", name="recaptcha_")
  */
 class RecaptchaController extends AbstractController
 {
