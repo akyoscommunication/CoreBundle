@@ -1,11 +1,9 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller\Recaptcha;
+namespace Akyos\CoreBundle\Controller;
 
-use Akyos\CoreBundle\Entity\RgpdOptions;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use ReCaptcha\ReCaptcha;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RecaptchaController extends AbstractController
 {
     /**
-     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify", methods={"GET"}, options={"expose"=true})
+     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify")
      * @param string $action
      * @param string $token
      * @param Request $request

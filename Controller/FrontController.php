@@ -43,7 +43,7 @@ class FrontController extends AbstractController
         }
 
         if(!$homePage) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Accueil )");
         }
 
         // GET COMPONENTS OR CONTENT
@@ -76,7 +76,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
+     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
      * @param Redirect301Repository $redirect301Repository
@@ -99,7 +99,7 @@ class FrontController extends AbstractController
         }
 
         if(!$page) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Page )");
         }
 
         // GET COMPONENTS OR CONTENT
@@ -131,7 +131,7 @@ class FrontController extends AbstractController
                 'slug' => $slug
             ]);
         } else {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Page )");
         }
     }
 
@@ -159,7 +159,7 @@ class FrontController extends AbstractController
         }
 
         if(!$page) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Page Preview )");
         }
 
         // GET COMPONENTS OR CONTENT
@@ -189,7 +189,7 @@ class FrontController extends AbstractController
                 'slug' => $slug
             ]);
         } else {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Page Preview )");
         }
     }
 
@@ -224,7 +224,7 @@ class FrontController extends AbstractController
         }
 
         if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
         }
 
         if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfArchiveEnable', ['entity' => $entity])->getContent() === "false") {
@@ -287,11 +287,11 @@ class FrontController extends AbstractController
         }
 
         if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
         }
 
         if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfSingleEnable', ['entity' => $entity])->getContent() === "false") {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
         }
 
         // GET ELEMENT
@@ -311,7 +311,7 @@ class FrontController extends AbstractController
         }
 
         if(!$element) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
         }
 
         // GET COMPONENTS OR CONTENT
@@ -331,7 +331,7 @@ class FrontController extends AbstractController
         $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId()));
 
         if ($element instanceof Post && !$element->getPublished()) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
         }
 
         $environment->addGlobal('global_element', $element);
@@ -382,11 +382,11 @@ class FrontController extends AbstractController
         }
 
         if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
         }
 
         if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfSingleEnable', ['entity' => $entity])->getContent() === "false") {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
         }
 
         // GET ELEMENT
@@ -402,7 +402,7 @@ class FrontController extends AbstractController
         }
 
         if(!$element) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
         }
 
         // GET COMPONENTS OR CONTENT
@@ -465,7 +465,7 @@ class FrontController extends AbstractController
         }
 
         if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
         }
 
         // GET CATEGORY FULLNAME FROM ENTITY SLUG
@@ -477,13 +477,13 @@ class FrontController extends AbstractController
         }
 
         if(!$categoryFullName) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
         }
 
         // FIND ELEMENTS FROM CATEGORY OBJECT
         $categoryObject = $this->getDoctrine()->getRepository($categoryFullName)->findOneBy(['slug' => $category]);
         if(!$categoryObject) {
-            throw $this->createNotFoundException('Cette page n\'existe pas! ');
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
         }
         if(substr($entity, -1) === "y") {
             $getter = 'get'.substr(ucfirst($entity), 0,strlen($entity) - 1).'ies';

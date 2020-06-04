@@ -16,9 +16,7 @@
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
                             fetch(path).then(res => {
-                                console.log(res);
-                                console.log(res.text());
-                                    return res.text().then(res => {
+                                    return res.json().then(res => {
                                         if(res.error) {
                                             alert(res.message);
                                         } else {
@@ -43,7 +41,7 @@
 
                     fetch(path).then(res => {
                             return res.json().then(res => {
-                                if(res.error) {
+                                if (res.error) {
                                     alert(res.message);
                                 }
                             })
