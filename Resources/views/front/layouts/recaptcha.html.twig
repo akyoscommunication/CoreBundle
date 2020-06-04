@@ -17,8 +17,8 @@
                             e.preventDefault();
                             fetch(path).then(res => {
                                 console.log(res);
-                                console.log(res.json());
-                                    return res.json().then(res => {
+                                console.log(res.text());
+                                    return res.text().then(res => {
                                         if(res.error) {
                                             alert(res.message);
                                         } else {
