@@ -357,7 +357,7 @@ class FrontController extends AbstractController
      *
      * @return Response
      */
-    public function singlePreview(Filesystem $filesystem, $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment, SeoRepository $seoRepository): Response
+    public function singlePreview(Filesystem $filesystem, string $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment, SeoRepository $seoRepository): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -502,7 +502,8 @@ class FrontController extends AbstractController
         // RENDER
         return $this->render($view, [
             'elements' => $elements,
-            'entity' => $entity
+            'entity' => $entity,
+            'category' => $categoryObject
         ]);
     }
 }
