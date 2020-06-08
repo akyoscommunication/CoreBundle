@@ -3,8 +3,9 @@
     <script>
         grecaptcha.ready(function() {
             const key = '{{ core_options.recaptchaPublicKey }}';
+            let path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+
             grecaptcha.execute(key, {action: 'verify'}).then(token => {
-                let path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
                 path = path.replace("tokenHash", token);
 
                 const forms = document.querySelectorAll('form');
@@ -14,21 +15,40 @@
                     if(submitButton) {
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
-                            fetch(path).then(res => res.json()).then(res => {
-                                if(res.error) {
-                                    alert(res.message);
-                                } else {
-                                    el.submit();
+                            fetch(path).then(res => {
+                                    return res.json().then(res => {
+                                        if(res.error) {
+                                            alert(res.message);
+                                        } else {
+                                            el.submit();
+                                        }
+                                        grecaptcha.execute(key, {action: 'verify'}).then(token => {
+                                            path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+                                            path = path.replace("tokenHash", token);
+                                        })
+                                    })
                                 }
-                                grecaptcha.execute(key, {action: 'verify'}).then(token => {
-                                    path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
-                                    path = path.replace("tokenHash", token);
-                                })
-                            });
+                            );
                         })
                     }
                 })
             });
+
+            setInterval(() => {
+                grecaptcha.execute(key, {action: 'verify'}).then(token => {
+                    path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+                    path = path.replace("tokenHash", token);
+
+                    fetch(path).then(res => {
+                            return res.json().then(res => {
+                                if (res.error) {
+                                    alert(res.message);
+                                }
+                            })
+                        }
+                    );
+                })
+            }, 150000)
         });
     </script>
 {% endif %}

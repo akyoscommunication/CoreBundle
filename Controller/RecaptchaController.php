@@ -1,18 +1,16 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller\Recaptcha;
+namespace Akyos\CoreBundle\Controller;
 
-use Akyos\CoreBundle\Entity\RgpdOptions;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use ReCaptcha\ReCaptcha;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/recaptcha", name="recaptcha_")
+ * @Route("/recaptcha", name="recaptcha_")
  */
 class RecaptchaController extends AbstractController
 {
