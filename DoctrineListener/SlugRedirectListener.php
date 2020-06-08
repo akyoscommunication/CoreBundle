@@ -97,11 +97,7 @@ class SlugRedirectListener
                             $em->flush();
                         }
 
-                        /** @var ClassMetadata $meta */
-                        $meta = $em->getClassMetadata(get_class($entity));
-
                         $entity->setSlug($changeSet['slug'][1].'-1');
-//                        $uow->recomputeSingleEntityChangeSet($meta, $entity);
                         $em->flush();
                     }
                 }
