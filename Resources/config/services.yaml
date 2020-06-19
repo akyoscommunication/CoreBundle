@@ -18,3 +18,9 @@ services:
   twig.extension.globals_extension:
     alias: 'Akyos\CoreBundle\Twig\GlobalsExtension'
     public: true
+
+  Akyos\CoreBundle\DoctrineListener\SlugRedirectListener:
+    arguments: []
+    tags:
+      - { name: 'doctrine.event_listener', event: 'postUpdate' }
+    public: true

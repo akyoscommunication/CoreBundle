@@ -30,7 +30,9 @@
                                     <button class="btn btn-link flex-fill text-left" data-toggle="collapse" data-target="#collapse{{el.slug}}" aria-expanded="true" aria-controls="collapse{{el.slug}}">
                                         {{el.title}}
                                     </button>
-                                    <a href="{{ path('option_delete', {'id': el.id}) }}" data-toggle="tooltip" title="Supprimer le réglage" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <a href="{{ path('option_delete', {'id': el.id}) }}" data-toggle="tooltip" title="Supprimer le réglage" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+                                    {% endif %}
                                 </div>
 
                                 <div id="collapse{{el.slug}}" class="collapse aky-option-collapse" aria-labelledby="heading{{el.slug}}" data-parent="#accordion">

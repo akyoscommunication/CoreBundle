@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Akyos\CoreBundle\Controller;
 
 use Akyos\CoreBundle\Entity\MenuItem;
