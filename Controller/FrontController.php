@@ -402,7 +402,8 @@ class FrontController extends AbstractController
         // RENDER
         return $this->render($view, [
             'elements' => $elements,
-            'entity' => $entity
+            'entity' => $entity,
+            'slug' => $category
         ]);
     }
 }
