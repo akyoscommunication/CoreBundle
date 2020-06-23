@@ -19,6 +19,11 @@ class PostCategoryController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param PostCategoryRepository $postCategoryRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(PostCategoryRepository $postCategoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -43,6 +48,9 @@ class PostCategoryController extends AbstractController
 
     /**
      * @Route("/new", name="new", methods={"GET","POST"})
+     * @param Request $request
+     *
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -69,6 +77,10 @@ class PostCategoryController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param PostCategory $postCategory
+     *
+     * @return Response
      */
     public function edit(Request $request, PostCategory $postCategory): Response
     {
@@ -93,6 +105,11 @@ class PostCategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param PostCategory $postCategory
+     * @param SeoRepository $seoRepository
+     *
+     * @return Response
      */
     public function delete(Request $request, PostCategory $postCategory, SeoRepository $seoRepository): Response
     {

@@ -2,11 +2,14 @@
 
 namespace Akyos\CoreBundle\Controller;
 
+use Akyos\BuilderBundle\AkyosBuilderBundle;
+use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Form\PostType;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PostRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
+use Akyos\CoreBundle\Services\CoreService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,6 +24,12 @@ class PostController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param PostRepository $postRepository
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -55,8 +64,12 @@ class PostController extends AbstractController
 
     /**
      * @Route("/new", name="new", methods={"GET","POST"})
+     * @param PostRepository $postRepository
+     * @param CoreOptionsRepository $coreOptionsRepository
+     *
+     * @return Response
      */
-    public function new(Request $request, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository): Response
+    public function new(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository): Response
     {
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
@@ -78,9 +91,15 @@ class PostController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Post $post
+     * @param CoreOptionsRepository $coreOptionsRepository
+     *
+     * @return Response
      */
-    public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository): Response
+    public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository, CoreService $coreService): Response
     {
+        $entity = 'Post';
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {
@@ -91,23 +110,20 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-        if ($this->forward('Akyos\CoreBundle\Controller\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Post'])->getContent() === "true") {
+        if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
             if (!$form->isSubmitted()) {
-                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::initCloneComponents', ['type' => 'Post', 'typeId' => $post->getId()]);
+                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::initCloneComponents', ['type' => $entity, 'typeId' => $post->getId()]);
             }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->forward('Akyos\CoreBundle\Controller\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Post'])->getContent() === "true") {
+            if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
                 $this->forward('Akyos\BuilderBundle\Controller\BuilderController::tempToProd', ['type' => 'Post', 'typeId' => $post->getId()]);
             }
 
             $this->getDoctrine()->getManager()->flush();
 
             return new JsonResponse('valid');
-        } elseif($form->isSubmitted() && !($form->isValid())) {
-            // TODO => error mess
-            return new JsonResponse('not valid');
         }
 
         return $this->render('@AkyosCore/crud/edit.html.twig', [
@@ -122,9 +138,19 @@ class PostController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Post $post
+     * @param PostRepository $postRepository
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @param SeoRepository $seoRepository
+     *
+     * @param CoreService $coreService
+     *
+     * @return Response
      */
-    public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository): Response
+    public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService): Response
     {
+        $entity = 'Post';
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {
@@ -135,11 +161,11 @@ class PostController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($this->forward('Akyos\CoreBundle\Controller\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Post'])->getContent() === "true") {
-                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::onDeleteEntity', ['type' => 'Post', 'typeId' => $post->getId()]);
+            if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::onDeleteEntity', ['type' => $entity, 'typeId' => $post->getId()]);
             }
 
-            $seo = $seoRepository->findOneBy(array('type' => 'Post', 'typeId' => $post->getId()));
+            $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $post->getId()));
             if ($seo) {
                 $entityManager->remove($seo);
             }

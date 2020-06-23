@@ -18,6 +18,11 @@ class OptionCategoryController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param OptionCategoryRepository $optionCategoryRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(OptionCategoryRepository $optionCategoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -42,6 +47,9 @@ class OptionCategoryController extends AbstractController
 
     /**
      * @Route("/new", name="new", methods={"GET","POST"})
+     * @param Request $request
+     *
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -73,6 +81,10 @@ class OptionCategoryController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param OptionCategory $optionCategory
+     *
+     * @return Response
      */
     public function edit(Request $request, OptionCategory $optionCategory): Response
     {
@@ -100,6 +112,10 @@ class OptionCategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param OptionCategory $optionCategory
+     *
+     * @return Response
      */
     public function delete(Request $request, OptionCategory $optionCategory): Response
     {

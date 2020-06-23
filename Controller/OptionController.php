@@ -21,6 +21,12 @@ class OptionController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET", "POST"})
+     * @param Request $request
+     * @param OptionRepository $optionRepository
+     * @param PageRepository $pageRepository
+     * @param OptionCategoryRepository $categoryRepository
+     *
+     * @return Response
      */
     public function index(Request $request, OptionRepository $optionRepository, PageRepository $pageRepository, OptionCategoryRepository $categoryRepository): Response
     {
@@ -35,9 +41,9 @@ class OptionController extends AbstractController
                 try {
                     $em->persist($option);
                     $em->flush();
-                    $this->get('session')->getFlashBag()->add('success',"Création du réglage effectuée avec succès !");
+                    $this->addFlash('success',"Création du réglage effectuée avec succès !");
                 } catch (Exception $e) {
-                    $this->get('session')->getFlashBag()->add('danger',"Une erreur s'est produite lors de la création du réglage, merci de réssayer.");
+                    $this->addFlash('danger',"Une erreur s'est produite lors de la création du réglage, merci de réssayer.");
                 }
             }
         }
@@ -57,9 +63,9 @@ class OptionController extends AbstractController
                     try {
                         $em->persist($option);
                         $em->flush();
-                        $this->get('session')->getFlashBag()->add('success',"Modification du réglage effectuée avec succès !");
+                        $this->addFlash('success',"Modification du réglage effectuée avec succès !");
                     } catch (Exception $e) {
-                        $this->get('session')->getFlashBag()->add('danger',"Une erreur s'est produite lors de la modification du réglage, merci de réssayer.");
+                        $this->addFlash('danger',"Une erreur s'est produite lors de la modification du réglage, merci de réssayer.");
                     }
                 }
             }

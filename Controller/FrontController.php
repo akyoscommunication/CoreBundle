@@ -2,11 +2,15 @@
 
 namespace Akyos\CoreBundle\Controller;
 
-use Akyos\CoreBundle\Entity\Post;
+use Akyos\BuilderBundle\AkyosBuilderBundle;
+use Akyos\BuilderBundle\Entity\BuilderOptions;
+use Akyos\BuilderBundle\Entity\Component;
+use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\Redirect301Repository;
 use Akyos\CoreBundle\Repository\SeoRepository;
+use Akyos\CoreBundle\Services\CoreService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,10 +22,13 @@ use Twig\Environment;
 class FrontController extends AbstractController
 {
     protected $kernel;
+    /** @var CoreService */
+    private $coreService;
 
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel, CoreService $coreService)
     {
         $this->kernel = $kernel;
+        $this->coreService = $coreService;
     }
 
     /**
@@ -32,15 +39,16 @@ class FrontController extends AbstractController
      * @param Environment $environment
      * @return Response
      */
-    public function home(CoreOptionsRepository $coreOptionsRepository, PageRepository $pageRepository, SeoRepository $seoRepository, Environment $environment): Response
+    public function home(
+        CoreOptionsRepository $coreOptionsRepository,
+        PageRepository $pageRepository,
+        SeoRepository $seoRepository,
+        Environment $environment): Response
     {
         // FIND HOMEPAGE
+        $entity = 'Page';
         $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            $homePage = $coreOptions[0]->getHomepage();
-        } else {
-            $homePage = $pageRepository->findOneBy([], ['position' => "ASC"]);
-        }
+        $homePage = $coreOptions ? $coreOptions[0]->getHomepage() : $pageRepository->findOneBy([], ['position' => "ASC"]);
 
         if(!$homePage) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Accueil )");
@@ -48,29 +56,21 @@ class FrontController extends AbstractController
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Page'])->getContent() === "true") {
-            $components = $this->getDoctrine()->getRepository('Akyos\\BuilderBundle\\Entity\\Component')->findBy(['type' => 'Page', 'typeId' => $homePage->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $homePage->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
         }
-        $content = $homePage->getContent();
 
         // GET TEMPLATE
-        if($homePage->getTemplate()) {
-            $view = '/home/'.$homePage->getTemplate().'.html.twig';
-        } else {
-            $view = '@AkyosCore/front/content.html.twig';
-        }
-
-        // GET SEO
-        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $homePage->getId()));
+        $view = $homePage->getTemplate() ? '/home/'.$homePage->getTemplate().'.html.twig' : '@AkyosCore/front/content.html.twig';
 
         $environment->addGlobal('global_page', $homePage);
 
         // RENDER
         return $this->render($view, [
-            'seo' => $seo,
+            'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $homePage->getId())),
             'page' => $homePage,
             'components' => $components,
-            'content' => $content,
+            'content' => $homePage->getContent(),
             'slug' => 'accueil'
         ]);
     }
@@ -84,59 +84,53 @@ class FrontController extends AbstractController
      * @param Environment $environment
      * @return Response
      */
-    public function page(PageRepository $pageRepository, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, $slug, Environment $environment): Response
+    public function page(
+        PageRepository $pageRepository,
+        SeoRepository $seoRepository,
+        Redirect301Repository $redirect301Repository,
+        $slug,
+        Environment $environment): Response
     {
         // FIND PAGE
+        $entity = 'Page';
         $page = $pageRepository->findOneBy(['slug' => $slug]);
 
         if(!$page) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => 'Akyos\CoreBundle\Entity\Page']);
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
             if($redirect301) {
                 $page = $pageRepository->find($redirect301->getObjectId());
                 $redirectUrl = $this->generateUrl('page', ['slug' => $page->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }
-        }
-
-        if(!$page) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Page )");
+            throw $this->createNotFoundException("Cette page n'existe pas! ( ${entity} )");
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Page'])->getContent() === "true") {
-            $components = $this->getDoctrine()->getRepository('Akyos\\BuilderBundle\\Entity\\Component')->findBy(['type' => 'Page', 'typeId' => $page->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
         }
-        $content = $page->getContent();
 
         // GET TEMPLATE
-        if($page->getTemplate()) {
-            $view = '/page/'.$page->getTemplate().'.html.twig';
-        } else {
-            $view = '@AkyosCore/front/content.html.twig';
-        }
-
-        // GET SEO
-        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
+        $view = $page->getTemplate() ? '/page/'.$page->getTemplate().'.html.twig' : '@AkyosCore/front/content.html.twig';
 
         $environment->addGlobal('global_page', $page);
 
         if ($page->getPublished()) {
-            // RENDER
             return $this->render($view, [
-                'seo' => $seo,
+                'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $page->getId())),
                 'page' => $page,
                 'components' => $components,
-                'content' => $content,
+                'content' => $page->getContent(),
                 'slug' => $slug
             ]);
         } else {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Page )");
+            throw $this->createNotFoundException("Cette page n'existe pas! ( ${entity} )");
         }
     }
 
     /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin|app|archive|details|details_preview|categorie).+"})
+     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
      * @param Redirect301Repository $redirect301Repository
@@ -144,53 +138,43 @@ class FrontController extends AbstractController
      * @param Environment $environment
      * @return Response
      */
-    public function pagePreview(PageRepository $pageRepository, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, $slug, Environment $environment): Response
+    public function pagePreview(
+        PageRepository $pageRepository,
+        SeoRepository $seoRepository,
+        Redirect301Repository $redirect301Repository,
+        $slug,
+        Environment $environment): Response
     {
         // FIND PAGE
+        $entity = 'Page';
         $page = $pageRepository->findOneBy(['slug' => $slug]);
 
         if(!$page) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => 'Akyos\CoreBundle\Entity\Page']);
+            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
             if($redirect301) {
                 $page = $pageRepository->find($redirect301->getObjectId());
                 $redirectUrl = $this->generateUrl('page_preview', ['slug' => $page->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }
-        }
-
-        if(!$page) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Page Preview )");
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => 'Page'])->getContent() === "true") {
-            $components = $this->getDoctrine()->getRepository('Akyos\\BuilderBundle\\Entity\\Component')->findBy(['type' => 'Page', 'typeId' => $page->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE
-        if($page->getTemplate()) {
-            $view = '/page/'.$page->getTemplate().'.html.twig';
-        } else {
-            $view = '@AkyosCore/front/content.html.twig';
-        }
-
-        // GET SEO
-        $seo = $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId()));
-
+        $view = $page->getTemplate() ? '/page/'.$page->getTemplate().'.html.twig' : '@AkyosCore/front/content.html.twig';
         $environment->addGlobal('global_page', $page);
 
-        if ($page->getPublished()) {
-            // RENDER
-            return $this->render($view, [
-                'seo' => $seo,
-                'page' => $page,
-                'components' => $components,
-                'slug' => $slug
-            ]);
-        } else {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Page Preview )");
-        }
+        return $this->render($view, [
+            'seo' => $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId())),
+            'page' => $page,
+            'components' => $components,
+            'slug' => $slug
+        ]);
     }
 
     /**
@@ -199,7 +183,9 @@ class FrontController extends AbstractController
      * @param $entitySlug
      * @return Response
      */
-    public function archive(Filesystem $filesystem, $entitySlug): Response
+    public function archive(
+        Filesystem $filesystem,
+        $entitySlug): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -225,9 +211,7 @@ class FrontController extends AbstractController
 
         if(!$entityFullName || !$entity) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
-        }
-
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfArchiveEnable', ['entity' => $entity])->getContent() === "false") {
+        } else if(!$this->coreService->checkIfArchiveEnable($entity)) {
             throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
         }
 
@@ -238,11 +222,9 @@ class FrontController extends AbstractController
         }
 
         // GET TEMPLATE
-        if($filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/archive.html.twig')) {
-            $view = '/'.$entity.'/archive.html.twig';
-        } else {
-            $view = '@AkyosCore/front/archive.html.twig';
-        }
+        $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/archive.html.twig')
+            ? "/${entity}/archive.html.twig"
+            : '@AkyosCore/front/archive.html.twig';
 
         // RENDER
         return $this->render($view, [
@@ -260,9 +242,16 @@ class FrontController extends AbstractController
      * @param SeoRepository $seoRepository
      * @param Redirect301Repository $redirect301Repository
      * @param Environment $environment
+     *
      * @return Response
      */
-    public function single(Filesystem $filesystem, $entitySlug, $slug, SeoRepository $seoRepository, Redirect301Repository $redirect301Repository, Environment $environment): Response
+    public function single(
+        Filesystem $filesystem,
+        $entitySlug,
+        $slug,
+        SeoRepository $seoRepository,
+        Redirect301Repository $redirect301Repository,
+        Environment $environment): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -286,21 +275,12 @@ class FrontController extends AbstractController
             }
         }
 
-        if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
-        }
-
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfSingleEnable', ['entity' => $entity])->getContent() === "false") {
+        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
         }
 
         // GET ELEMENT
         $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
-
-        if (property_exists($element, 'published') and !$element->getPublished()) {
-            return $this->redirectToRoute('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]);
-        }
-
         if(!$element) {
             $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
             if($redirect301) {
@@ -308,37 +288,26 @@ class FrontController extends AbstractController
                 $redirectUrl = $this->generateUrl('single', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }
-        }
-
-        if(!$element) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
+        } else if (property_exists($element, 'published') and !$element->getPublished()) {
+            return $this->redirectToRoute('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]);
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => $entity])->getContent() === "true") {
-            $components = $this->getDoctrine()->getRepository('Akyos\\BuilderBundle\\Entity\\Component')->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE
-        if($filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/single.html.twig')) {
-            $view = '/'.$entity.'/single.html.twig';
-        } else {
-            $view = '@AkyosCore/front/single.html.twig';
-        }
-
-        // GET SEO
-        $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId()));
-
-        if ($element instanceof Post && !$element->getPublished()) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
-        }
-
+        $view = $filesystem->exists($this->kernel->getProjectDir()."/templates/${entity}/single.html.twig")
+            ? "/${entity}/single.html.twig"
+            : '@AkyosCore/front/single.html.twig';
         $environment->addGlobal('global_element', $element);
 
         // RENDER
         return $this->render($view, [
-            'seo' => $seo,
+            'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId())),
             'element' => $element,
             'components' => $components,
             'entity' => $entity,
@@ -349,7 +318,7 @@ class FrontController extends AbstractController
     /**
      * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
      * @param Filesystem $filesystem
-     * @param $entitySlug
+     * @param string $entitySlug
      * @param $slug
      * @param Redirect301Repository $redirect301Repository
      * @param Environment $environment
@@ -357,7 +326,13 @@ class FrontController extends AbstractController
      *
      * @return Response
      */
-    public function singlePreview(Filesystem $filesystem, string $entitySlug, $slug, Redirect301Repository $redirect301Repository, Environment $environment, SeoRepository $seoRepository): Response
+    public function singlePreview(
+        Filesystem $filesystem,
+        string $entitySlug,
+        $slug,
+        Redirect301Repository $redirect301Repository,
+        Environment $environment,
+        SeoRepository $seoRepository): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -381,11 +356,7 @@ class FrontController extends AbstractController
             }
         }
 
-        if(!$entityFullName || !$entity) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
-        }
-
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfSingleEnable', ['entity' => $entity])->getContent() === "false") {
+        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
         }
 
@@ -399,33 +370,24 @@ class FrontController extends AbstractController
                 $redirectUrl = $this->generateUrl('single_preview', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }
-        }
-
-        if(!$element) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->forward('Akyos\\CoreBundle\\Controller\\CoreBundleController::checkIfBundleEnable', ['bundle' => 'builder', 'entity' => $entity])->getContent() === "true") {
-            $components = $this->getDoctrine()->getRepository('Akyos\\BuilderBundle\\Entity\\Component')->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE
-        if($filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/single.html.twig')) {
-            $view = '/'.$entity.'/single.html.twig';
-        } else {
-            $view = '@AkyosCore/front/single.html.twig';
-        }
-
+        $view = $filesystem->exists($this->kernel->getProjectDir()."/templates/${entity}/single.html.twig")
+            ? "/${entity}/single.html.twig"
+            : '@AkyosCore/front/single.html.twig';
         $environment->addGlobal('global_element', $element);
-
-        // GET SEO
-        $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId()));
 
         // RENDER
         return $this->render($view, [
-            'seo' => $seo,
+            'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId())),
             'element' => $element,
             'components' => $components,
             'entity' => $entity,
@@ -440,7 +402,10 @@ class FrontController extends AbstractController
      * @param $category
      * @return Response
      */
-    public function category(Filesystem $filesystem, $entitySlug, $category): Response
+    public function category(
+        Filesystem $filesystem,
+        $entitySlug,
+        $category): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $entityFullName = null;
@@ -493,11 +458,9 @@ class FrontController extends AbstractController
         $elements = $categoryObject->$getter();
 
         // GET TEMPLATE
-        if($filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/category.html.twig')) {
-            $view = '/'.$entity.'/category.html.twig';
-        } else {
-            $view = '@AkyosCore/front/category.html.twig';
-        }
+        $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/category.html.twig')
+            ? "/${entity}/category.html.twig"
+            : '@AkyosCore/front/category.html.twig';
 
         // RENDER
         return $this->render($view, [

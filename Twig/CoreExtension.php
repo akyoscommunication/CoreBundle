@@ -7,6 +7,7 @@ use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\OptionRepository;
+use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -21,13 +22,19 @@ class CoreExtension extends AbstractExtension
     private $em;
     private $router;
     private $coreOptionsRepository;
+    private $coreService;
 
-    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router, CoreOptionsRepository $coreOptionsRepository)
+    public function __construct(CoreBundleController $coreBundleController,
+                                EntityManagerInterface $entityManager,
+                                UrlGeneratorInterface $router,
+                                CoreOptionsRepository $coreOptionsRepository,
+                                CoreService $coreService)
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;
         $this->router = $router;
         $this->coreOptionsRepository = $coreOptionsRepository;
+        $this->coreService = $coreService;
     }
 
     public function getFilters(): array
@@ -97,14 +104,9 @@ class CoreExtension extends AbstractExtension
         return $value;
     }
 
-    public function hasSeo($entity)
+    public function hasSeo($entity): bool
     {
-        $hasSeo = $this->corebundleController->checkIfSeoEnable($entity)->getContent();
-        if ($hasSeo === "true") {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->coreService->checkIfSeoEnable($entity) ?: false;
     }
 
     public function getEntitySlug($entity)

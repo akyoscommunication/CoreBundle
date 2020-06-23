@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Controller;
 use Akyos\CoreBundle\Entity\MenuArea;
 use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Repository\MenuItemRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +33,7 @@ class CoreBundleController extends AbstractController
      * @param $id
      * @param Request $request
      * @param $bundle
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function changePosition($route, $el, $id, Request $request, $bundle = null)
     {
@@ -84,7 +85,7 @@ class CoreBundleController extends AbstractController
      * @param $id
      * @param $bundle
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function changeStatus($route, $el, $id, $bundle = null, Request $request)
     {
@@ -106,49 +107,6 @@ class CoreBundleController extends AbstractController
         return $this->render('@AkyosCore/layout/sidebar.html.twig', [
             'route' => $route
         ]);
-    }
-
-    public function checkIfBundleEnable($bundle, $entity)
-    {
-        if (class_exists('Akyos\BuilderBundle\AkyosBuilderBundle')) {
-            $builderOptions = $this->getDoctrine()->getRepository('Akyos\BuilderBundle\Entity\BuilderOptions')->findAll();
-            if ($builderOptions) {
-                if (preg_grep('/'.$entity.'$/i', $builderOptions[0]->getHasBuilderEntities())) {
-                    return new Response("true");
-                } else return new Response("false");
-            } else return new Response("false");
-        }
-        return new Response("false");
-    }
-
-    public function checkIfSeoEnable($entity)
-    {
-        $coreOptions = $this->getDoctrine()->getRepository('Akyos\CoreBundle\Entity\CoreOptions')->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasSeoEntities())) {
-                return new Response("true");
-            } else return new Response("false");
-        } else return new Response("false");
-    }
-
-    public function checkIfArchiveEnable($entity)
-    {
-        $coreOptions = $this->getDoctrine()->getRepository('Akyos\CoreBundle\Entity\CoreOptions')->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasArchiveEntities())) {
-                return new Response("true");
-            } else return new Response("false");
-        } else return new Response("false");
-    }
-
-    public function checkIfSingleEnable($entity)
-    {
-        $coreOptions = $this->getDoctrine()->getRepository('Akyos\CoreBundle\Entity\CoreOptions')->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasSingleEntities())) {
-                return new Response("true");
-            } else return new Response("false");
-        } else return new Response("false");
     }
 
     public function renderMenu($menu, $page)

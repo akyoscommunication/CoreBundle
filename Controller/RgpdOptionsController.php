@@ -19,11 +19,11 @@ class RgpdOptionsController extends AbstractController
     /**
      * @Route("/", name="", methods={"GET", "POST"})
      * @param RgpdOptionsRepository $rgpdOptionsRepository
-     * @param PageRepository $pageRepository
      * @param Request $request
+     *
      * @return Response
      */
-    public function index(RgpdOptionsRepository $rgpdOptionsRepository, PageRepository $pageRepository, Request $request): Response
+    public function index(RgpdOptionsRepository $rgpdOptionsRepository, Request $request): Response
     {
         $rgpdOption = $rgpdOptionsRepository->findAll();
         if(!$rgpdOption) {
