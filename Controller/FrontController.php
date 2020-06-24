@@ -74,7 +74,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
+     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
      * @param $slug
      * @param FrontControllerService $frontControllerService
      *
@@ -84,11 +84,11 @@ class FrontController extends AbstractController
         $slug,
         FrontControllerService $frontControllerService): Response
     {
-        return $frontControllerService->pageAndPreview($slug, 'page');
+        return new Response($frontControllerService->pageAndPreview($slug, 'page'));
     }
 
     /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
+     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"})
      * @param $slug
      * @param FrontControllerService $frontControllerService
      *
@@ -98,7 +98,7 @@ class FrontController extends AbstractController
         $slug,
         FrontControllerService $frontControllerService): Response
     {
-        return $frontControllerService->pageAndPreview($slug, 'page_preview');
+        return new Response($frontControllerService->pageAndPreview($slug, 'page_preview'));
     }
 
     /**
@@ -156,7 +156,7 @@ class FrontController extends AbstractController
         $slug,
         FrontControllerService $frontControllerService): Response
     {
-        return $frontControllerService->singleAndPreview($entitySlug, $slug, 'single');
+        return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single'));
     }
 
     /**
@@ -173,7 +173,7 @@ class FrontController extends AbstractController
         $slug,
         FrontControllerService $frontControllerService): Response
     {
-        return $frontControllerService->singleAndPreview($entitySlug, $slug, 'single_preview');
+        return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single_preview'));
     }
 
     /**
