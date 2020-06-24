@@ -9,6 +9,7 @@ use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Entity\Redirect301;
 use Akyos\CoreBundle\Entity\Seo;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
