@@ -55,4 +55,31 @@ class CoreService
             } else return false;
         } else return false;
     }
+
+    public function getEntityAndFullString(string $entitySlug) {
+        $entityFullName = null;
+        $entity = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
+                try {
+                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
+                    $constant_value = $constant_reflex->getValue();
+                } catch (\ReflectionException $e) {
+                    $constant_value = null;
+                }
+                if(null !== $constant_value) {
+                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
+                        $entityFullName = $m->getName();
+                        $entity = array_reverse(explode('\\', $entityFullName))[0];
+                    }
+                }
+            }
+        }
+
+        return [
+            $entityFullName,
+            $entity
+        ];
+    }
 }

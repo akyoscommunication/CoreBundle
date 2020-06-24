@@ -5,15 +5,13 @@ namespace Akyos\CoreBundle\Controller;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\BuilderBundle\Entity\Component;
-use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
-use Akyos\CoreBundle\Repository\Redirect301Repository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
+use Akyos\CoreBundle\Services\FrontControllerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -77,137 +75,47 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
-     * @param PageRepository $pageRepository
-     * @param SeoRepository $seoRepository
-     * @param Redirect301Repository $redirect301Repository
      * @param $slug
-     * @param Environment $environment
+     * @param FrontControllerService $frontControllerService
+     *
      * @return Response
      */
     public function page(
-        PageRepository $pageRepository,
-        SeoRepository $seoRepository,
-        Redirect301Repository $redirect301Repository,
         $slug,
-        Environment $environment): Response
+        FrontControllerService $frontControllerService): Response
     {
-        // FIND PAGE
-        $entity = 'Page';
-        $page = $pageRepository->findOneBy(['slug' => $slug]);
-
-        if(!$page) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
-            if($redirect301) {
-                $page = $pageRepository->find($redirect301->getObjectId());
-                $redirectUrl = $this->generateUrl('page', ['slug' => $page->getSlug()]);
-                return new RedirectResponse($redirectUrl, 301);
-            }
-            throw $this->createNotFoundException("Cette page n'existe pas! ( ${entity} )");
-        }
-
-        // GET COMPONENTS OR CONTENT
-        $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
-        }
-
-        // GET TEMPLATE
-        $view = $page->getTemplate() ? '/page/'.$page->getTemplate().'.html.twig' : '@AkyosCore/front/content.html.twig';
-
-        $environment->addGlobal('global_page', $page);
-
-        if ($page->getPublished()) {
-            return $this->render($view, [
-                'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $page->getId())),
-                'page' => $page,
-                'components' => $components,
-                'content' => $page->getContent(),
-                'slug' => $slug
-            ]);
-        } else {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( ${entity} )");
-        }
+        return $frontControllerService->pageAndPreview($slug, 'page');
     }
 
     /**
      * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
-     * @param PageRepository $pageRepository
-     * @param SeoRepository $seoRepository
-     * @param Redirect301Repository $redirect301Repository
      * @param $slug
-     * @param Environment $environment
+     * @param FrontControllerService $frontControllerService
+     *
      * @return Response
      */
     public function pagePreview(
-        PageRepository $pageRepository,
-        SeoRepository $seoRepository,
-        Redirect301Repository $redirect301Repository,
         $slug,
-        Environment $environment): Response
+        FrontControllerService $frontControllerService): Response
     {
-        // FIND PAGE
-        $entity = 'Page';
-        $page = $pageRepository->findOneBy(['slug' => $slug]);
-
-        if(!$page) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
-            if($redirect301) {
-                $page = $pageRepository->find($redirect301->getObjectId());
-                $redirectUrl = $this->generateUrl('page_preview', ['slug' => $page->getSlug()]);
-                return new RedirectResponse($redirectUrl, 301);
-            }
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Page Preview )");
-        }
-
-        // GET COMPONENTS OR CONTENT
-        $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
-        }
-
-        // GET TEMPLATE
-        $view = $page->getTemplate() ? '/page/'.$page->getTemplate().'.html.twig' : '@AkyosCore/front/content.html.twig';
-        $environment->addGlobal('global_page', $page);
-
-        return $this->render($view, [
-            'seo' => $seoRepository->findOneBy(array('type' => 'Page', 'typeId' => $page->getId())),
-            'page' => $page,
-            'components' => $components,
-            'slug' => $slug
-        ]);
+        return $frontControllerService->pageAndPreview($slug, 'page_preview');
     }
 
     /**
      * @Route("/archive/{entitySlug}", name="archive", methods={"GET","POST"})
      * @param Filesystem $filesystem
      * @param $entitySlug
+     * @param CoreService $coreService
+     *
      * @return Response
      */
     public function archive(
         Filesystem $filesystem,
-        $entitySlug): Response
+        $entitySlug,
+        CoreService $coreService): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
-        $entityFullName = null;
-        $entity = null;
-        $em =$this->getDoctrine()->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                try {
-                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
-                    $constant_value = $constant_reflex->getValue();
-                } catch (\ReflectionException $e) {
-                    $constant_value = null;
-                }
-                if(null !== $constant_value) {
-                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                        $entityFullName = $m->getName();
-                        $entity = array_reverse(explode('\\', $entityFullName))[0];
-                    }
-                }
-            }
-        }
+        [$entityFullName, $entity] = $coreService->getEntityAndFullString($entitySlug);
 
         if(!$entityFullName || !$entity) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
@@ -236,163 +144,36 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
-     * @param Filesystem $filesystem
      * @param $entitySlug
      * @param $slug
-     * @param SeoRepository $seoRepository
-     * @param Redirect301Repository $redirect301Repository
-     * @param Environment $environment
+     *
+     * @param CoreService $coreService
      *
      * @return Response
      */
     public function single(
-        Filesystem $filesystem,
         $entitySlug,
         $slug,
-        SeoRepository $seoRepository,
-        Redirect301Repository $redirect301Repository,
-        Environment $environment): Response
+        CoreService $coreService): Response
     {
-        // GET ENTITY NAME AND FULLNAME FROM SLUG
-        $entityFullName = null;
-        $entity = null;
-        $em =$this->getDoctrine()->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                try {
-                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
-                    $constant_value = $constant_reflex->getValue();
-                } catch (\ReflectionException $e) {
-                    $constant_value = null;
-                }
-                if(null !== $constant_value) {
-                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                        $entityFullName = $m->getName();
-                        $entity = array_reverse(explode('\\', $entityFullName))[0];
-                    }
-                }
-            }
-        }
-
-        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
-        }
-
-        // GET ELEMENT
-        $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
-        if(!$element) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
-            if($redirect301) {
-                $element = $this->getDoctrine()->getRepository($entityFullName)->find($redirect301->getObjectId());
-                $redirectUrl = $this->generateUrl('single', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
-                return new RedirectResponse($redirectUrl, 301);
-            }
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail )");
-        } else if (property_exists($element, 'published') and !$element->getPublished()) {
-            return $this->redirectToRoute('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]);
-        }
-
-        // GET COMPONENTS OR CONTENT
-        $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
-        }
-
-        // GET TEMPLATE
-        $view = $filesystem->exists($this->kernel->getProjectDir()."/templates/${entity}/single.html.twig")
-            ? "/${entity}/single.html.twig"
-            : '@AkyosCore/front/single.html.twig';
-        $environment->addGlobal('global_element', $element);
-
-        // RENDER
-        return $this->render($view, [
-            'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId())),
-            'element' => $element,
-            'components' => $components,
-            'entity' => $entity,
-            'slug' => $slug
-        ]);
+        return $coreService->singleAndPreview($entitySlug, $slug, 'single');
     }
 
     /**
      * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
-     * @param Filesystem $filesystem
      * @param string $entitySlug
      * @param $slug
-     * @param Redirect301Repository $redirect301Repository
-     * @param Environment $environment
-     * @param SeoRepository $seoRepository
+     *
+     * @param CoreService $coreService
      *
      * @return Response
      */
     public function singlePreview(
-        Filesystem $filesystem,
         string $entitySlug,
         $slug,
-        Redirect301Repository $redirect301Repository,
-        Environment $environment,
-        SeoRepository $seoRepository): Response
+        CoreService $coreService): Response
     {
-        // GET ENTITY NAME AND FULLNAME FROM SLUG
-        $entityFullName = null;
-        $entity = null;
-        $em =$this->getDoctrine()->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                try {
-                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
-                    $constant_value = $constant_reflex->getValue();
-                } catch (\ReflectionException $e) {
-                    $constant_value = null;
-                }
-                if(null !== $constant_value) {
-                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                        $entityFullName = $m->getName();
-                        $entity = array_reverse(explode('\\', $entityFullName))[0];
-                    }
-                }
-            }
-        }
-
-        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
-        }
-
-        // GET ELEMENT
-        $element = $this->getDoctrine()->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
-
-        if(!$element) {
-            $redirect301 = $redirect301Repository->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
-            if($redirect301) {
-                $element = $this->getDoctrine()->getRepository($entityFullName)->find($redirect301->getObjectId());
-                $redirectUrl = $this->generateUrl('single_preview', ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
-                return new RedirectResponse($redirectUrl, 301);
-            }
-            throw $this->createNotFoundException("Cette page n'existe pas! ( Détail Preview )");
-        }
-
-        // GET COMPONENTS OR CONTENT
-        $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->getDoctrine()->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => true, 'parentComponent' => null], ['position' => 'ASC']);
-        }
-
-        // GET TEMPLATE
-        $view = $filesystem->exists($this->kernel->getProjectDir()."/templates/${entity}/single.html.twig")
-            ? "/${entity}/single.html.twig"
-            : '@AkyosCore/front/single.html.twig';
-        $environment->addGlobal('global_element', $element);
-
-        // RENDER
-        return $this->render($view, [
-            'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $element->getId())),
-            'element' => $element,
-            'components' => $components,
-            'entity' => $entity,
-            'slug' => $slug
-        ]);
+        return $coreService->singleAndPreview($entitySlug, $slug, 'single_preview');
     }
 
     /**
@@ -400,34 +181,19 @@ class FrontController extends AbstractController
      * @param Filesystem $filesystem
      * @param $entitySlug
      * @param $category
+     * @param CoreService $coreService
+     *
      * @return Response
      */
     public function category(
         Filesystem $filesystem,
         $entitySlug,
-        $category): Response
+        $category,
+        CoreService $coreService): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
-        $entityFullName = null;
-        $entity = null;
-        $em =$this->getDoctrine()->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                try {
-                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
-                    $constant_value = $constant_reflex->getValue();
-                } catch (\ReflectionException $e) {
-                    $constant_value = null;
-                }
-                if(null !== $constant_value) {
-                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                        $entityFullName = $m->getName();
-                        $entity = array_reverse(explode('\\', $entityFullName))[0];
-                    }
-                }
-            }
-        }
+        $meta = $this->getDoctrine()->getManager()->getMetadataFactory()->getAllMetadata();
+        [$entityFullName, $entity] = $coreService->getEntityAndFullString($entitySlug);
 
         if(!$entityFullName || !$entity) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
