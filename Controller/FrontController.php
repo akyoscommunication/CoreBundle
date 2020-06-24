@@ -147,16 +147,16 @@ class FrontController extends AbstractController
      * @param $entitySlug
      * @param $slug
      *
-     * @param CoreService $coreService
+     * @param FrontControllerService $frontControllerService
      *
      * @return Response
      */
     public function single(
         $entitySlug,
         $slug,
-        CoreService $coreService): Response
+        FrontControllerService $frontControllerService): Response
     {
-        return $coreService->singleAndPreview($entitySlug, $slug, 'single');
+        return $frontControllerService->singleAndPreview($entitySlug, $slug, 'single');
     }
 
     /**
@@ -164,16 +164,16 @@ class FrontController extends AbstractController
      * @param string $entitySlug
      * @param $slug
      *
-     * @param CoreService $coreService
+     * @param FrontControllerService $frontControllerService
      *
      * @return Response
      */
     public function singlePreview(
         string $entitySlug,
         $slug,
-        CoreService $coreService): Response
+        FrontControllerService $frontControllerService): Response
     {
-        return $coreService->singleAndPreview($entitySlug, $slug, 'single_preview');
+        return $frontControllerService->singleAndPreview($entitySlug, $slug, 'single_preview');
     }
 
     /**
