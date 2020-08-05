@@ -56,7 +56,7 @@ then
 	echo "Downloading Symfony..."
 	line
 
-	symfony new $projectName --full --version=^$symfonyVersion
+	symfony new $projectName --full --version=$symfonyVersion
 fi
 
 	cd $path/$projectName 
