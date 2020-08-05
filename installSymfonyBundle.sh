@@ -41,8 +41,8 @@ current
 echo "2 - Install Symfony"
 line
 
-read -e -p "Wich version do you want to install (default 4.4): " symfonyVersion
-symfonyVersion="${symfonyVersion:=4.4}"
+read -e -p "Wich version do you want to install (default lts): " symfonyVersion
+symfonyVersion="${symfonyVersion:=lts}"
 line
 
 read -e -p "How do you want to call your project (default defaultName): " projectName
@@ -56,7 +56,7 @@ then
 	echo "Downloading Symfony..."
 	line
 
-	composer create-project symfony/website-skeleton:^$symfonyVersion $projectName
+	symfony new $projectName --version=^$symfonyVersion
 fi
 
 	cd $path/$projectName 
