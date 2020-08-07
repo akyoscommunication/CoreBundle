@@ -39,8 +39,6 @@ var tarteaucitron = {
         var origOpen;
 
         tarteaucitron.parameters = params;
-        console.log(tarteaucitron.parameters);
-        console.log(1);
         if (alreadyLaunch === 0) {
             alreadyLaunch = 1;
             if (window.addEventListener) {
@@ -204,8 +202,6 @@ var tarteaucitron = {
         }
     },
     "load": function () {
-        console.log(tarteaucitron.parameters);
-        console.log(2);
         "use strict";
         var cdn = tarteaucitron.cdn,
             language = tarteaucitron.getLanguage(),
