@@ -52,6 +52,10 @@ class MenuItemType extends AbstractType
                 'label' => 'Votre élément est-il le listing des éléments du type choisi ?',
                 'help' => '( Affiche en enfant la liste des Type/Entité choisie )'
             ])
+            ->add('isCategoryList', null, [
+                'label' => 'Votre élément est-il le listing des catégories du type choisi ?',
+                'help' => '( Affiche en enfant la liste des categories du type choisi )'
+            ])
             ->add('menuItemParent', null, [
                 'query_builder' => function (MenuItemRepository $er) {
                     return $er->createQueryBuilder('m')
