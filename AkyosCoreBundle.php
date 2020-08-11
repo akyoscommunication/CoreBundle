@@ -9,6 +9,9 @@ class AkyosCoreBundle extends Bundle
 {
     public function getContainerExtension()
     {
-        return new CoreBundleExtension();
+        if (null === $this->extension) {
+            $this->extension = new CoreBundleExtension();
+        }
+        return $this->extension;
     }
 }
