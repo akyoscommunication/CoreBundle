@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Form;
+namespace Akyos\CoreBundle\Form\Type\Post;
 
 use Akyos\CoreBundle\Entity\Post;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
@@ -19,10 +19,10 @@ class PostType extends AbstractType
                 'label' => 'Titre',
                 'help' => 'Insérez votre titre ici',
             ])
-//            ->add('slug', null, [
-//                'label' => 'Slug de l\'article',
-//                'help' => '( mon-slug )',
-//            ])
+            ->add('slug', null, [
+                'label' => "Slug de l'article",
+                'help' => '( mon-slug )',
+            ])
             ->add('content', CKEditorType::class, [
                 'label' => 'Contenu de l\'article',
                 'required'    => false,

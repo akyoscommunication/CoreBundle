@@ -5,13 +5,14 @@ namespace Akyos\CoreBundle\Controller;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\CoreBundle\Entity\Page;
-use Akyos\CoreBundle\Form\PageType;
+use Akyos\CoreBundle\Form\Handler\CrudHandler;
+use Akyos\CoreBundle\Form\Type\Page\NewPageType;
+use Akyos\CoreBundle\Form\Type\Page\PageType;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,13 +23,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class PageController extends AbstractController
 {
     /**
-     * @Route("/", name="index", methods={"GET"})
+     * @Route("/", name="index", methods={"GET", "POST"})
      * @param PageRepository $pageRepository
      * @param PaginatorInterface $paginator
      * @param Request $request
+     * @param CrudHandler $crudHandler
+     *
      * @return Response
      */
-    public function index(PageRepository $pageRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PageRepository $pageRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
     {
         $els = $paginator->paginate(
             $pageRepository->createQueryBuilder('a')->getQuery(),
@@ -36,12 +39,22 @@ class PageController extends AbstractController
             12
         );
 
+        $page = new Page();
+        $page->setPublished(false);
+        $page->setPosition($pageRepository->count([]));
+        $newPageForm = $this->createForm(NewPageType::class, $page);
+
+        if ($crudHandler->new($newPageForm, $request)) {
+            return $this->redirectToRoute('page_edit', ['id' => $page->getId()]);
+        }
+
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,
             'title' => 'Page',
             'entity' => 'Page',
             'view' => 'page',
             'route' => 'page',
+            'formModal' => $newPageForm->createView(),
             'bundle' => 'CoreBundle',
             'fields' => array(
                 'ID' => 'Id',
@@ -64,7 +77,7 @@ class PageController extends AbstractController
         $page = new Page();
         $page->setPublished(false);
         $page->setTitle("Nouvelle page");
-        $page->setPosition($pageRepository->count(array()));
+        $page->setPosition($pageRepository->count([]));
         $entityManager->persist($page);
         $entityManager->flush();
 
@@ -99,9 +112,9 @@ class PageController extends AbstractController
             }
             $em->flush();
 
-            return new JsonResponse('valid');
+            return $this->redirect($request->getUri());
         } elseif($form->isSubmitted() && !($form->isValid())) {
-            return new JsonResponse('not valid');
+            throw $this->createNotFoundException("Formulaire invalide.");
         }
 
         return $this->render('@AkyosCore/crud/edit.html.twig', [
@@ -139,7 +152,7 @@ class PageController extends AbstractController
             $entityManager->flush();
 
             $position = 0;
-            foreach ($pageRepository->findBy(array(), array('position' => 'ASC')) as $el) {
+            foreach ($pageRepository->findBy([], ['position' => 'ASC']) as $el) {
                 $el->setPosition($position);
                 $position++;
             }

@@ -5,14 +5,15 @@ namespace Akyos\CoreBundle\Controller;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\CoreBundle\Entity\Post;
-use Akyos\CoreBundle\Form\PostType;
+use Akyos\CoreBundle\Form\Handler\CrudHandler;
+use Akyos\CoreBundle\Form\Type\Post\PostType;
+use Akyos\CoreBundle\Form\Type\Post\NewPostType;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PostRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,15 +24,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     /**
-     * @Route("/", name="index", methods={"GET"})
+     * @Route("/", name="index", methods={"GET", "POST"})
      * @param PostRepository $postRepository
      * @param CoreOptionsRepository $coreOptionsRepository
      * @param PaginatorInterface $paginator
      * @param Request $request
+     * @param CrudHandler $crudHandler
      *
      * @return Response
      */
-    public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
     {
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
@@ -46,19 +48,29 @@ class PostController extends AbstractController
             12
         );
 
+        $post = new Post();
+        $post->setPublished(false);
+        $post->setPosition($postRepository->count([]));
+        $newPostForm = $this->createForm(NewPostType::class, $post);
+
+        if ($crudHandler->new($newPostForm, $request)) {
+            return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
+        }
+
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,
             'title' => 'Article',
             'entity' => 'Post',
             'view' => 'single',
             'route' => 'post',
+            'formModal' => $newPostForm->createView(),
             'bundle' => 'CoreBundle',
-            'fields' => array(
+            'fields' => [
                 'Title' => 'Title',
                 'ID' => 'Id',
                 'Position' => 'Position',
                 'Status' => 'Published',
-            ),
+            ],
         ]);
     }
 
@@ -94,6 +106,7 @@ class PostController extends AbstractController
      * @param Request $request
      * @param Post $post
      * @param CoreOptionsRepository $coreOptionsRepository
+     * @param CoreService $coreService
      *
      * @return Response
      */
@@ -123,7 +136,7 @@ class PostController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            return new JsonResponse('valid');
+            return $this->redirect($request->getUri());
         }
 
         return $this->render('@AkyosCore/crud/edit.html.twig', [
@@ -174,7 +187,7 @@ class PostController extends AbstractController
             $entityManager->flush();
 
             $position = 0;
-            foreach ($postRepository->findBy(array(), array('position' => 'ASC')) as $el) {
+            foreach ($postRepository->findBy([], ['position' => 'ASC']) as $el) {
                 $el->setPosition($position);
                 $position++;
             }

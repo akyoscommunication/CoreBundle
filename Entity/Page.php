@@ -29,7 +29,7 @@ class Page
     private $title;
 
     /**
-     * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @SlugRedirect
      * @ORM\Column(type="string", length=255)
      */
