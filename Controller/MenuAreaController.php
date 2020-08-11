@@ -18,6 +18,11 @@ class MenuAreaController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param MenuAreaRepository $menuAreaRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(MenuAreaRepository $menuAreaRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -44,6 +49,9 @@ class MenuAreaController extends AbstractController
 
     /**
      * @Route("/new", name="new", methods={"GET","POST"})
+     * @param Request $request
+     *
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -70,6 +78,10 @@ class MenuAreaController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param MenuArea $menuArea
+     *
+     * @return Response
      */
     public function edit(Request $request, MenuArea $menuArea): Response
     {
@@ -93,6 +105,10 @@ class MenuAreaController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param MenuArea $menuArea
+     *
+     * @return Response
      */
     public function delete(Request $request, MenuArea $menuArea): Response
     {

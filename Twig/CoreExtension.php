@@ -7,6 +7,7 @@ use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\OptionRepository;
+use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -21,13 +22,19 @@ class CoreExtension extends AbstractExtension
     private $em;
     private $router;
     private $coreOptionsRepository;
+    private $coreService;
 
-    public function __construct(CoreBundleController $coreBundleController, EntityManagerInterface $entityManager, UrlGeneratorInterface $router, CoreOptionsRepository $coreOptionsRepository)
+    public function __construct(CoreBundleController $coreBundleController,
+                                EntityManagerInterface $entityManager,
+                                UrlGeneratorInterface $router,
+                                CoreOptionsRepository $coreOptionsRepository,
+                                CoreService $coreService)
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;
         $this->router = $router;
         $this->coreOptionsRepository = $coreOptionsRepository;
+        $this->coreService = $coreService;
     }
 
     public function getFilters(): array
@@ -68,6 +75,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getElementSlug', [$this, 'getElementSlug']),
             new TwigFunction('getElement', [$this, 'getElement']),
             new TwigFunction('getElementsList', [$this, 'getElementsList']),
+            new TwigFunction('getCategoryList', [$this, 'getCategoryList']),
             new TwigFunction('getPermalink', [$this, 'getPermalink']),
             new TwigFunction('getPermalinkById', [$this, 'getPermalinkById']),
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
@@ -97,14 +105,9 @@ class CoreExtension extends AbstractExtension
         return $value;
     }
 
-    public function hasSeo($entity)
+    public function hasSeo($entity): bool
     {
-        $hasSeo = $this->corebundleController->checkIfSeoEnable($entity)->getContent();
-        if ($hasSeo === "true") {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->coreService->checkIfSeoEnable($entity) ?: false;
     }
 
     public function getEntitySlug($entity)
@@ -137,7 +140,7 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
                 if(preg_match('/^'.$entity.'$/i', $entityName)) {
                     $entityFullName = $m->getName();
                 }
@@ -259,6 +262,39 @@ class CoreExtension extends AbstractExtension
 
         if(preg_match('/Category/i', $type)) {
             $entity = str_replace('Category', '', $type);
+        }
+
+        $entityFullName = null;
+        $entityFields = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            $entityName = explode('\\', $m->getName());
+            $entityName = $entityName[count($entityName)-1];
+            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
+                if(preg_match('/^'.$type.'$/i', $entityName)) {
+                    $entityFullName = $m->getName();
+                    $entityFields = $m->getFieldNames();
+                }
+            }
+        }
+
+        if($entityFullName) {
+            if(in_array('position', $entityFields, true)) {
+                $elements = $this->em->getRepository($entityFullName)->findBy([], ['position' => 'ASC']);
+            } else {
+                $elements = $this->em->getRepository($entityFullName)->findAll();
+            }
+        }
+
+        return ($elements ?? null);
+    }
+
+    public function getCategoryList($type)
+    {
+        if ($type == null) {
+            return false;
+        }else{
+            $type = $type.'Category';
         }
 
         $entityFullName = null;

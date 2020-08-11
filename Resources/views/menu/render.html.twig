@@ -4,9 +4,10 @@
     <ul class="nav">
         {% if menu is not null %}
             {% for menuItem in menu.menu.menuItems|filter(menuItem => menu.menu is not null and menuItem.menuItemParent is null) %}
-                <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList ? 'nav-item-parent' : '' }} {{ currentPage is same as(getElement(menuItem.type, menuItem.idType)) or checkChildActive(menuItem, currentPage) or ( menuItem.isList and matchSameEntity(getEntityNameSpace(menuItem.type), currentPage) ) or isArchive(getEntityNameSpace(menuItem.type), currentPage) ? 'active' : '' }}">
+{#                {{ dump(entity) }}#}
+                <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList or menuItem.isCategoryList ? 'nav-item-parent' : '' }} {{ currentPage is same as(getElement(menuItem.type, menuItem.idType)) or checkChildActive(menuItem, currentPage) or ( menuItem.isList and matchSameEntity(getEntityNameSpace(menuItem.type), currentPage) ) or ( menuItem.isCategoryList and matchSameEntity(getEntityNameSpace(menuItem.type~'Category'), currentPage) ) or isArchive(getEntityNameSpace(menuItem.type), currentPage) ? 'active' : '' }}">
                     {% if not menuItem.isParent %}
-                        {% if menuItem.isList %}
+                        {% if menuItem.isList or menuItem.isCategoryList %}
                             {% if menuItem.url == null %}
                                 <a class="nav-item__link" href="{{ path('archive', {'entitySlug': getEntitySlug(menuItem.type)}) }}"  {{ menuItem.target == "_blank" ? 'target="_blank" rel="noopener noreferrer"' : "" }}>{{ menuItem.title|raw }}</a>
                             {% elseif menuItem.url == "http://#" %}
@@ -61,6 +62,15 @@
             {% for element in getElementsList(menuItem.type) %}
                 <li class="nav-{{ depthToClasse }}-item {{ (currentPage == element) ? 'active' : '' }}">
                     <a href="{{ path('single', {'entitySlug' : getEntitySlug(menuItem.type), 'slug' : element.slug}) }}" class="nav-{{ depthToClasse }}-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if menuItem.isCategoryList %}
+        <ul class="nav-{{ depthToClasse }}">
+            {% for element in getCategoryList(menuItem.type) %}
+                <li class="nav-{{ depthToClasse }}-item {{ (currentPage == element) ? 'active' : '' }}">
+                    <a href="{{ path('taxonomy', {'entitySlug' : getEntitySlug(menuItem.type~'Category'), 'category' : element.slug}) }}" class="nav-{{ depthToClasse }}-item__link" >{{ element.title is defined ? element.title : (element.name is defined ? element.name : element.slug) }}</a>
                 </li>
             {% endfor %}
         </ul>

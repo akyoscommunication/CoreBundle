@@ -86,6 +86,11 @@ class MenuItem
      */
     private $target;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCategoryList;
+
     public function __construct()
     {
         $this->menuItemsChilds = new ArrayCollection();
@@ -260,6 +265,18 @@ class MenuItem
     public function setTarget(?string $target): self
     {
         $this->target = $target;
+
+        return $this;
+    }
+
+    public function getIsCategoryList(): ?bool
+    {
+        return $this->isCategoryList;
+    }
+
+    public function setIsCategoryList(?bool $isCategoryList): self
+    {
+        $this->isCategoryList = $isCategoryList;
 
         return $this;
     }
