@@ -1,11 +1,12 @@
 <?php
 
-namespace Akyos\CoreBundle\Form;
+namespace Akyos\CoreBundle\Form\Type\Page;
 
 use Akyos\CoreBundle\Entity\Page;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,11 +15,21 @@ class PageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Page $page */
+        $page = $builder->getData();
+
         $builder
-            ->add('title', null, [
+            ->add('title', TextType::class, [
                 'label' => 'Titre de la page',
-            ])
-            ->add('published', null, [
+            ]);
+        if ($page->getSlug()) {
+            $builder
+                ->add('slug', TextType::class, [
+                    'label' => 'Slug de la page',
+                ]);
+        }
+        $builder
+            ->add('published', CheckboxType::class, [
                 'label' => 'Publiée ?',
             ])
             ->add('template', TextType::class, [

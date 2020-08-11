@@ -17,6 +17,10 @@ class CoreOptionsController extends AbstractController
 {
     /**
      * @Route("/", name="", methods={"GET", "POST"})
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(CoreOptionsRepository $coreOptionsRepository, Request $request): Response
     {

@@ -33,11 +33,15 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/", name="menu_index", methods={"GET"})
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function index(MenuRepository $menuRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $els = $paginator->paginate(
-            $menuRepository->createQueryBuilder('a')->getQuery(),
+            $this->menuRepository->createQueryBuilder('a')->getQuery(),
             $request->query->getInt('page', 1),
             12
         );
@@ -57,8 +61,11 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/new", name="menu_new", methods={"GET","POST"})
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function new(Request $request, MenuItemRepository $menuItemRepository): Response
+    public function new(Request $request): Response
     {
         $menu = new Menu();
         $form = $this->createForm(MenuType::class, $menu);
@@ -82,6 +89,11 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="menu_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Menu $menu
+     * @param MenuItemRepository $menuItemRepository
+     *
+     * @return Response
      */
     public function edit(Request $request, Menu $menu, MenuItemRepository $menuItemRepository): Response
     {
@@ -123,6 +135,10 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/{id}", name="menu_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Menu $menu
+     *
+     * @return Response
      */
     public function delete(Request $request, Menu $menu): Response
     {
@@ -158,7 +174,7 @@ class MenuController extends AbstractController
                 $this->getDoctrine()->getManager()->persist($menuParentItem);
                 if (!empty($item['childs'])) {
                     foreach ($item['childs'] as $subKey => $subItem) {
-                        $this->subItemChangePostion($subKey, $subItem, $menuParentItem);
+                        $this->subItemChangePosition($subKey, $subItem, $menuParentItem);
                     }
                 }
             }
@@ -168,7 +184,7 @@ class MenuController extends AbstractController
         return new JsonResponse('valid');
     }
 
-    public function subItemChangePostion ($key, $item, $parent)
+    public function subItemChangePosition($key, $item, $parent)
     {
         $menuChildItem = $this->menuItemRepository->findOneBy(array('id' => $item));
         $menuChildItem->setPosition($key);
@@ -176,7 +192,7 @@ class MenuController extends AbstractController
         $this->getDoctrine()->getManager()->persist($menuChildItem);
         if (!empty($item['childs'])) {
             foreach ($item['childs'] as $subKey => $subItem) {
-                $this->subItemChangePostion($subKey, $subItem, $menuChildItem);
+                $this->subItemChangePosition($subKey, $subItem, $menuChildItem);
             }
         }
     }

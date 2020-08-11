@@ -43,6 +43,12 @@ class SeoController extends AbstractController
 
     /**
      * @Route("/submit/{type}/{typeId}", name="submit", methods={"POST"}, options={"expose"=true})
+     * @param $type
+     * @param $typeId
+     * @param Request $request
+     * @param SeoRepository $seoRepository
+     *
+     * @return JsonResponse
      */
     public function submit($type, $typeId, Request $request, SeoRepository $seoRepository)
     {

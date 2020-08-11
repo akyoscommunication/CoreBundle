@@ -19,6 +19,12 @@ class MenuItemController extends AbstractController
 {
     /**
      * @Route("/{id}/edit/{menu}", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param MenuItem $menuItem
+     * @param $menu
+     * @param MenuRepository $menuRepository
+     *
+     * @return Response
      */
     public function edit(Request $request, MenuItem $menuItem, $menu, MenuRepository $menuRepository): Response
     {
@@ -40,6 +46,10 @@ class MenuItemController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param MenuItem $menuItem
+     *
+     * @return Response
      */
     public function delete(Request $request, MenuItem $menuItem): Response
     {
