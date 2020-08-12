@@ -18,7 +18,7 @@
                     </li>
                     {# BUNDLES #}
                     {{ render(controller(
-                        'Akyos\\CoreBundle\\Controller\\CrudController::getBundleTab',
+                        'Akyos\\CoreBundle\\Controller\\Back\\CrudController::getBundleTab',
                         { 'objectType': entity }
                     )) }}
                     {# SEO #}
@@ -42,14 +42,14 @@
                     </div>
                     {# BUNDLES #}
                     {{ render(controller(
-                        'Akyos\\CoreBundle\\Controller\\CrudController::getBundleTabContent',
+                        'Akyos\\CoreBundle\\Controller\\Back\\CrudController::getBundleTabContent',
                         { 'objectType': entity, 'objectId': el.id }
                     )) }}
                     {# SEO #}
                     {% if hasSeo(entity) %}
                         <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="seo-tab">
                             {{ render(controller(
-                                'Akyos\\CoreBundle\\Controller\\SeoController::index',
+                                'Akyos\\CoreBundle\\Controller\\Back\\SeoController::index',
                                 { 'type': entity, 'typeId': el.id, 'route' : route }
                             )) }}
                         </div>

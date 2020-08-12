@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Back;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

@@ -8,11 +8,12 @@ use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\MenuItemRepository")
  */
-class MenuItem
+class MenuItem implements Translatable
 {
     use TimestampableEntity;
 
@@ -25,36 +26,43 @@ class MenuItem
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Translatable
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $url;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Translatable
      */
     private $isParent;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $type;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Translatable
      */
     private $idType;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Translatable
      */
     private $isList;
 
     /**
      * @ORM\Column(type="integer")
+     * @Gedmo\Translatable
      */
     private $position;
 
@@ -77,17 +85,20 @@ class MenuItem
 
     /**
      * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $target;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Translatable
      */
     private $isCategoryList;
 

@@ -9,11 +9,14 @@ use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Entity\Redirect301;
 use Akyos\CoreBundle\Entity\Seo;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Translatable\Entity\Translation;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 class FrontControllerService
@@ -29,8 +32,21 @@ class FrontControllerService
     private $environment;
     /** @var CoreService */
     private $coreService;
+    /** @var RequestStack */
+    private $request;
+    /** @var AuthorizationCheckerInterface */
+    private $checker;
 
-    public function __construct(EntityManagerInterface $em, RouterInterface $router, Filesystem $filesystem, KernelInterface $kernel, Environment $environment, CoreService $coreService)
+    public function __construct(
+        EntityManagerInterface $em,
+        RouterInterface $router,
+        Filesystem $filesystem,
+        KernelInterface $kernel,
+        Environment $environment,
+        CoreService $coreService,
+        AuthorizationCheckerInterface $checker,
+        RequestStack $request
+    )
     {
         $this->em = $em;
         $this->router = $router;
@@ -38,6 +54,8 @@ class FrontControllerService
         $this->kernel = $kernel;
         $this->environment = $environment;
         $this->coreService = $coreService;
+        $this->checker = $checker;
+        $this->request = $request;
     }
 
     public function singleAndPreview(string $entitySlug, string $slug, string $route)
@@ -60,7 +78,11 @@ class FrontControllerService
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${route} )");
         } elseif (property_exists($element, 'published') and !$element->getPublished() and $route !== 'single_preview') {
-            return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+            if($this->checker->isGranted('ROLE_ADMIN')) {
+                return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+            } else {
+                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+            }
         }
 
         // GET COMPONENTS OR CONTENT
@@ -89,7 +111,9 @@ class FrontControllerService
     {
         // FIND PAGE
         $entity = 'Page';
-        $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]);
+        /** @var Page $page */
+        $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]) ?? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, Page::class);
+//        dd($slug);
 
         if(!$page) {
             $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
@@ -100,13 +124,17 @@ class FrontControllerService
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
         } elseif (!$page->getPublished() and $route !== 'page_preview') {
-            return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+            if($this->checker->isGranted('ROLE_ADMIN')) {
+                return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+            } else {
+                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+            }
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
         if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => false, 'parentComponent' => null], ['position' => 'ASC']);
+            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $page->getId(), 'isTemp' => ($route === 'page_preview'), 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE

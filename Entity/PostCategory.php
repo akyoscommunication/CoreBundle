@@ -7,11 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\PostCategoryRepository")
  */
-class PostCategory
+class PostCategory implements Translatable
 {
     use TimestampableEntity;
 
@@ -24,17 +25,20 @@ class PostCategory
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Translatable
      */
     private $title;
 
     /**
      * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Gedmo\Translatable
      */
     private $content;
 

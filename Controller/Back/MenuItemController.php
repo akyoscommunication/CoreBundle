@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Form\MenuItemType;

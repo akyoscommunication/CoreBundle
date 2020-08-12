@@ -2,15 +2,12 @@
 
 namespace Akyos\CoreBundle\Twig;
 
-use Akyos\CoreBundle\Controller\CoreBundleController;
+use Akyos\CoreBundle\Controller\Back\CoreBundleController;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
-use Akyos\CoreBundle\Repository\OptionRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -24,11 +21,13 @@ class CoreExtension extends AbstractExtension
     private $coreOptionsRepository;
     private $coreService;
 
-    public function __construct(CoreBundleController $coreBundleController,
-                                EntityManagerInterface $entityManager,
-                                UrlGeneratorInterface $router,
-                                CoreOptionsRepository $coreOptionsRepository,
-                                CoreService $coreService)
+    public function __construct(
+        CoreBundleController $coreBundleController,
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $router,
+        CoreOptionsRepository $coreOptionsRepository,
+        CoreService $coreService
+    )
     {
         $this->corebundleController = $coreBundleController;
         $this->em = $entityManager;

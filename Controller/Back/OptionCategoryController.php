@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Form\OptionCategoryType;

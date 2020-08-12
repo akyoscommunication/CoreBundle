@@ -8,11 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\PostRepository")
  */
-class Post
+class Post implements Translatable
 {
     use TimestampableEntity;
 
@@ -27,28 +28,33 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Translatable
      */
     private $title;
 
     /**
      * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @SlugRedirect
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=999999999999999999, nullable=true)
+     * @Gedmo\Translatable
      */
     private $content;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Translatable
      */
     private $published;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $thumbnail;
 
@@ -64,6 +70,7 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $thumbnailArchive;
 

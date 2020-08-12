@@ -3,12 +3,14 @@
 namespace Akyos\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\SeoRepository")
  */
-class Seo
+class Seo implements Translatable
 {
     use TimestampableEntity;
 
@@ -21,21 +23,25 @@ class Seo
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $metaTitle;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Gedmo\Translatable
      */
     private $metaDescription;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Translatable
      */
     private $noIndex;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $metaRobots;
 

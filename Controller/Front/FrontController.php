@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Front;
 
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
@@ -74,21 +74,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="page", methods={"GET","POST"}, requirements={"slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"})
-     * @param $slug
-     * @param FrontControllerService $frontControllerService
-     *
-     * @return Response
-     */
-    public function page(
-        $slug,
-        FrontControllerService $frontControllerService): Response
-    {
-        return new Response($frontControllerService->pageAndPreview($slug, 'page'));
-    }
-
-    /**
-     * @Route("page_preview/{slug}", name="page_preview", methods={"GET","POST"})
+     * @Route("/page_preview/{slug}", name="page_preview", methods={"GET","POST"})
      * @param $slug
      * @param FrontControllerService $frontControllerService
      *
@@ -99,6 +85,25 @@ class FrontController extends AbstractController
         FrontControllerService $frontControllerService): Response
     {
         return new Response($frontControllerService->pageAndPreview($slug, 'page_preview'));
+    }
+
+    /**
+     * @Route("/{slug}",
+     *     methods={"GET","POST"},
+     *     requirements={
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"
+     *     },
+     *     name="page")
+     * @param $slug
+     * @param FrontControllerService $frontControllerService
+     *
+     * @return Response
+     */
+    public function page(
+        $slug,
+        FrontControllerService $frontControllerService): Response
+    {
+        return new Response($frontControllerService->pageAndPreview($slug, 'page'));
     }
 
     /**
@@ -143,23 +148,6 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
-     * @param $entitySlug
-     * @param $slug
-     *
-     * @param FrontControllerService $frontControllerService
-     *
-     * @return Response
-     */
-    public function single(
-        $entitySlug,
-        $slug,
-        FrontControllerService $frontControllerService): Response
-    {
-        return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single'));
-    }
-
-    /**
      * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
      * @param string $entitySlug
      * @param $slug
@@ -174,6 +162,23 @@ class FrontController extends AbstractController
         FrontControllerService $frontControllerService): Response
     {
         return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single_preview'));
+    }
+
+    /**
+     * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
+     * @param $entitySlug
+     * @param $slug
+     *
+     * @param FrontControllerService $frontControllerService
+     *
+     * @return Response
+     */
+    public function single(
+        $entitySlug,
+        $slug,
+        FrontControllerService $frontControllerService): Response
+    {
+        return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single'));
     }
 
     /**

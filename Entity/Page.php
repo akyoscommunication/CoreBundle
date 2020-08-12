@@ -6,11 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Akyos\CoreBundle\Annotations\SlugRedirect;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\PageRepository")
  */
-class Page
+class Page implements Translatable
 {
     use TimestampableEntity;
 
@@ -25,40 +26,54 @@ class Page
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Translatable
      */
     private $title;
 
     /**
      * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @SlugRedirect
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Translatable
      */
     private $published;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $template;
 
     /**
      * @ORM\Column(type="integer")
+     * @Gedmo\Translatable
      */
     private $position;
 
     /**
      * @ORM\Column(type="string", length=999999999999999999, nullable=true)
+     * @Gedmo\Translatable
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     private $thumbnail;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
     public function getId(): ?int
     {
@@ -147,5 +162,10 @@ class Page
         $this->thumbnail = $thumbnail;
 
         return $this;
+    }
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

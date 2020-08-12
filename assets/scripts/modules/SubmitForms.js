@@ -9,14 +9,14 @@ class SubmitForm {
                 .catch( (err) => {console.log(err);});
         });
     }
-    
+
     static initSubmit() {
         return new Promise( (resolve, reject) => {
             $('body').append('<div class="submitLoader"><i class="fas fa-spinner"></i></div>');
             resolve();
         });
     }
-    
+
     static post(form) {
         return new Promise( (resolve, reject) => {
             $.post(
@@ -25,13 +25,12 @@ class SubmitForm {
                 function (res) {
                     console.log(form);
                     console.log(res);
-                    if (res === 'valid') {
-                        resolve(res);
-                    } else {
-                        reject(res);
-                    }
+                    resolve(res);
                 }
-            );
+            ).fail(function(res) {
+                reject(res)
+                alert(res.responseText)
+            });
         });
     }
 }

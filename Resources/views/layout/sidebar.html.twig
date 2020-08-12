@@ -58,12 +58,12 @@
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <li class="divider"></li>
             {# BUNDLES EXTENSIONS #}
-            {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getBundleSidebar', {'route': route})) }}
+            {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getBundleSidebar', {'route': route})) }}
         {% endif %}
 
         <li class="divider"></li>
         {# CUSTOM EXTENSIONS #}
-        {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getCustomSidebar', {'route': route})) }}
+        {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getCustomSidebar', {'route': route})) }}
 
         <li class="divider"></li>
         {# SETTINGS #}
@@ -88,7 +88,7 @@
                         <a href="{{ path('rgpd_options') }}">RGPD et tracking</a>
                     </li>
                     {# BUNDLES OPTIONS EXTENSIONS #}
-                    {{ render(controller('Akyos\\CoreBundle\\Controller\\SidebarController::getOptionsSidebar', {'route': route})) }}
+                    {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getOptionsSidebar', {'route': route})) }}
                 {% endif %}
             </ul>
         </li>

@@ -5,12 +5,13 @@ namespace Akyos\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\OptionRepository")
  * @Orm\Table(name="`option`")
  */
-class Option
+class Option implements Translatable
 {
     use TimestampableEntity;
 
@@ -23,17 +24,20 @@ class Option
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Translatable
      */
     private $title;
 
     /**
      * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=999999999999999999, nullable=true)
+     * @Gedmo\Translatable
      */
     private $value;
 

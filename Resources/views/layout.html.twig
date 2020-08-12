@@ -3,7 +3,7 @@
  {% block body %}
      <div class="wrapper" style="{{ core_options and core_options.backMaincolor ? "--color-back-main-color:"~core_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(core_options.backMaincolor)~";" : "" }}">
          <!-- Sidebar  -->
-         {{ render(controller('Akyos\\CoreBundle\\Controller\\CoreBundleController::sidebar', {'route': app.request.attributes.get('_route')})) }}
+         {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\CoreBundleController::sidebar', {'route': app.request.attributes.get('_route')})) }}
 
          <!-- Page Content  -->
          <div id="main">

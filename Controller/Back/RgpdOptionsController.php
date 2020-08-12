@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\RgpdOptions;
 use Akyos\CoreBundle\Form\RgpdOptionsType;

@@ -24,3 +24,10 @@ services:
     tags:
       - { name: 'doctrine.event_listener', event: 'postUpdate' }
     public: true
+
+  gedmo.listener.sluggable:
+    class: Gedmo\Sluggable\SluggableListener
+    tags:
+      - { name: doctrine.event_subscriber, connection: default, priority: 1 }
+    calls:
+      - [ setAnnotationReader, [ '@annotation_reader' ] ]

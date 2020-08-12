@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller;
+namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\NewPasswordRequest;
 use Akyos\CoreBundle\Form\ChangePasswordType;
@@ -39,9 +39,9 @@ class NewPasswordRequestController extends AbstractController
         if($coreOptions) {
             $coreOptions = $coreOptions[0];
         }
-        
+
         $type = explode(';', $type);
-        
+
         $newPasswordRequest = new NewPasswordRequest();
         $newPasswordRequest->setUserRoute($route);
 
@@ -52,7 +52,7 @@ class NewPasswordRequestController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 			$entityManager = $this->getDoctrine()->getManager();
-	
+
 			$user = null;
 			foreach ($type as $testedType) {
 			    $testedType = implode('\\', explode('_', $testedType));
