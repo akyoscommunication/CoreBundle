@@ -1,0 +1,42 @@
+{
+    "name": "akyos/core-bundle",
+    "description": "AkyosCMS for Symfony - Core",
+    "type": "symfony-bundle",
+    "require": {
+        "php": "^7.2",
+        "ext-ctype": "*",
+        "ext-curl": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-intl": "*",
+        "ext-fileinfo": "*",
+        "beberlei/doctrineextensions": "^1.2",
+        "friendsofsymfony/ckeditor-bundle": "^2.2",
+        "knplabs/knp-paginator-bundle": "^5.3",
+        "stof/doctrine-extensions-bundle": "^1.4",
+        "symfony/swiftmailer-bundle": "^3.4",
+        "symfony/apache-pack": "^1.0"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "liip/test-fixtures-bundle": "^1.0",
+        "theofidry/alice-data-fixtures": "^1.2"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Lilian Carneau",
+            "email": "lilian@akyos.com"
+        },
+        {
+            "name": "Thomas Sebert",
+            "email": "thomas@akyos.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Akyos\\CoreBundle\\": ""
+        }
+    }
+}

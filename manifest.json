@@ -1,0 +1,26 @@
+{
+  "aliases": [
+    "akyos-core"
+  ],
+  "bundles": {
+    "Akyos\\CoreBundle\\AkyosCoreBundle": [
+      "all"
+    ]
+  },
+  "container": {
+    "locale": "en"
+  },
+  "copy-from-package": {
+  },
+  "composer-scripts": {
+    "ckeditor:install": "symfony-cmd",
+    "assets:install --symlink": "symfony-cmd",
+    "yarn && yarn run encore dev": "script",
+    "symfony server:start": "script"
+  },
+  "gitignore": [
+    ".DS_Store",
+    ".idea",
+    ".vs"
+  ]
+}
