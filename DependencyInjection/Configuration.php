@@ -14,15 +14,21 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('core_bundle');
 
-        return $treeBuilder
+        $treeBuilder
             ->getRootNode()
-                ->children()
-                ->arrayNode('recaptcha')
-                    ->children()
-                        ->scalarNode('public_key')->isRequired()->end()
-                        ->scalarNode('private_key')->isRequired()->end()
-                    ->end()
+            ->children()
+                ->arrayNode('user_roles')
+                    ->defaultValue([
+                        'Utilisateur' => 'ROLE_USER',
+                        'Admin' => 'ROLE_ADMIN',
+                        'Super Admin' => 'ROLE_SUPER_ADMIN',
+                        'Akyos' => 'ROLE_AKYOS',
+                    ])
+                    ->scalarPrototype()->end()
                 ->end()
-            ->end();
+            ->end()
+        ;
+
+        return $treeBuilder;
     }
 }

@@ -21,6 +21,10 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
      */
     public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -32,7 +36,7 @@ class UserController extends AbstractController
 
         foreach ($els as $user) {
             $newUserRoles = array_map(function($n) {
-                $rolesList = array_flip(User::ROLES);
+                $rolesList = array_flip($this->container->get('parameter_bag')->get('user_roles'));
                 return $rolesList[$n];
             }, $user->getRoles());
             $user->setRoles($newUserRoles);
@@ -90,8 +94,12 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param User $user
+     * @return Response
      */
-    public function edit(Request $request, User $user): Response
+    public function edit(Request $request,
+                         User $user): Response
     {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
@@ -113,6 +121,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param User $user
+     * @return Response
      */
     public function delete(Request $request, User $user): Response
     {

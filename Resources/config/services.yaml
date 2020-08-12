@@ -1,33 +1,34 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+
 parameters:
 
 services:
-  # default configuration for services in *this* file
-  _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-  # add more service definitions when explicit configuration is needed
-  # please note that last definitions always *replace* previous ones
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
 
-  Akyos\CoreBundle\:
-    resource: '../../../../lib/CoreBundle/*'
-    tags: ['controller.service_arguments']
-    public: true
+    Akyos\CoreBundle\:
+        resource: '../../../../lib/CoreBundle/*'
+        tags: ['controller.service_arguments']
+        public: true
 
-  twig.extension.globals_extension:
-    alias: 'Akyos\CoreBundle\Twig\GlobalsExtension'
-    public: true
+    twig.extension.globals_extension:
+        alias: 'Akyos\CoreBundle\Twig\GlobalsExtension'
+        public: true
 
-  Akyos\CoreBundle\DoctrineListener\SlugRedirectListener:
-    arguments: []
-    tags:
-      - { name: 'doctrine.event_listener', event: 'postUpdate' }
-    public: true
+    Akyos\CoreBundle\DoctrineListener\SlugRedirectListener:
+      arguments: []
+      tags:
+        - { name: 'doctrine.event_listener', event: 'postUpdate' }
+      public: true
 
-  gedmo.listener.sluggable:
-    class: Gedmo\Sluggable\SluggableListener
-    tags:
-      - { name: doctrine.event_subscriber, connection: default, priority: 1 }
-    calls:
-      - [ setAnnotationReader, [ '@annotation_reader' ] ]
+    gedmo.listener.sluggable:
+      class: Gedmo\Sluggable\SluggableListener
+      tags:
+        - { name: doctrine.event_subscriber, connection: default, priority: 1 }
+      calls:
+        - [ setAnnotationReader, [ '@annotation_reader' ] ]

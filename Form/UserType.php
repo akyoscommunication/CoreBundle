@@ -4,26 +4,31 @@ namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\User;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserType extends AbstractType
 {
     private $authorizationChecker;
+    private $container;
 
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, ContainerInterface $container)
     {
         $this->authorizationChecker = $authorizationChecker;
+        $this->container = $container;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $roles = User::ROLES;
+        $roles = $this->container->getParameter('user_roles');
 
         if(!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')){
             unset($roles['Super Admin']);
