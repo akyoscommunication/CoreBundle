@@ -15,7 +15,8 @@
         "knplabs/knp-paginator-bundle": "^5.3",
         "stof/doctrine-extensions-bundle": "^1.4",
         "symfony/swiftmailer-bundle": "^3.4",
-        "symfony/apache-pack": "^1.0"
+        "symfony/apache-pack": "^1.0",
+        "symfony/webpack-encore-bundle": "^1.7"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
@@ -33,6 +34,17 @@
             "email": "thomas@akyos.com"
         }
     ],
+    "scripts": {
+        "pre-autoload-dump": [
+            "composer config extra.symfony.allow-contrib true"
+        ],
+        "post-autoload-dump": [
+            "cd templates && rm -rf base.html.twig && cd ..",
+            "mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
+            "php bin/console ckeditor:install",
+            "php bin/console asset:install --symlink"
+        ]
+    },
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
