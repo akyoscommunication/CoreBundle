@@ -38,7 +38,7 @@
         "pre-autoload-dump": [
             "composer config extra.symfony.allow-contrib true"
         ],
-        "post-autoload-dump": [
+        "post-install-cmd": [
             "cd templates && rm -rf base.html.twig && cd ..",
             "mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
             "php bin/console ckeditor:install",
