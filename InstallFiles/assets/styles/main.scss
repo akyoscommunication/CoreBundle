@@ -1,0 +1,13 @@
+@import "common/variables";
+
+/** Import everything from autoload */
+@import "./autoload/bootstrap";
+//@import "~swiper/swiper";
+
+/** Import theme styles */
+@import "common/mixins";
+@import "common/fonts";
+@import "common/global";
+@import "layouts/layouts";
+
+@import "common/components";

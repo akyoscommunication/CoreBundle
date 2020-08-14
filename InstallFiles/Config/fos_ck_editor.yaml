@@ -1,0 +1,41 @@
+fos_ck_editor:
+    base_path: "bundles/fosckeditor"
+    js_path:   "bundles/fosckeditor/ckeditor.js"
+    default_config: my_config
+    configs:
+        my_config:
+            toolbar: "my_toolbar"
+            uiColor: "#DCDDDE"
+            language: fr
+            extraPlugins: "confighelper"
+        my_config_2:
+            toolbar: "my_toolbar_2"
+            uiColor: "#DCDDDE"
+            language: fr
+            height: "80px"
+            extraPlugins: "confighelper"
+        my_config_3:
+            toolbar: "my_toolbar_3"
+            uiColor: "#DCDDDE"
+            language: fr
+            height: "80px"
+            extraPlugins: "confighelper"
+    toolbars:
+        configs:
+            my_toolbar:     [ "@document", '@basicstyles', '@paragraph', '@styles', '@links' ]
+            my_toolbar_2:     [ "@document", '@basicstyles', '@paragraph', '@styles', '@links' ]
+            my_toolbar_3:     [ '@small' ]
+        items:
+            clipboard:      [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
+            editing:        [ 'Scayt' ]
+            links:          [ 'Link', 'Unlink', 'Anchor'  ]
+            insert:         [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ]
+            document:       [ 'Source' ]
+            basicstyles:    [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
+            paragraph:      [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ]
+            styles:         [ 'Styles', 'Format', 'Font', 'FontSize', 'TextColor', 'BGColor' ]
+            small:          [ 'Bold', 'Italic', 'Underline', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Link', 'TextColor' ]
+    plugins:
+        confighelper:
+            path:     "/ckeditor/plugins/confighelper/" # with trailing slash
+            filename: "plugin.js"

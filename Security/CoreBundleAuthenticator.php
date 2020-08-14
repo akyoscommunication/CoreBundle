@@ -68,7 +68,7 @@ class CoreBundleAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Cet email n\'est associé à aucun compte utilisateur.');
         }
 
         return $user;
