@@ -44,6 +44,7 @@
         ],
         "after-install-dependencies": [
             "mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
+            "mkdir -p templates/bundles/AkyosCoreBundle/front/layouts",
             "mv lib/CoreBundle/InstallFiles/Templates/front_layout.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
             "mv lib/CoreBundle/InstallFiles/Templates/footer.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
             "mv lib/CoreBundle/InstallFiles/Templates/content.html.twig templates/bundles/AkyosCoreBundle/front",
@@ -56,6 +57,8 @@
             "mv lib/CoreBundle/InstallFiles/Config/routes.yaml config",
             "mkdir assets/fonts",
             "mkdir assets/images",
+            "rm -rf assets/css",
+            "rm -rf assets/js",
             "mv lib/CoreBundle/InstallFiles/assets/styles assets",
             "mv lib/CoreBundle/InstallFiles/assets/styles assets",
             "mv lib/CoreBundle/InstallFiles/assets/webpack.config.js .",
