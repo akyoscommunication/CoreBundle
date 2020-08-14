@@ -17,10 +17,7 @@
                         <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">Général</a>
                     </li>
                     {# BUNDLES #}
-                    {{ render(controller(
-                        'Akyos\\CoreBundle\\Controller\\Back\\CrudController::getBundleTab',
-                        { 'objectType': entity }
-                    )) }}
+                    {{ getBundleTab(entity)|raw }}
                     {# SEO #}
                     {% if hasSeo(entity) %}
                         <li class="nav-item">
@@ -41,10 +38,7 @@
                         {{ form_end(form) }}
                     </div>
                     {# BUNDLES #}
-                    {{ render(controller(
-                        'Akyos\\CoreBundle\\Controller\\Back\\CrudController::getBundleTabContent',
-                        { 'objectType': entity, 'objectId': el.id }
-                    )) }}
+                    {{ getBundleTabContent(entity, el.id)|raw }}
                     {# SEO #}
                     {% if hasSeo(entity) %}
                         <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="seo-tab">

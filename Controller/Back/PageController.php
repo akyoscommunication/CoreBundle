@@ -2,8 +2,6 @@
 
 namespace Akyos\CoreBundle\Controller\Back;
 
-use Akyos\BuilderBundle\AkyosBuilderBundle;
-use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Form\Handler\CrudHandler;
 use Akyos\CoreBundle\Form\Type\Page\NewPageType;
@@ -12,6 +10,7 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,23 +91,25 @@ class PageController extends AbstractController
      *
      * @return Response
      */
-    public function edit(Request $request, Page $page, CoreService $coreService): Response
+    public function edit(Request $request, Page $page, CoreService $coreService, ContainerInterface $container): Response
     {
         $entity = 'Page';
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(PageType::class, $page);
         $form->handleRequest($request);
 
-        if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+        $classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle' ;
+        $classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions' ;
+        if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
             if (!$form->isSubmitted()) {
-                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::initCloneComponents', ['type' => 'Page', 'typeId' => $page->getId()]);
+                $container->get('render.builder')->initCloneComponents($entity, $page->getId());
             }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::tempToProd', ['type' => 'Page', 'typeId' => $page->getId()]);
+            if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+                $container->get('render.builder')->tempToProd($entity, $page->getId());
             }
             $em->flush();
 
@@ -133,17 +134,23 @@ class PageController extends AbstractController
      * @param Page $page
      * @param PageRepository $pageRepository
      * @param SeoRepository $seoRepository
+     * @param CoreService $coreService
+     * @param ContainerInterface $container
+     *
      * @return Response
      */
-    public function delete(Request $request, Page $page, PageRepository $pageRepository, SeoRepository $seoRepository, CoreService $coreService): Response
+    public function delete(Request $request, Page $page, PageRepository $pageRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
     {
         $entity = 'Page';
         if ($this->isCsrfTokenValid('delete'.$page->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-                $this->forward('Akyos\BuilderBundle\Controller\BuilderController::onDeleteEntity', ['type' => $entity, 'typeId' => $page->getId()]);
+            $classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle' ;
+            $classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions' ;
+            if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+                $container->get('render.builder')->onDeleteEntity($entity, $page->getId());
             }
+
             $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $page->getId()));
             if ($seo) {
                 $entityManager->remove($seo);

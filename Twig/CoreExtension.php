@@ -8,6 +8,7 @@ use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -20,13 +21,16 @@ class CoreExtension extends AbstractExtension
     private $router;
     private $coreOptionsRepository;
     private $coreService;
+    /** @var ContainerInterface */
+    private $container;
 
     public function __construct(
         CoreBundleController $coreBundleController,
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $router,
         CoreOptionsRepository $coreOptionsRepository,
-        CoreService $coreService
+        CoreService $coreService,
+        ContainerInterface $container
     )
     {
         $this->corebundleController = $coreBundleController;
@@ -34,6 +38,7 @@ class CoreExtension extends AbstractExtension
         $this->router = $router;
         $this->coreOptionsRepository = $coreOptionsRepository;
         $this->coreService = $coreService;
+        $this->container = $container;
     }
 
     public function getFilters(): array
@@ -78,6 +83,8 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getPermalink', [$this, 'getPermalink']),
             new TwigFunction('getPermalinkById', [$this, 'getPermalinkById']),
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
+            new TwigFunction('getBundleTab', [$this, 'getBundleTab']),
+            new TwigFunction('getBundleTabContent', [$this, 'getBundleTabContent']),
         ];
     }
 
@@ -398,5 +405,31 @@ class CoreExtension extends AbstractExtension
             }
         }
         return false;
+    }
+
+    public function getBundleTab($objectType)
+    {
+        $html = '';
+        $class = 'Akyos\BuilderBundle\Service\Builder';
+        if (class_exists($class)) {
+            if($this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
+                $html .= $this->container->get('render.builder')->getTab();
+            }
+        }
+
+        return $html;
+    }
+
+    public function getBundleTabContent($objectType, $objectId)
+    {
+        $html = '';
+        $class = 'Akyos\BuilderBundle\Service\Builder';
+        if (class_exists($class)) {
+            if($this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
+                $html .= $this->container->get('render.builder')->getTabContent($objectType, $objectId);
+            }
+        }
+
+        return $html;
     }
 }

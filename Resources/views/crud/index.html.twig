@@ -1,5 +1,4 @@
 {% extends '@AkyosCore/layout.html.twig' %}
-{% form_theme formModal 'bootstrap_4_layout.html.twig' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -8,6 +7,7 @@
     {% include '@AkyosCore/crud/elements/_table.html.twig' %}
 
     {% if formModal is defined %}
+        {% form_theme formModal 'bootstrap_4_layout.html.twig' %}
         <!-- Modal -->
         <div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="newModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
