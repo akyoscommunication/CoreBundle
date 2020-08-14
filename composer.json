@@ -43,6 +43,7 @@
             "composer config extra.symfony.allow-contrib true"
         ],
         "after-install-dependencies": [
+            "mkdir src/Components",
             "mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
             "mkdir -p templates/bundles/AkyosCoreBundle/front/layouts",
             "mv lib/CoreBundle/InstallFiles/Templates/front_layout.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
