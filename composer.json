@@ -60,7 +60,7 @@
             "rm -rf assets/css",
             "rm -rf assets/js",
             "mv lib/CoreBundle/InstallFiles/assets/styles assets",
-            "mv lib/CoreBundle/InstallFiles/assets/styles assets",
+            "mv lib/CoreBundle/InstallFiles/assets/scripts assets",
             "mv lib/CoreBundle/InstallFiles/assets/webpack.config.js .",
             "rm -rf lib/CoreBundle/InstallFiles",
             "php bin/console ckeditor:install",
