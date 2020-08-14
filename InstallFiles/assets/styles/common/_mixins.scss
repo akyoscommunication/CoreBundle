@@ -1,0 +1,68 @@
+@import
+"_variables.scss"
+;
+
+/*******************************************************************************************/
+
+// FLEX
+@mixin flex($direction, $wrap, $justify-content, $align-items) {
+    display: flex;
+    flex-direction: $direction;
+    flex-wrap: $wrap;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+// OBJECT FIT
+@mixin objectFit($object-fit, $object-position, $height, $width) {
+    object-fit: $object-fit;
+    object-position: $object-position;
+    height: $height;
+    width: $width;
+}
+
+$theme-colors: (
+        primary: #004378,
+        second: #0CACAA,
+        grey: #F4F4F5,
+        blaack: rgba(10,10,10, 1.0),
+        whiite: rgba(255,255,255, 1.0),
+        dynamic: #FDFDFD
+);
+
+:root {
+    @each $name, $color in $theme-colors {
+        --color-#{$name}: #{$color};
+    }
+}
+
+// CSS4 COLOR
+@function color($color-name) {
+    @return var(--color-#{$color-name});
+}
+
+// CSS4 DYNAMIC COLOR
+@mixin dynamic-color($color) {
+    --color-dynamic: #{$color};
+}
+
+// EXEMPLE SIMPLE
+//.couleur-simple {
+//    background-color: color(second);
+//}
+// EXEMPLE COULEUR DYNAMIQUE
+//.container {
+//    &.page-id-26, &.page-id-933 {
+//        @include dynamic-color(color(primary));
+//    }
+//    &.page-id-44 {
+//        @include dynamic-color(color(second));
+//    }
+//    &.page-id-24 {
+//        @include dynamic-color(color(grey));
+//    }
+//    .button {
+//        background-color: color(dynamic);
+//    }
+//}
+// Le bouton n'aura pas la même couleur en fonction des classes de son parent.

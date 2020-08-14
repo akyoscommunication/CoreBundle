@@ -1,0 +1,53 @@
+{% extends '@AkyosCore/front/base.html.twig' %}
+
+{% block meta %}
+
+{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <header class="banner">
+        <div class="container">
+            <div class="row">
+                {% block header %}
+                    <div class="col-4">
+                        {% block logo %} {% include '@AkyosCore/front/layouts/logo.html.twig' %} {% endblock %}
+                    </div>
+                    <div class="col-8 d-flex justify-content-end">
+                        {% include '@AkyosCore/front/layouts/menu.html.twig' %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block main %}
+            {% block titlebar %} {% include '@AkyosCore/front/layouts/titlebar.html.twig' %} {% endblock %}
+            {% block content %} CONTENT {% endblock %}
+        {% endblock %}
+    </main>
+    <footer id="Footer">
+        {% block footer %} {% include '@AkyosCore/front/layouts/footer.html.twig' %} {% endblock %}
+    </footer>
+    <div id="copyright">
+        <div class="container">
+            <p>{{ core_options.siteTitle }} © {{ "now"|date("Y") }} - Tous droits réservés - <a href="{{ core_options.agencyLink }}">Réalisation {{ core_options.agencyName }}</a>  </p>
+        </div>
+    </div>
+    {% block rgpd %} {% include '@AkyosCore/front/layouts/rgpd.html.twig' %} {% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script type="text/javascript" src="{{ asset('bundles/akyoscore/tarteaucitronjs/tarteaucitron.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/akyoscore/front.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/akyoscore/front.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/main.css') }}">
+{% endblock %}
+
+

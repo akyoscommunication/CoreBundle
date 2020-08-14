@@ -1,0 +1,3 @@
+core:
+    resource: '../lib/CoreBundle/Controller/'
+    type:     annotation
