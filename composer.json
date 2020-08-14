@@ -64,7 +64,7 @@
             "mv lib/CoreBundle/InstallFiles/assets/webpack.config.js .",
             "rm -rf lib/CoreBundle/InstallFiles",
             "php bin/console ckeditor:install",
-            "yarn && yarn add sass-loader@^7.0.1 node-sass --dev && yarn run encore dev",
+            "yarn && yarn add sass-loader@^7.0.1 node-sass --dev && yarn add copy-webpack-plugin && yarn run encore dev",
             "php bin/console asset:install --symlink",
             "composer dump-autoload",
             "php bin/console make:migration",
