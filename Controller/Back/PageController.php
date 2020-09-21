@@ -120,7 +120,7 @@ class PageController extends AbstractController
 
         return $this->render('@AkyosCore/crud/edit.html.twig', [
             'el' => $page,
-            'title' => 'Page',
+            'title' => '"'.$page->getTitle().'"',
             'entity' => 'Page',
             'route' => 'page',
             'view' => 'page',
