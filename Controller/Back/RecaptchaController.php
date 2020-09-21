@@ -34,7 +34,7 @@ class RecaptchaController extends AbstractController
         $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_private . '&response=' . $token);
         $recaptcha = json_decode($recaptcha);
         if($recaptcha->success) {
-            if ($recaptcha->score >= 0.5) {
+            if ($recaptcha->score >= 0.8) {
                 return new JsonResponse(['error' => false]);
             }
         }
