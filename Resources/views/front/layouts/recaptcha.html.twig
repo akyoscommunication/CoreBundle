@@ -1,6 +1,7 @@
 {% if core_options.recaptchaPublicKey and core_options.recaptchaPrivateKey %}
     <script src="https://www.google.com/recaptcha/api.js?render={{ core_options.recaptchaPublicKey }}"></script>
     <script>
+
         grecaptcha.ready(function() {
             const key = '{{ core_options.recaptchaPublicKey }}';
             let path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
@@ -12,23 +13,35 @@
 
                 forms.forEach(el => {
                     const submitButton = el.querySelector('.form-submit button');
-                    if(submitButton) {
+                    if(submitButton|length) {
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
-                            fetch(path).then(res => {
-                                    return res.json().then(res => {
-                                        if(res.error) {
-                                            alert(res.message);
-                                        } else {
-                                            el.submit();
-                                        }
-                                        grecaptcha.execute(key, {action: 'verify'}).then(token => {
-                                            path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
-                                            path = path.replace("tokenHash", token);
+                            document.querySelectorAll('.required-field').forEach(function(elementToRemove) {
+                                elementToRemove.parentNode.removeChild(elementToRemove);
+                            })
+                            if(!el.checkValidity()) {
+                                el.querySelectorAll('[required]').forEach(function(requiredField) {
+                                    const txt = document.createElement("span")
+                                    txt.innerHTML = requiredField.validationMessage;
+                                    txt.classList.add('text-danger', 'small', 'required-field');
+                                    requiredField.insertAdjacentElement('afterend', txt);
+                                })
+                            } else {
+                                fetch(path).then(res => {
+                                        return res.json().then(res => {
+                                            if(res.error) {
+                                                alert(res.message);
+                                            } else {
+                                                el.submit();
+                                            }
+                                            grecaptcha.execute(key, {action: 'verify'}).then(token => {
+                                                path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
+                                                path = path.replace("tokenHash", token);
+                                            })
                                         })
-                                    })
-                                }
-                            );
+                                    }
+                                );
+                            }
                         })
                     }
                 })

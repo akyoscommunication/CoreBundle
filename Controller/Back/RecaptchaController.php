@@ -36,11 +36,8 @@ class RecaptchaController extends AbstractController
         if($recaptcha->success) {
             if ($recaptcha->score >= 0.5) {
                 return new JsonResponse(['error' => false]);
-            } else {
-                return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement.']);
             }
-        } else {
-            return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement: '.json_encode($recaptcha)]);
         }
+        return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement.']);
     }
 }
