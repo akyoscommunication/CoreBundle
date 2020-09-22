@@ -38,6 +38,6 @@ class RecaptchaController extends AbstractController
                 return new JsonResponse(['error' => false]);
             }
         }
-        return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, veuillez réessayer ultérieurement.']);
+        return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, ou le délai est expiré, veuillez réessayer l\'envoi du formulaire.']);
     }
 }
