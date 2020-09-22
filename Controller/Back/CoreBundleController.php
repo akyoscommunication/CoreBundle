@@ -5,6 +5,10 @@ namespace Akyos\CoreBundle\Controller\Back;
 use Akyos\CoreBundle\Entity\MenuArea;
 use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Repository\MenuItemRepository;
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -116,5 +120,27 @@ class CoreBundleController extends AbstractController
             'menu' => $menuArea,
             'currentPage' => $page,
         ]);
+    }
+
+    /**
+     * @Route("/clear-cache", name="clear_cache", methods={"GET"})
+     * @param string $env
+     * @param bool $debug
+     * @return RedirectResponse
+     * @throws \Exception
+     */
+    public function clearCache($env = 'prod', $debug = false)
+    {
+        $kernel = new Kernel($env, $debug);
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+        $input = new ArrayInput([
+            'command' => 'cache:clear'
+        ]);
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $this->addFlash('success', 'Le cache serveur a bien été vidé.');
+        return $this->redirectToRoute('core_index');
     }
 }

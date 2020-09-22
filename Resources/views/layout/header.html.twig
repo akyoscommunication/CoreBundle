@@ -5,6 +5,8 @@
     <span>
         <a href="{{ path('home') }}" target="_blank">Voir le site</a>
         <span class="divider"> | </span>
+        <a href="{{ path('core_clear_cache') }}">Vider le cache</a>
+        <span class="divider"> | </span>
         <a href="{{ path('app_logout') }}" target="_blank">Déconnexion</a>
         {% if core_options %}
             <span class="divider"> | </span>
