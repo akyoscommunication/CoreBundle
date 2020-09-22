@@ -10,6 +10,7 @@ use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -23,6 +24,8 @@ class CoreExtension extends AbstractExtension
     private $coreService;
     /** @var ContainerInterface */
     private $container;
+    private $mailer;
+    private $twig;
 
     public function __construct(
         CoreBundleController $coreBundleController,
@@ -30,7 +33,9 @@ class CoreExtension extends AbstractExtension
         UrlGeneratorInterface $router,
         CoreOptionsRepository $coreOptionsRepository,
         CoreService $coreService,
-        ContainerInterface $container
+        ContainerInterface $container,
+        \Swift_Mailer $mailer,
+        Environment $twig
     )
     {
         $this->corebundleController = $coreBundleController;
@@ -39,6 +44,8 @@ class CoreExtension extends AbstractExtension
         $this->coreOptionsRepository = $coreOptionsRepository;
         $this->coreService = $coreService;
         $this->container = $container;
+        $this->mailer = $mailer;
+        $this->twig = $twig;
     }
 
     public function getFilters(): array
@@ -85,6 +92,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('checkChildActive', [$this, 'checkChildActive']),
             new TwigFunction('getBundleTab', [$this, 'getBundleTab']),
             new TwigFunction('getBundleTabContent', [$this, 'getBundleTabContent']),
+            new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
         ];
     }
 
@@ -431,5 +439,34 @@ class CoreExtension extends AbstractExtension
         }
 
         return $html;
+    }
+
+    public function sendExceptionMail($exceptionMessage)
+    {
+        $mail = new \Swift_Message();
+
+
+        $body = $this->twig->render('@AkyosCore/email/default.html.twig', array(
+            'subject' => 'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
+            'title' => 'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
+            'body' => $exceptionMessage,
+        ));
+
+
+        $mail->setFrom("noreply@".$_SERVER['SERVER_NAME'])
+            ->setTo(["thomas.sebert.akyos@gmail.com"])
+            ->setBcc(["lilian.akyos@gmail.com", "johan@akyos.com"])
+            ->setSubject('Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],)
+            ->setBody($body)
+            ->setReplyTo("noreply@".$_SERVER['SERVER_NAME'])
+            ->setContentType("text/html")
+        ;
+
+        try {
+            $this->mailer->send($mail);
+            return true;
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 }

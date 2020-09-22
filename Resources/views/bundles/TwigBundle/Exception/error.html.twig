@@ -13,6 +13,7 @@
         <div class="mt-5 small">
             <div>Message d'origine:</div>
             <p>{{ exception.message~' '~exception.statusCode~' '~exception.statusText }}</p>
+            {{ sendExceptionMail(exception.message~' '~exception.statusCode~' '~exception.statusText) }}
         </div>
     </div>
 {% endblock %}
