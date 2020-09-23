@@ -456,7 +456,7 @@ class CoreExtension extends AbstractExtension
         $mail->setFrom("noreply@".$_SERVER['SERVER_NAME'])
             ->setTo(["thomas.sebert.akyos@gmail.com"])
             ->setBcc(["lilian.akyos@gmail.com", "johan@akyos.com"])
-            ->setSubject('Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],)
+            ->setSubject('Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'])
             ->setBody($body)
             ->setReplyTo("noreply@".$_SERVER['SERVER_NAME'])
             ->setContentType("text/html")
