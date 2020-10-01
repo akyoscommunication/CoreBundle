@@ -113,7 +113,6 @@ class FrontControllerService
         $entity = 'Page';
         /** @var Page $page */
         $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]) ?? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, Page::class);
-//        dd($slug);
 
         if(!$page) {
             $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);

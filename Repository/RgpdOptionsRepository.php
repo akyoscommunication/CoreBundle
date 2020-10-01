@@ -4,7 +4,7 @@ namespace Akyos\CoreBundle\Repository;
 
 use Akyos\CoreBundle\Entity\RgpdOptions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method RgpdOptions|null find($id, $lockMode = null, $lockVersion = null)

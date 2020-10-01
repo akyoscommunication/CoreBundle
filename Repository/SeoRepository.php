@@ -4,7 +4,7 @@ namespace Akyos\CoreBundle\Repository;
 
 use Akyos\CoreBundle\Entity\Seo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Seo|null find($id, $lockMode = null, $lockVersion = null)

@@ -4,7 +4,7 @@ namespace Akyos\CoreBundle\DataFixtures;
 
 use Akyos\CoreBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserAdminFixtures extends Fixture
