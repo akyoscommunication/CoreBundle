@@ -1,6 +1,6 @@
 {% if rgpd_options %}
-	<script type="text/javascript" src="{{ asset('bundles/akyoscore/tarteaucitronjs/tarteaucitron.js') }}"></script>
-	<script type="text/javascript">
+	<script type="text/javascript" src="{{ asset('bundles/akyoscore/tarteaucitronjs/tarteaucitron.js') }}" defer></script>
+	<script type="text/javascript" defer>
 			tarteaucitron.init({
 				"privacyUrl": "{{ absolute_url(path('page', {'slug' : rgpd_options.policyPage.slug})) }}", /* Privacy policy url */
 
