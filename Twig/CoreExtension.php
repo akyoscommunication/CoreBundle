@@ -102,7 +102,7 @@ class CoreExtension extends AbstractExtension
         if(count(explode(';', $field)) > 1) {
             $getter1 = 'get'.explode(';', $field)[0];
             $getter2 = 'get'.explode(';', $field)[1];
-            $value = $el->$getter1()->$getter2();
+            $value = $el->$getter1() ? $el->$getter1()->$getter2() : '';
         } else {
             $value = $el->$getter();
         }
