@@ -81,6 +81,11 @@ class CoreOptions
      */
     private $recaptchaPrivateKey;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $hasPostDocuments;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -238,6 +243,18 @@ class CoreOptions
     public function setRecaptchaPrivateKey(string $recaptchaPrivateKey): self
     {
         $this->recaptchaPrivateKey = $recaptchaPrivateKey;
+
+        return $this;
+    }
+
+    public function getHasPostDocuments(): ?bool
+    {
+        return $this->hasPostDocuments;
+    }
+
+    public function setHasPostDocuments(?bool $hasPostDocuments): self
+    {
+        $this->hasPostDocuments = $hasPostDocuments;
 
         return $this;
     }

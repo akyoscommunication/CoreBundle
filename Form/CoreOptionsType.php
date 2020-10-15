@@ -41,6 +41,10 @@ class CoreOptionsType extends AbstractType
                 'label' => 'Activation du blog',
                 'required' => false
             ])
+            ->add('hasPostDocuments', CheckboxType::class, [
+                'label' => 'Activation des documents d\'articles',
+                'required' => false
+            ])
             ->add('homepage', EntityType::class, [
                 'label' => "Page d'accueil",
                 'required' => false,

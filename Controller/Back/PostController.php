@@ -5,7 +5,9 @@ namespace Akyos\CoreBundle\Controller\Back;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\CoreBundle\Entity\Post;
+use Akyos\CoreBundle\Entity\PostDocument;
 use Akyos\CoreBundle\Form\Handler\CrudHandler;
+use Akyos\CoreBundle\Form\Type\Post\PostDocumentType;
 use Akyos\CoreBundle\Form\Type\Post\PostType;
 use Akyos\CoreBundle\Form\Type\Post\NewPostType;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
@@ -123,7 +125,6 @@ class PostController extends AbstractController
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-
         $classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle' ;
         $classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions' ;
         if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {

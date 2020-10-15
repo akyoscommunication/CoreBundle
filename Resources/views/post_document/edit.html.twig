@@ -1,11 +1,11 @@
 {% extends '@AkyosCore/layout.html.twig' %}
 
-{% block title %}Editer {{ title }}{% endblock %}
+{% block title %}Editer le document {{ el.title }}{% endblock %}
 
 {% block page_content %}
     <div class="aky-header-page">
         <h1 class="aky-header-page__title">Éditer {{ title }}</h1>
-        <a class="btn btn-outline-dark" href="{{ path(route~'_index', parameters is defined ? parameters : {}) }}">Retour à la liste</a>
+        <a class="btn btn-outline-dark" href="{{ path('post_edit', parameters) }}">Retour à l'édition de l'article</a>
     </div>
 
     <div class="content" data-type="{{ entity is defined ? entity : '' }}" data-typeid="{{ el.id is defined ? el.id : '' }}">
@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ app.request.get('tab') == 'general' or app.request.get('tab') == null ? 'active' : '' }}" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">Général</a>
                     </li>
-                    {% if entity is defined and entity == 'Post' and core_options.hasPostDocuments %}
+                    {% if entity is defined and entity == 'Post' %}
                         <li class="nav-item">
                             <a class="nav-link {{ app.request.get('tab') == 'postdoc' ? 'active' : '' }}" id="postdoc-tab" data-toggle="tab" href="#postdoc" role="tab" aria-controls="postdoc" aria-selected="true">Documents</a>
                         </li>
@@ -44,7 +44,7 @@
                         {{ form_end(form) }}
                     </div>
                     {# POSTDOCUMENT #}
-                {% if entity is defined and entity == 'Post' and core_options.hasPostDocuments %}
+                {% if entity is defined and entity == 'Post' %}
                     <div class="tab-pane fade {{ app.request.get('tab') == 'postdoc' ? 'show active' : '' }}" id="postdoc" role="tabpanel" aria-labelledby="postdoc-tab">
                         <div class="aky-header-page">
                             <h2 class="aky-header-page__title">Ajouter un document</h2>
@@ -64,7 +64,6 @@
                             <tr>
                                 <th>Titre</th>
                                 <th>Position</th>
-                                <th>Privé</th>
                                 <th style="width: 15%">Action</th>
                             </tr>
                             </thead>
@@ -75,12 +74,9 @@
                                         {{ doc.title }}
                                     </td>
                                     <td>
-                                        <form action="{{ path('core_change_position', {'route' : 'post', 'el' : 'Post', 'id' : doc.id, 'bundle' : 'CoreBundle' }) }}" method="post">
+                                        <form action="{{ path('core_change_position', {'route' : 'post_document', 'el' : 'PostDocument', 'id' : doc.id, 'bundle' : (bundle is defined ? bundle : null) }) }}" method="post">
                                             <input class="form-control" type="number" name="position" value="{{ doc.position }}" min="0" max="{{ el.postDocuments|length - 1 }}">
                                         </form>
-                                    </td>
-                                    <td style="color: {{ doc.private ? "green" : "red" }}">
-                                        {{ doc.private ? '<i class="fas fa-check"></i>':  '<i class="fas fa-times"></i>' }}
                                     </td>
                                     <td>
                                         <a class="btn btn-primary btn-sm" href="{{ path('post_document_edit', {'id': doc.id}) }}"><i class="fas fa-pencil-alt"></i></a>

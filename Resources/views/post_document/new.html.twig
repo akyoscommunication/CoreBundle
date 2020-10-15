@@ -5,7 +5,7 @@
 {% block page_content %}
     <div class="aky-header-page">
         <h1 class="aky-header-page__title">{{ title }}</h1>
-        <a class="btn btn-outline-dark" href="{{ path(route~'_index', parameters is defined ? parameters : {}) }}">Retour à la liste</a>
+        <a class="btn btn-outline-dark" href="{{ path('post_edit', parameters) }}">Retour à l'édition de l'article</a>
     </div>
 
     <div class="content">

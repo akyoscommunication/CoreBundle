@@ -74,9 +74,15 @@ class Post implements Translatable
      */
     private $thumbnailArchive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PostDocument::class, mappedBy="post")
+     */
+    private $postDocuments;
+
     public function __construct()
     {
         $this->postCategories = new ArrayCollection();
+        $this->postDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,6 +198,37 @@ class Post implements Translatable
     public function setThumbnailArchive(?string $thumbnailArchive): self
     {
         $this->thumbnailArchive = $thumbnailArchive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostDocument[]
+     */
+    public function getPostDocuments(): Collection
+    {
+        return $this->postDocuments;
+    }
+
+    public function addPostDocument(PostDocument $postDocument): self
+    {
+        if (!$this->postDocuments->contains($postDocument)) {
+            $this->postDocuments[] = $postDocument;
+            $postDocument->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostDocument(PostDocument $postDocument): self
+    {
+        if ($this->postDocuments->contains($postDocument)) {
+            $this->postDocuments->removeElement($postDocument);
+            // set the owning side to null (unless already changed)
+            if ($postDocument->getPost() === $this) {
+                $postDocument->setPost(null);
+            }
+        }
 
         return $this;
     }
