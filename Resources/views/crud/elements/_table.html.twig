@@ -1,3 +1,17 @@
+<form class="searchform form-inline" method="GET">
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="inputSearch" class="sr-only">Rechercher ...</label>
+        <input type="text" name="search" id=inputSearch" placeholder="Rechercher ..." class="field form-control" value="{{ app.request.query.get("search") }}" />
+        <div class="icons-container">
+            <div class="icon-search"></div>
+            <div class="icon-close">
+                <div class="x-up"></div>
+                <div class="x-down"></div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-outline-info mb-2">chercher</button>
+</form>
 <table class="table aky-table">
     <thead class="aky-table-head">
     <tr>

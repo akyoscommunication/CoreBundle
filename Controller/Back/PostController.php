@@ -44,9 +44,9 @@ class PostController extends AbstractController
                 return $this->redirectToRoute('core_index');
             }
         }
-
+        $query = $postRepository->searchByTitle($request->query->get('search') ?? null);
         $els = $paginator->paginate(
-            $postRepository->createQueryBuilder('a')->getQuery(),
+            $query,
             $request->query->getInt('page', 1),
             12
         );
@@ -73,6 +73,7 @@ class PostController extends AbstractController
                 'ID' => 'Id',
                 'Position' => 'Position',
                 'Status' => 'Published',
+                'publié le'=>'CreatedAt'
             ],
         ]);
     }

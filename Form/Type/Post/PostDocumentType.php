@@ -20,7 +20,12 @@ class PostDocumentType extends AbstractType
                 'label' => 'Titre',
                 'help' => 'Insérez votre titre ici',
             ])
-            ->add('file', FileManagerType::class)
+            ->add('file', FileManagerType::class, [
+                'label'=>'Document'
+            ])
+            ->add('content', CKEditorType::class, [
+                'label'=>'Contenu'
+            ])
             ->add('private', CheckboxType::class, [
                 'label'=>'Est-ce que ce document doit être privé?',
                 'required'=>false

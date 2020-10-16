@@ -64,7 +64,7 @@
                             <tr>
                                 <th>Titre</th>
                                 <th>Position</th>
-                                <th>Privé</th>
+                                <th>Privé/public</th>
                                 <th style="width: 15%">Action</th>
                             </tr>
                             </thead>
@@ -79,8 +79,8 @@
                                             <input class="form-control" type="number" name="position" value="{{ doc.position }}" min="0" max="{{ el.postDocuments|length - 1 }}">
                                         </form>
                                     </td>
-                                    <td style="color: {{ doc.private ? "green" : "red" }}">
-                                        {{ doc.private ? '<i class="fas fa-check"></i>':  '<i class="fas fa-times"></i>' }}
+                                    <td>
+                                        {{ doc.private ? '<i class="fas fa-lock"></i>':  '<i class="fas fa-lock-open"></i>' }}
                                     </td>
                                     <td>
                                         <a class="btn btn-primary btn-sm" href="{{ path('post_document_edit', {'id': doc.id}) }}"><i class="fas fa-pencil-alt"></i></a>
