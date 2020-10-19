@@ -19,17 +19,21 @@ class SubmitForm {
 
     static post(form) {
         return new Promise( (resolve, reject) => {
-            $.post(
-                $(form).attr('action'),
-                $(form).serialize(),
-                function (res) {
+            const formData = new FormData(form);
+            $.ajax({
+                url : $(form).attr('action'),
+                type: $(form).attr('method'),
+                data : formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
                     console.log(form);
                     console.log(res);
                     resolve(res);
+                },
+                error: function(xhr, desc, err) {
+                    alert(err)
                 }
-            ).fail(function(res) {
-                reject(res)
-                alert(res.responseText)
             });
         });
     }
