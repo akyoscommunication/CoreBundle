@@ -41,7 +41,12 @@
                             {{ element }} {{ key != dynamicVariable|length - 1 ? ',' : '' }}
                         {% endfor %}
                     </td>
+                {% elseif field == 'File' %}
+                    <td>
+                        {{ getImageAltById(dynamicVariable) ? getImageAltById(dynamicVariable) :  getImageNameById(dynamicVariable) }}
+                    </td>
                 {% else %}
+
                     <td>{{ dynamicVariable }}</td>
                 {% endif %}
             {% endfor %}

@@ -5,7 +5,7 @@ class SubmitForm {
             const forms = [...document.querySelectorAll('form:not(.not-submit)')];
             console.log(forms);
             forms.reduce((previous, next) => previous.then(() => { return that.post(next); }), that.initSubmit())
-                .then(() => {window.location.reload();})
+                .then(() => {})
                 .catch( (err) => {console.log(err);});
         });
     }
