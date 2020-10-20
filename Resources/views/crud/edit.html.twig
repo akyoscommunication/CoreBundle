@@ -3,10 +3,8 @@
 {% block title %}Editer {{ title }}{% endblock %}
 
 {% block page_content %}
-    <div class="aky-header-page">
-        <h1 class="aky-header-page__title">Éditer {{ title }}</h1>
-        <a class="btn btn-outline-dark" href="{{ path(route~'_index', parameters is defined ? parameters : {}) }}">Retour à la liste</a>
-    </div>
+
+    {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title': 'Éditer '~title, 'parameters': (parameters is defined ? parameters : {}), 'button_back': true, 'header_route' : header_route is defined ? header_route : null} %}
 
     <div class="content" data-type="{{ entity is defined ? entity : '' }}" data-typeid="{{ el.id is defined ? el.id : '' }}">
         <div class="row">
@@ -47,16 +45,7 @@
                 {% if entity is defined and entity == 'Post' and core_options.hasPostDocuments %}
                     <div class="tab-pane fade {{ app.request.get('tab') == 'postdoc' ? 'show active' : '' }}" id="postdoc" role="tabpanel" aria-labelledby="postdoc-tab">
                         <div class="aky-header-page">
-                            <h2 class="aky-header-page__title">Ajouter un document</h2>
-                            {% if button_add is not defined or button_add %}
-                                {% if formModal is defined %}
-                                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newModal">
-                                        Ajouter un élément <i class="fas fa-plus"></i>
-                                    </button>
-                                {% else %}
-                                    <a class="btn btn-outline-success" href="{{ path('post_document_new', {'id': el.id }) }}">Ajouter un élément <i class="fas fa-plus"></i></a>
-                                {% endif %}
-                            {% endif %}
+                            {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title': 'Documents', 'parameters': {'id': el.id}, 'button_add': true, 'header_route' : 'post_document' } %}
 
                         </div>
                         <table class="table aky-table">

@@ -44,12 +44,16 @@ class PostController extends AbstractController
                 return $this->redirectToRoute('core_index');
             }
         }
-        $query = $postRepository->searchByTitle($request->query->get('search') ?? null);
-        $els = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            12
-        );
+
+        $query = $postRepository->createQueryBuilder('a');
+        if($request->query->get('search')) {
+            $query
+                ->leftJoin('a.postCategories', 'postCategories')
+                ->andWhere('a.title LIKE :keyword OR a.position LIKE :keyword OR postCategories.title LIKE :keyword')
+                ->setParameter('keyword', '%'.$request->query->get('search').'%')
+            ;
+        }
+        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         $post = new Post();
         $post->setPublished(false);
@@ -69,11 +73,13 @@ class PostController extends AbstractController
             'formModal' => $newPostForm->createView(),
             'bundle' => 'CoreBundle',
             'fields' => [
-                'Title' => 'Title',
                 'ID' => 'Id',
+                'Title' => 'Title',
+                'Catégorie(s)' => 'PostCategories',
                 'Position' => 'Position',
-                'Status' => 'Published',
-                'publié le'=>'CreatedAt'
+                'En ligne ?' => 'Published',
+                'Publié le'=>'CreatedAt',
+                'Mis à jour le'=>'UpdatedAt',
             ],
         ]);
     }
@@ -166,6 +172,7 @@ class PostController extends AbstractController
      *
      * @param CoreService $coreService
      *
+     * @param ContainerInterface $container
      * @return Response
      */
     public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response

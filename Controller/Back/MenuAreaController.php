@@ -26,11 +26,15 @@ class MenuAreaController extends AbstractController
      */
     public function index(MenuAreaRepository $menuAreaRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $els = $paginator->paginate(
-            $menuAreaRepository->createQueryBuilder('ma')->getQuery(),
-            $request->query->getInt('page', 1),
-            12
-        );
+        $query = $menuAreaRepository->createQueryBuilder('a');
+        if($request->query->get('search')) {
+            $query
+                ->leftJoin('a.Menu', 'menu')
+                ->andWhere('a.name LIKE :keyword OR a.slug LIKE :keyword OR a.description LIKE :keyword OR menu.title LIKE :keyword')
+                ->setParameter('keyword', '%'.$request->query->get('search').'%')
+            ;
+        }
+        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,

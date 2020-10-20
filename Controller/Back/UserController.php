@@ -28,16 +28,26 @@ class UserController extends AbstractController
      */
     public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $els = $paginator->paginate(
-            $userRepository->createQueryBuilder('a')->getQuery(),
-            $request->query->getInt('page', 1),
-            12
-        );
+        $roles = $this->container->get('parameter_bag')->get('user_roles');
+        $flippedRoles = array_flip($roles);
+
+        $query = $userRepository->createQueryBuilder('a');
+
+        $keyword = $request->query->get('search');
+        if($keyword) {
+            if(array_key_exists($keyword, $roles)) {
+                $keyword = $roles[$keyword];
+            }
+            $query
+                ->andWhere('a.email LIKE :keyword OR a.roles LIKE :keyword')
+                ->setParameter('keyword', '%'.$keyword.'%')
+            ;
+        }
+        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         foreach ($els as $user) {
-            $newUserRoles = array_map(function($n) {
-                $rolesList = array_flip($this->container->get('parameter_bag')->get('user_roles'));
-                return $rolesList[$n];
+            $newUserRoles = array_map(static function($n) use ($flippedRoles) {
+                return $flippedRoles[$n];
             }, $user->getRoles());
             $user->setRoles($newUserRoles);
         }

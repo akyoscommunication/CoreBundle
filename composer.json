@@ -17,7 +17,8 @@
         "symfony/swiftmailer-bundle": "^3.4",
         "symfony/apache-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
-        "karser/karser-recaptcha3-bundle": "^0.1.0@dev"
+        "karser/karser-recaptcha3-bundle": "^0.1.0@dev",
+        "twig/extra-bundle": "3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",

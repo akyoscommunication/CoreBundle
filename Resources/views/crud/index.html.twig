@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
-    {% include '@AkyosCore/crud/elements/_header.html.twig' %}
+    {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title' : title, 'search' : true, 'button_add' : true, 'header_route' : header_route is defined ? header_route : null} %}
     {% include '@AkyosCore/crud/elements/_table.html.twig' %}
 
     {% if formModal is defined %}

@@ -4,8 +4,7 @@
 
 {% block page_content %}
     <div class="aky-header-page">
-        <h1 class="aky-header-page__title">{{ title }}</h1>
-        <a class="btn btn-outline-dark" href="{{ path(route~'_index', parameters is defined ? parameters : {}) }}">Retour à la liste</a>
+        {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title': title, 'button_back': true, 'header_route' : route~'_index'} %}
     </div>
 
     <div class="content">

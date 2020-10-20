@@ -26,11 +26,14 @@ class OptionCategoryController extends AbstractController
      */
     public function index(OptionCategoryRepository $optionCategoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $els = $paginator->paginate(
-            $optionCategoryRepository->createQueryBuilder('a')->getQuery(),
-            $request->query->getInt('page', 1),
-            12
-        );
+        $query = $optionCategoryRepository->createQueryBuilder('a');
+        if($request->query->get('search')) {
+            $query
+                ->andWhere('a.title LIKE :keyword OR a.slug LIKE :keyword')
+                ->setParameter('keyword', '%'.$request->query->get('search').'%')
+            ;
+        }
+        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,

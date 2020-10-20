@@ -1,17 +1,3 @@
-<form class="searchform form-inline" method="GET">
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="inputSearch" class="sr-only">Rechercher ...</label>
-        <input type="text" name="search" id=inputSearch" placeholder="Rechercher ..." class="field form-control" value="{{ app.request.query.get("search") }}" />
-        <div class="icons-container">
-            <div class="icon-search"></div>
-            <div class="icon-close">
-                <div class="x-up"></div>
-                <div class="x-down"></div>
-            </div>
-        </div>
-    </div>
-    <button type="submit" class="btn btn-outline-info mb-2">chercher</button>
-</form>
 <table class="table aky-table">
     <thead class="aky-table-head">
     <tr>
@@ -29,6 +15,7 @@
     {% for el in els %}
         <tr>
             {% for name, field in fields %}
+                {% set dynamicVariable = dynamicVariable(el, field) %}
                 {% if field == 'Published' %}
                     <td>
                         <form action="{{ path('core_change_status', {'route' : route, 'el' : entity, 'id' : el.id, 'bundle' : (bundle is defined ? bundle : null) }) }}" class="custom-switch-form" method="post">
@@ -44,13 +31,18 @@
                             <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0" max="{{ els|length - 1 }}">
                         </form>
                     </td>
-                {% elseif dynamicVariable(el, field).timezone is defined  %}
+                {% elseif dynamicVariable.timezone is defined  %}
                     <td>
-                            {{ dynamicVariable(el, field)|date('d-m-Y') }}
+                        {{ dynamicVariable|date('d/m/Y') }}
+                    </td>
+                {% elseif instanceOf(dynamicVariable, 'Doctrine\\ORM\\PersistentCollection') %}
+                    <td>
+                        {% for key, element in dynamicVariable %}
+                            {{ element }} {{ key != dynamicVariable|length - 1 ? ',' : '' }}
+                        {% endfor %}
                     </td>
                 {% else %}
-
-                    <td>{{ dynamicVariable(el, field) }}</td>
+                    <td>{{ dynamicVariable }}</td>
                 {% endif %}
             {% endfor %}
             <td>
@@ -79,7 +71,7 @@
         </tr>
     {% else %}
         <tr>
-            <td colspan="5">Il n'y a pas de résultats trouvés.</td>
+            <td colspan="{{ fields|length + 1 }}">Il n'y a pas de résultats trouvés.</td>
         </tr>
     {% endfor %}
     </tbody>

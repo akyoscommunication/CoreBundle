@@ -32,11 +32,14 @@ class PageController extends AbstractController
      */
     public function index(PageRepository $pageRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
     {
-        $els = $paginator->paginate(
-            $pageRepository->createQueryBuilder('a')->getQuery(),
-            $request->query->getInt('page', 1),
-            12
-        );
+        $query = $pageRepository->createQueryBuilder('a');
+        if($request->query->get('search')) {
+            $query
+                ->andWhere('a.title LIKE :keyword OR a.slug LIKE :keyword')
+                ->setParameter('keyword', '%'.$request->query->get('search').'%')
+            ;
+        }
+        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         $page = new Page();
         $page->setPublished(false);
@@ -53,6 +56,7 @@ class PageController extends AbstractController
             'entity' => 'Page',
             'view' => 'page',
             'route' => 'page',
+            'header_route' => 'page',
             'formModal' => $newPageForm->createView(),
             'bundle' => 'CoreBundle',
             'fields' => array(
@@ -123,6 +127,10 @@ class PageController extends AbstractController
             'title' => '"'.$page->getTitle().'"',
             'entity' => 'Page',
             'route' => 'page',
+            'header_route' => 'page_index',
+            'parameters' => [
+                'slug' => $page->getSlug(),
+            ],
             'view' => 'page',
             'form' => $form->createView(),
         ]);

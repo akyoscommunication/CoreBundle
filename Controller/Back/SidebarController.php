@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SidebarController extends AbstractController
 {
-    public function getBundleSidebar($route)
+    public function getBundleSidebar($route): Response
     {
         $html = "";
 
-        if (class_exists('Akyos\BuilderBundle\Service\ExtendSidebar'))
+        if (class_exists('Akyos\BuilderBundle\AkyosBuilderBundle'))
         {
             $response = $this->forward('Akyos\BuilderBundle\Service\ExtendSidebar::getTemplate', ['route' => $route]);
             $html .= $response->getContent();
@@ -32,7 +32,7 @@ class SidebarController extends AbstractController
         return new Response($html);
     }
 
-    public function getCustomSidebar($route)
+    public function getCustomSidebar($route): Response
     {
         $html = "";
 
@@ -45,7 +45,7 @@ class SidebarController extends AbstractController
         return new Response($html);
     }
 
-    public function getOptionsSidebar($route)
+    public function getOptionsSidebar($route): Response
     {
         $html = "";
 
