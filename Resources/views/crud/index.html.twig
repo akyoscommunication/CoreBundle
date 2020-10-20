@@ -3,7 +3,13 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
-    {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title' : title, 'search' : true, 'button_add' : true, 'header_route' : header_route is defined ? header_route : null} %}
+
+    {% set hasSearch = false %}
+    {% if (bundle is defined and (bundle == "CoreBundle" or bundle == "BuilderBundle" or bundle == "FormBundle" or bundle == "ShopBundle")) or (search is defined and search) %}
+        {% set hasSearch = true %}
+    {% endif %}
+
+    {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title' : title, 'search' : hasSearch, 'button_add' : true, 'header_route' : header_route is defined ? header_route : null} %}
     {% include '@AkyosCore/crud/elements/_table.html.twig' %}
 
     {% if formModal is defined %}
