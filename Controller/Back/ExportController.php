@@ -90,6 +90,9 @@ class ExportController extends AbstractController
                     $value = $el;
                     foreach (explode('.', $row) as $method){
                         $value = $value->{'get'.ucfirst($method)}();
+                        if (!$value) {
+                            break;
+                        }
                     }
                     $record[] = $this->valueToString($value);
                 }else{
@@ -132,10 +135,10 @@ class ExportController extends AbstractController
             $propertyName = $properties[$key];
             $propertyType = $propertyInfo->getTypes($entity, $p);
             if($propertyType && count(explode('\\', $propertyType[0]->getClassName())) > 1 && !in_array($propertyType[0]->getClassName(), $allreadyCheck, true)){
-                $returnedTab = $this->pushProperties($propertyType[0]->getClassName(), $propertyInfo->getProperties($propertyType[0]->getClassName()) , $propertyInfo, $returnedTab, $allreadyCheck, $propertyName.'.'.$currentDepth);
+                $returnedTab = $this->pushProperties($propertyType[0]->getClassName(), $propertyInfo->getProperties($propertyType[0]->getClassName()) , $propertyInfo, $returnedTab, $allreadyCheck, ($currentDepth ?? '').$propertyName.'.');
             }else{
                 if($propertyType){
-                    if(!$propertyType[0]->isCollection() || $propertyType[0]->getBuiltinType() === 'array'){
+                    if(!$propertyType[0]->getCollectionValueType()){
                         $returnedTab[] = ['name' => $currentDepth.$propertyName, 'class' => $propertyType[0]->getClassName()];
                     }
                 }else{
