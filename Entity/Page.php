@@ -168,4 +168,9 @@ class Page implements Translatable
     {
         $this->locale = $locale;
     }
+
+    public function __toString()
+    {
+        return (string)$this->title;
+    }
 }
