@@ -1,11 +1,16 @@
 /** Import Bootstrap functions */
 @import "~bootstrap/scss/functions";
 
+$primary: #EC1920;
+$secondary: #061441;
+$third : #F6F6F8;
+$quatre : #dce2f3;
+
 $theme-colors: (
-    primary: #EC1920,
-    secondary: #061441,
-    third : #F6F6F8,
-    quatre : #dce2f3,
+    primary: $primary,
+    secondary: $secondary,
+    third : $third ,
+    quatre : $quatre ,
 );
 
 //$grid-breakpoints: (
