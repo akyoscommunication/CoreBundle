@@ -1,0 +1,32 @@
+.aky-button {
+    @include flex(row, wrap, center, center);
+    font-weight: 500;
+    width: 100%;
+
+    &.left {
+        justify-content: flex-start;
+    }
+
+    &.right {
+        justify-content: flex-end;
+    }
+
+    &.center {
+        justify-content: center;
+    }
+
+    &__link {
+        position: relative;
+        font-size: .9rem;
+        font-weight: 700;
+        padding: .5rem 2rem;
+        transition: ease .3s;
+        transform: scale(1);
+        border-radius: 5px;
+
+        &:hover {
+            text-decoration: none;
+            color: white;
+        }
+    }
+}

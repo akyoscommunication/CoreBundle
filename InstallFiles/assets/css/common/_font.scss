@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin:400,400i,500,500i,600,600i,700,700i&display=swap');
+
+:root {
+    font-size: 16px;
+    line-height: 27px;
+
+    @include media-breakpoint-down(md) {
+        font-size: 14px;
+    }
+
+    @include media-breakpoint-between(md, lg) {
+        font-size: 12px;
+    }
+}
+
+body {
+    color: #000;
+    font-family: 'Cabin', sans-serif;
+
+    div,
+    p,
+    li,
+    h1,h2,h3,h4,h5 {
+        font-family: 'Cabin', sans-serif;
+    }
+}

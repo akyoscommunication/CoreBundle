@@ -1,0 +1,27 @@
+.aky-slider{
+}
+
+.aky-slide{
+    position: relative;
+    &-img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+
+        > * {
+            object-fit: cover;
+            object-position: center;
+            height: 100%;
+            width: 100%;
+        }
+    }
+    &-content{
+        @extend .container;
+        @include flex(column, nowrap, center, flex-start);
+        color: white;
+        height: 100%;
+    }
+}

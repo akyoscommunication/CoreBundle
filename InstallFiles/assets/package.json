@@ -34,6 +34,5 @@
     "select2": "^4.0.13",
     "swiper": "^5.2.1",
     "symfony-collection": "ninsuo/symfony-collection",
-    "wowjs": "^1.1.3"
   }
 }
