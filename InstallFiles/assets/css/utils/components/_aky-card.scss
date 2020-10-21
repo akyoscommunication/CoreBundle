@@ -1,0 +1,50 @@
+.aky-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background-color: color(white);
+    color: color(gray-900);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.12);
+    padding: 2.5rem;
+
+    &.position-sticky {
+        top: 120px;
+    }
+
+    &-header {
+        padding-bottom: 2rem;
+        @include flex(row, wrap, space-between, center);
+        &__title {
+            font-weight: 600;
+        }
+    }
+    &-body {
+        //overflow: scroll;
+    }
+
+    &.primary {
+        background-color: color(primary);
+        color: color(white);
+    }
+
+    &.second {
+        background-color: color(second);
+        color: color(white);
+    }
+
+    .spinning-dots-container {
+        @include flex(row, nowrap, center, center);
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,.8);
+        z-index: 9;
+
+        spinning-dots {
+            color: white;
+        }
+    }
+}
+

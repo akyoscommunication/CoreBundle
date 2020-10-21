@@ -1,0 +1,28 @@
+/** Import Bootstrap functions */
+@import "~bootstrap/scss/functions";
+
+$theme-colors: (
+    primary: #EC1920,
+    secondary: #061441,
+    third : #F6F6F8,
+    quatre : #dce2f3,
+);
+
+//$grid-breakpoints: (
+//    // Extra small screen / phone
+//        xs: 0,
+//    // Small screen / phone
+//        sm: 576px,
+//    // Medium screen / tablet
+//        md: 768px,
+//    // Large screen / desktop
+//        lg: 1400px,
+//    // Extra large screen / wide desktop
+//        xl: 1550px
+//);
+
+$container-max-widths: (
+    md: 1400px,
+    lg: 1250px,
+    xl: 1500px
+);

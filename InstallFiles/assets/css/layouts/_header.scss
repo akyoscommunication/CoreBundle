@@ -1,0 +1,190 @@
+$hBorder : 3px;
+$wBorder : 44.15%;
+
+.breadcrumbs {
+    @extend .container;
+    @include flex(row, nowrap, flex-start, center);
+    list-style-type: none;
+
+    li {
+        position: relative;
+        font-size: 14px;
+
+        &:not(:first-child) {
+            margin-left: 25px;
+
+            &:before {
+                position: absolute;
+                left: -15px;
+                top: auto;
+                bottom: auto;
+                content: ">";
+            }
+        }
+    }
+}
+
+.banner {
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    padding: 1rem 0;
+
+    .burger {
+        width: 50px;
+        height: 50px;
+        position: fixed;
+        top: 30px;
+        right: 20px;
+        border-radius: 100%;
+        background-color: white;
+        z-index: 25;
+        border: 2px solid color(primary);
+        display: none;
+
+        span {
+            @include burger(30px, 3px, 6px, color(goldlight)); // gray
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -15px;
+            margin-top: -1.5px;
+        }
+
+        &.clicked {
+            span {
+                @include burger-to-cross;
+
+                &:before, &:after {
+                    background-color: black;
+                }
+            }
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .brand {
+        display: block;
+        max-height: 75px;
+        height: 100%;
+
+        #mainLogo{
+            @include objectFit(contain, left, 100%, 100%);
+        }
+    }
+
+    .nav {
+        @include flex(row, nowrap, space-between, center);
+        position: relative;
+
+        &-item {
+            border-right: 3px solid color(gold);
+            padding: 0 1rem;
+            @include flex(row, wrap, center, center);
+
+            &__link {
+                position: relative;
+                text-transform: uppercase;
+                color: color(secondary);
+                font-weight: bold;
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    background-color: color(primary);
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: 3px;
+                    display: block;
+                    transform: translateY(100%) scaleY(0);
+                    transform-origin: center bottom;
+                    transition: ease .3s;
+                }
+
+                &:hover {
+                    text-decoration: none;
+                    &:after {
+                        transform: translateY(100%) scaleY(1);
+                    }
+                }
+            }
+
+            &-parent {
+                position: relative;
+
+                &:hover {
+                    .nav-sub {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        &-sub {
+            @include flex(column, wrap, center, center);
+            position: absolute;
+            background-color: white;
+            display: none;
+            top: calc(100% + 9px);
+            list-style-type: none;
+            padding: 1.3rem 1rem;
+            width: 100%;
+            z-index: 9;
+
+            &-item {
+                @include flex(row, nowrap, center, center);
+                margin-bottom: 10px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                &.active {
+                    > a {
+                        &:after,
+                        &:before {
+                            opacity: 1;
+                        }
+                    }
+                }
+
+                &__link {
+                    @include flex(row, wrap, center, center);
+                    color: color(primary);
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    position: relative;
+                    padding: 0 1rem;
+                    text-align: center;
+
+                    $hw : 11px;
+
+                }
+            }
+
+            .nav-item-parent {
+                @include flex(column, nowrap, center, center);
+            }
+
+            &-sub {
+                display: none;
+                list-style-type: none;
+                padding: 0;
+                text-align: center;
+            }
+        }
+    }
+
+    &-row {
+        nav {
+            @include flex(row, nowrap, flex-end, center);
+            height: 100%;
+            padding: 25px 0;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+#preFooter {
+    background-color: color(quatre);
+    padding: 1.5rem;
+}
+
+#Footer,
+#Copyright {
+    color: white;
+    background-color: color(secondary);
+}
+
+#Footer {
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+
+    a {
+        color: white;
+    }
+}
+#Copyright {
+    padding: 1.5rem 0;
+    border-top: 1px solid white;
+}

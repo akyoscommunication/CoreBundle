@@ -1,0 +1,16 @@
+@import "common/variables";
+
+/** Librairies externe */
+@import "common/autoload";
+
+/** Import theme styles */
+@import "common/mixins";
+@import "common/font";
+@import "common/global";
+@import "utils/components";
+@import "layouts/index";
+
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
