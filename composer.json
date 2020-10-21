@@ -10,6 +10,7 @@
         "ext-json": "*",
         "ext-intl": "*",
         "ext-fileinfo": "*",
+        "league/csv": "^9.0",
         "beberlei/doctrineextensions": "^1.2",
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.3",

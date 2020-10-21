@@ -11,6 +11,7 @@ import MenuItem from  './modules/MenuItem';
 import Seo from "./modules/Seo";
 import SubmitForm from "./modules/SubmitForms";
 import FixCKEditor from "./modules/FixCKEditor";
+import Export from "./modules/Export";
 
 class Core {
     static init() {
@@ -21,6 +22,7 @@ class Core {
         Seo.init();
         SubmitForm.init();
         FixCKEditor.init();
+        Export.init();
         initCollectionType.initDataPrototype();
     }
 

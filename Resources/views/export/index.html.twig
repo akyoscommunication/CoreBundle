@@ -1,0 +1,64 @@
+{% extends '@AkyosCore/layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+    <div class="aky-header-page">
+        <h1 class="aky-header-page__title">{{ title }}</h1>
+    </div>
+
+    <div class="akyos-step row mb-5" id="akyos-step-1">
+        <div class="akyos-step-title col-md-4">
+            <div class="akyos-step-title__circle">
+                <span>1</span>
+            </div>
+            <p class="akyos-step-title__help">Choisisez une entiter a exporter</p>
+        </div>
+        <div class="akyos-step-element col-md-8">
+            <select class="form-control js-select2" name="entity" id="step-1-entity">
+                <option disabled selected>Choisissez une entiter</option>
+                {% for entity in entities %}
+                    <option value="{{ entity }}">{{ entity|split('\\')|last }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div hidden class="akyos-step row mb-5" id="akyos-step-2">
+        <div class="akyos-step-title col-md-4">
+            <div class="akyos-step-title__circle">
+                <span>2</span>
+            </div>
+            <p class="akyos-step-title__help">Choisissez les champs a exporter</p>
+        </div>
+        <div class="akyos-step-element col-md-8">
+            <select class="form-control js-select2" multiple name="entity" id="step-2-fields">
+            </select>
+        </div>
+    </div>
+
+    <div hidden class="akyos-step row md-5" id="akyos-step-3">
+        <div class="akyos-step-title col-md-12">
+            <div class="akyos-step-title__circle mb-3">
+                <span>3</span>
+            </div>
+            <p class="akyos-step-title__help">Choisissez les champs dans l'ordre souhaité</p>
+        </div>
+        <div class="akyos-step-element col-md-12 mb-3">
+            <ul class="akyos-step-element__sortable" id="akyos-step-sortable">
+            </ul>
+        </div>
+    </div>
+
+    <div hidden class="akyos-step row md-5" id="akyos-step-4">
+        <div class="akyos-step-title col-md-4">
+            <div class="akyos-step-title__circle">
+                <span>4</span>
+            </div>
+            <p class="akyos-step-title__help">Télécharger le fichier</p>
+        </div>
+        <div class="akyos-step-element col-md-8">
+            <button class="akyos-step-element__button" id="akyos-step-dl"><i class="fas fa-download"></i> Télécharger</button>
+        </div>
+    </div>
+{% endblock %}
