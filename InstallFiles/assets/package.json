@@ -33,6 +33,6 @@
     "puppeteer": "^2.1.1",
     "select2": "^4.0.13",
     "swiper": "^5.2.1",
-    "symfony-collection": "ninsuo/symfony-collection",
+    "symfony-collection": "ninsuo/symfony-collection"
   }
 }
