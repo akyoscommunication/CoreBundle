@@ -59,6 +59,8 @@ class CoreInstallFixtures extends Fixture
             ->setHasPosts(0)
             ->setHasPostDocuments(0)
             ->setHasSeoEntities(['Akyos\CoreBundle\Entity\Page'])
+            ->setAgencyLink('https://akyos.com')
+            ->setAgencyName('Akyos Communication')
         ;
         $manager->persist($coreOptions);
         $manager->flush();
