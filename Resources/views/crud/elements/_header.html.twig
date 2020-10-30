@@ -13,7 +13,7 @@
 
     {% if href %}
         {% if button_add is defined and button_add %}
-            <a class="aky-header-page__btn btn btn-outline-success" href="{{ path(href~'_new' , parameters is defined ? parameters : {}) }}" {{ formModal is defined and formModal ? 'data-toggle="modal" data-target="'~(formModalId is defined ? formModalId : "#newModal")~'"' : '' }}> {{ element is defined ? element : "Ajouter un élément" }} <i class="fas fa-plus"></i></a>
+            <a class="aky-header-page__btn btn btn-outline-success" href="{{ path(href~'_new' , parameters is defined ? parameters : {}) }}" {{ formModal is defined and formModal ? 'data-toggle=modal data-target='~(formModalId is defined ? formModalId : "#newModal")~'' : '' }}> {{ element is defined ? element : "Ajouter un élément" }} <i class="fas fa-plus"></i></a>
         {% endif %}
         {% if button_back is defined and button_back %}
             <a class="aky-header-page__btn btn btn-outline-primary" href="{{ path(href, parameters is defined ? parameters : {}) }}"><i class="fas fa-long-arrow-alt-left"></i> Retour</a>
