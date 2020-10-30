@@ -47,6 +47,7 @@ class CoreInstallFixtures extends Fixture
         $menu
             ->setTitle('Menu principal')
             ->setSlug('menu-principal')
+            ->setMenuArea($menuArea)
         ;
         $manager->persist($menu);
         $manager->flush();
