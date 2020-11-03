@@ -67,9 +67,9 @@
                                         <form action="{{ path('core_change_position_sub', {
                                             'route' : 'post',
                                             'id' : doc.id,
-                                            'namespace': 'Akyos\\CoreBundle\\Entity\\PostDocument',
+                                            'namespace': get_class(doc),
                                             'parentId': el.id,
-                                            'namespaceParent': 'Akyos\\CoreBundle\\Entity\\Post',
+                                            'namespaceParent': get_class(el),
                                             'tab': 'postdoc'
                                             }) }}" method="post">
                                             <input class="form-control" type="number" name="position" value="{{ doc.position }}" min="0" max="{{ el.postDocuments|length - 1 }}">
