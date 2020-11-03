@@ -93,6 +93,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getBundleTab', [$this, 'getBundleTab']),
             new TwigFunction('getBundleTabContent', [$this, 'getBundleTabContent']),
             new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
+            new TwigFunction('get_class', 'get_class'),
         ];
     }
 

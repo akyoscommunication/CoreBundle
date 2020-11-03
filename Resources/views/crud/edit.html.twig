@@ -58,13 +58,20 @@
                             </tr>
                             </thead>
                             <tbody class="aky-table-body">
-                            {% for doc in el.postDocuments %}
+                            {% for doc in el.postDocuments|sort((a,b)=>a.position > b.position) %}
                                 <tr>
                                     <td>
                                         {{ doc.title }}
                                     </td>
                                     <td>
-                                        <form action="{{ path('core_change_position', {'route' : 'post', 'el' : 'Post', 'id' : doc.id, 'bundle' : 'CoreBundle' }) }}" method="post">
+                                        <form action="{{ path('core_change_position_sub', {
+                                            'route' : 'post',
+                                            'id' : doc.id,
+                                            'namespace': 'Akyos\\CoreBundle\\Entity\\PostDocument',
+                                            'parentId': el.id,
+                                            'namespaceParent': 'Akyos\\CoreBundle\\Entity\\Post',
+                                            'tab': 'postdoc'
+                                            }) }}" method="post">
                                             <input class="form-control" type="number" name="position" value="{{ doc.position }}" min="0" max="{{ el.postDocuments|length - 1 }}">
                                         </form>
                                     </td>

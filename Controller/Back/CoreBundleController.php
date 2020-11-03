@@ -68,6 +68,63 @@ class CoreBundleController extends AbstractController
         return $this->redirectToRoute($route.'_index');
     }
 
+    /**
+     * permet de changer les positions des éléments enfant d'une entité,
+     * doit prendre en paramètres :
+     * route du parent
+     * id de l'élement cible + namespace complet ("Akyos\\CoreBundle\\Entity\\PostDocument")
+     * id du parent + namespace complet "Akyos\\CoreBundle\\Entity\\Post"
+     * @Route("/change-position-sub/{route}/{id}/{namespace}/{parentId}/{namespaceParent}/{tab}", name="change_position_sub", methods={"POST"})
+     * @param $route
+     * @param $id
+     * @param $namespace
+     * @param Request $request
+     * @param $parentId
+     * @param $namespaceParent
+     * @param null $tab
+     * @return RedirectResponse
+     */
+    public function changePositionSub($route, $id, $namespace, Request $request, $parentId = null, $namespaceParent = null, $tab = null)
+    {
+        $repository = $this->getDoctrine()->getRepository($namespace);
+        $entityOne = $repository->findOneById($id);
+        $oldPosition = $entityOne->getPosition();
+        $newPosition = $request->get('position');
+        if($parentId && $namespaceParent){
+            //Pour appeler la collection d'éléments depuis le parent à partir du nom de l'entité mise en param
+            $array = explode('\\', $namespace);
+            $command = 'get'.array_pop($array).'s';
+            $repositoryParent = $this->getDoctrine()->getRepository($namespaceParent);
+            $els = $repositoryParent->findOneById($parentId)->$command();
+        }else{
+            $els = $repository->findAll();
+        }
+        if($oldPosition < $newPosition){
+            foreach ($els as $item) {
+                if($item->getPosition() > $oldPosition && $item->getPosition() <= $newPosition){
+                    $item->setPosition($item->getPosition()-1);
+                }
+            }
+        }elseif($oldPosition > $newPosition){
+            foreach ($els as $item) {
+                if($item->getPosition() >= $newPosition && $item->getPosition() < $oldPosition){
+                    $item->setPosition($item->getPosition()+1);
+                }
+            }
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityOne->setPosition($request->get('position'));
+        $entityManager->flush();
+        if($parentId && $namespaceParent){
+            return $this->redirectToRoute($route.'_edit', [
+                'id'=>$parentId,
+                'tab'=>$tab
+            ]);
+        }else{
+            return $this->redirectToRoute($route.'_index');
+        }
+    }
+
 //    /**
 //     * @Route("/reset-position/{route}/{el}", name="reset_position", methods={"POST"})
 //     */
