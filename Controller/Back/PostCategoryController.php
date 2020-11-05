@@ -108,22 +108,19 @@ class PostCategoryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="delete", methods={"DELETE"})
      * @param Request $request
      * @param PostCategory $postCategory
      * @param SeoRepository $seoRepository
-     *
      * @return Response
      */
     public function delete(Request $request, PostCategory $postCategory, SeoRepository $seoRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$postCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($seoRepository->findOneBy(array('type' => 'PostCategory', 'typeId' => $postCategory->getId())));
             $entityManager->remove($postCategory);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('post_category_index');
     }
 }
