@@ -22,6 +22,11 @@ class SidebarController extends AbstractController
             $response = $this->forward('Akyos\FormBundle\Service\ExtendSidebar::getTemplate', ['route' => $route]);
             $html .= $response->getContent();
         }
+        if (class_exists('Akyos\FileManagerBundle\AkyosFileManagerBundle'))
+        {
+            $response = $this->forward('Akyos\FileManagerBundle\Service\ExtendSidebar::getTemplate', ['route' => $route]);
+            $html .= $response->getContent();
+        }
 
         if (class_exists('Akyos\ShopBundle\AkyosShopBundle'))
         {
