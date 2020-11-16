@@ -19,9 +19,11 @@ class PostDocumentType extends AbstractType
             ->add('title', null, [
                 'label' => 'Titre',
                 'help' => 'Insérez votre titre ici',
+                'required'=> true
             ])
             ->add('file', FileManagerType::class, [
-                'label'=>'Document'
+                'label'=>'Document',
+                'required'=> true
             ])
             ->add('content', CKEditorType::class, [
                 'label'=>'Contenu'
@@ -30,7 +32,9 @@ class PostDocumentType extends AbstractType
                 'label'=>'Est-ce que ce document doit être privé?',
                 'required'=>false
             ])
-            ->add('position')
+            ->add('position', null, [
+                'required'=> true
+            ])
         ;
     }
 
