@@ -10,8 +10,10 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Akyos\CoreBundle\Services\FrontControllerService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -117,7 +119,9 @@ class FrontController extends AbstractController
     public function archive(
         Filesystem $filesystem,
         $entitySlug,
-        CoreService $coreService): Response
+        CoreService $coreService,
+        Request $request,
+        PaginatorInterface $paginator): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         [$entityFullName, $entity] = $coreService->getEntityAndFullString($entitySlug);
@@ -129,7 +133,21 @@ class FrontController extends AbstractController
         }
 
         // GET ELEMENTS
-        $elements = $this->getDoctrine()->getRepository($entityFullName)->findAll();
+        // Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "search"
+        if(method_exists($this->getDoctrine()->getRepository($entityFullName), 'search')){
+            $elements = $paginator->paginate(
+                $this->getDoctrine()->getRepository($entityFullName)->search($request->query->get('search') ?? null),
+                $request->query->getInt('page', 1),
+                10
+            );
+        }else{
+            $elements = $paginator->paginate(
+                $this->getDoctrine()->getRepository($entityFullName)->findAll(),
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
         if(!$elements) {
             throw $this->createNotFoundException('Aucun élément pour cette entité! ');
         }
