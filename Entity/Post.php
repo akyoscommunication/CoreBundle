@@ -79,6 +79,11 @@ class Post implements Translatable
      */
     private $postDocuments;
 
+    /**
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $gallery = [];
+
     public function __construct()
     {
         $this->postCategories = new ArrayCollection();
@@ -236,5 +241,17 @@ class Post implements Translatable
     public function __toString()
     {
         return (string)$this->title;
+    }
+
+    public function getGallery(): ?array
+    {
+        return $this->gallery;
+    }
+
+    public function setGallery(?array $gallery): self
+    {
+        $this->gallery = $gallery;
+
+        return $this;
     }
 }

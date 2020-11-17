@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Form\Type\Post;
 
 use Akyos\CoreBundle\Entity\Post;
+use Akyos\FileManagerBundle\Form\Type\FileManagerCollectionType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
@@ -43,7 +44,10 @@ class PostType extends AbstractType
                 'label' => 'Image à la une',
             ])
             ->add('thumbnailArchive', FileManagerType::class, [
-                'label' => 'Image à la une ( archive )',
+                'label' => 'Image à la une ( miniature sur le listing des actualités )',
+            ])
+            ->add('gallery', FileManagerCollectionType::class, [
+                'label' => 'Galerie d\'images',
             ])
             ->add('postCategories', null, [
                 'by_reference' => false,
