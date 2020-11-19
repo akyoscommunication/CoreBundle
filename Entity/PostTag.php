@@ -17,6 +17,8 @@ class PostTag
 {
     use TimestampableEntity;
 
+    const ENTITY_SLUG = "etiquette";
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
