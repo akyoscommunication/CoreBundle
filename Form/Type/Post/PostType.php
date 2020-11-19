@@ -52,18 +52,14 @@ class PostType extends AbstractType
             ->add('gallery', FileManagerCollectionType::class, [
                 'label' => 'Galerie d\'images',
             ])
-            ->add('postCategories', EntityType::class, [
+            ->add('postCategories', null, [
                 'by_reference' => false,
-                'class' => PostCategory::class,
-                'choice_label' => 'title',
                 'attr' => ['class' => 'form-control js-select2'],
                 'label' => 'Catégorie(s) liée(s)',
                 'help' => '( Sélectionnez les catégories de l\'article )',
             ])
-            ->add('postTags', EntityType::class, [
+            ->add('postTags', null, [
                 'by_reference' => false,
-                'class' => PostTag::class,
-                'choice_label' => 'title',
                 'attr' => ['class' => 'form-control js-select2'],
                 'label' => 'Étiquettes(s) associée(s)',
                 'help' => '( Sélectionnez les étiquettes de l\'article )',

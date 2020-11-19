@@ -86,6 +86,7 @@ class Post implements Translatable
 
     /**
      * @ORM\ManyToMany(targetEntity=PostTag::class, mappedBy="posts")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $postTags;
 
