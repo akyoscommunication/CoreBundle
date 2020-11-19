@@ -93,7 +93,7 @@ class FrontController extends AbstractController
      * @Route("/{slug}",
      *     methods={"GET","POST"},
      *     requirements={
-     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/).+"
      *     },
      *     name="page")
      * @param $slug
@@ -261,7 +261,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/etiquette/{entitySlug}/{tag}", name="taxonomy", methods={"GET","POST"})
+     * @Route("/tag/{entitySlug}/{tag}", name="tag", methods={"GET","POST"})
      * @param Filesystem $filesystem
      * @param $entitySlug
      * @param $tag
@@ -283,10 +283,12 @@ class FrontController extends AbstractController
             throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
         }
 
+        $parentEntity = str_replace('Tag', '', $entity);
+
         // GET TAG FULLNAME FROM ENTITY SLUG
         $tagFullName = null;
         foreach ($meta as $m) {
-            if(preg_match('/'.$entity.'Tag$/i', $m->getName())) {
+            if(preg_match('/'.$entity.'$/i', $m->getName())) {
                 $tagFullName = $m->getName();
             }
         }
@@ -301,15 +303,15 @@ class FrontController extends AbstractController
             throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
         }
         if(substr($entity, -1) === "y") {
-            $getter = 'get'.substr(ucfirst($entity), 0,strlen($entity) - 1).'ies';
+            $getter = 'get'.substr(ucfirst($parentEntity), 0,strlen($parentEntity) - 1).'ies';
         } else {
-            $getter = 'get'.ucfirst($entity).'s';
+            $getter = 'get'.ucfirst($parentEntity).'s';
         }
         $elements = $tagObject->$getter();
 
         // GET TEMPLATE
-        $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/tag.html.twig')
-            ? "/${entity}/tag.html.twig"
+        $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$parentEntity.'/tag.html.twig')
+            ? "/${parentEntity}/tag.html.twig"
             : '@AkyosCore/front/tag.html.twig';
 
         // RENDER

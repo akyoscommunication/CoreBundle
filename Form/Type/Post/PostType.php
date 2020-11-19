@@ -3,9 +3,12 @@
 namespace Akyos\CoreBundle\Form\Type\Post;
 
 use Akyos\CoreBundle\Entity\Post;
+use Akyos\CoreBundle\Entity\PostCategory;
+use Akyos\CoreBundle\Entity\PostTag;
 use Akyos\FileManagerBundle\Form\Type\FileManagerCollectionType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,11 +52,21 @@ class PostType extends AbstractType
             ->add('gallery', FileManagerCollectionType::class, [
                 'label' => 'Galerie d\'images',
             ])
-            ->add('postCategories', null, [
+            ->add('postCategories', EntityType::class, [
                 'by_reference' => false,
+                'class' => PostCategory::class,
+                'choice_label' => 'title',
                 'attr' => ['class' => 'form-control js-select2'],
                 'label' => 'Catégorie(s) liée(s)',
                 'help' => '( Sélectionnez les catégories de l\'article )',
+            ])
+            ->add('postTags', EntityType::class, [
+                'by_reference' => false,
+                'class' => PostTag::class,
+                'choice_label' => 'title',
+                'attr' => ['class' => 'form-control js-select2'],
+                'label' => 'Étiquettes(s) associée(s)',
+                'help' => '( Sélectionnez les étiquettes de l\'article )',
             ])
             ->add('createdAt', DateType::class, [
                 'widget' => 'single_text',

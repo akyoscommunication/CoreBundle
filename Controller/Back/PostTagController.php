@@ -40,7 +40,7 @@ class PostTagController extends AbstractController
             'els' => $els,
             'title' => 'Étiquettes d\'article',
             'entity' => 'PostTag',
-            'view' => 'taxonomy',
+            'view' => 'tag',
             'route' => 'post_tag',
             'fields' => array(
                 'ID' => 'Id',
