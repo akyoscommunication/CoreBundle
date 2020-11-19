@@ -3,30 +3,29 @@
 namespace Akyos\CoreBundle\Entity;
 
 use Akyos\CoreBundle\Annotations\SlugRedirect;
+use Akyos\CoreBundle\Repository\PostTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
- * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\PostCategoryRepository")
+ * @ORM\Entity(repositoryClass=PostTagRepository::class)
  */
-class PostCategory implements Translatable
+class PostTag
 {
     use TimestampableEntity;
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo\Translatable
      */
     private $title;
 
@@ -40,12 +39,11 @@ class PostCategory implements Translatable
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Gedmo\Translatable
      */
     private $content;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Akyos\CoreBundle\Entity\Post", inversedBy="postCategories")
+     * @ORM\ManyToMany(targetEntity=Post::class, inversedBy="postTags")
      */
     private $posts;
 
@@ -114,15 +112,8 @@ class PostCategory implements Translatable
 
     public function removePost(Post $post): self
     {
-        if ($this->posts->contains($post)) {
-            $this->posts->removeElement($post);
-        }
+        $this->posts->removeElement($post);
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->title;
     }
 }

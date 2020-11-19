@@ -84,10 +84,16 @@ class Post implements Translatable
      */
     private $gallery = [];
 
+    /**
+     * @ORM\ManyToMany(targetEntity=PostTag::class, mappedBy="posts")
+     */
+    private $postTags;
+
     public function __construct()
     {
         $this->postCategories = new ArrayCollection();
         $this->postDocuments = new ArrayCollection();
+        $this->postTags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -251,6 +257,33 @@ class Post implements Translatable
     public function setGallery(?array $gallery): self
     {
         $this->gallery = $gallery;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostTag[]
+     */
+    public function getPostTags(): Collection
+    {
+        return $this->postTags;
+    }
+
+    public function addPostTag(PostTag $postTag): self
+    {
+        if (!$this->postTags->contains($postTag)) {
+            $this->postTags[] = $postTag;
+            $postTag->addPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostTag(PostTag $postTag): self
+    {
+        if ($this->postTags->removeElement($postTag)) {
+            $postTag->removePost($this);
+        }
 
         return $this;
     }

@@ -24,12 +24,16 @@
                 <a href="#post" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Articles</a>
                 <ul class="collapse list-unstyled" id="post">
                     {# POSTS #}
-                    <li class="{{ 'post_' in route and 'post_category_' not in route ? "active" : "" }}">
+                    <li class="{{ 'post_' in route and 'post_category_' not in route and 'post_tag_' not in route ? "active" : "" }}">
                         <a href="{{ path('post_index') }}">Liste des articles</a>
                     </li>
                     {# POSTS CATEGORIES #}
                     <li class="{{ 'post_category_' in route ? "active" : "" }}">
                         <a href="{{ path('post_category_index') }}">Catégories d'articles</a>
+                    </li>
+                    {# POSTS TAGS #}
+                    <li class="{{ 'post_tag_' in route ? "active" : "" }}">
+                        <a href="{{ path('post_tag_index') }}">Étiquettes d'articles</a>
                     </li>
                 </ul>
             </li>
