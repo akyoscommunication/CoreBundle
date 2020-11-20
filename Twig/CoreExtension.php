@@ -3,12 +3,14 @@
 namespace Akyos\CoreBundle\Twig;
 
 use Akyos\CoreBundle\Controller\Back\CoreBundleController;
+use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\CustomFieldRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Services\CoreService;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -103,6 +105,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
             new TwigFunction('get_class', 'get_class'),
             new TwigFunction('getCustomField', [$this, 'getCustomField']),
+            new TwigFunction('searchByCustomField', [$this, 'searchByCustomField']),
         ];
     }
 
@@ -502,5 +505,60 @@ class CoreExtension extends AbstractExtension
         }
 
         return $customFieldValue;
+    }
+
+    public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null)
+    {
+        $customFieldValuesQuery = $this->customFieldValueRepository->createQueryBuilder('cfv')
+            ->innerJoin('cfv.customField', 'cf')
+        ;
+
+        foreach ($customFieldCriterias as $customFieldSlug => $customFieldValue) {
+            $customFieldValuesQuery
+                ->andWhere('cf.slug = :customFieldSlug')
+                ->setParameter('customFieldSlug', $customFieldSlug)
+                ->andWhere('cfv.value = :customFieldValue')
+                ->setParameter('customFieldValue', $customFieldValue)
+            ;
+        }
+
+        $customFieldValues = $customFieldValuesQuery
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $elementsIds = array_map(static function(CustomFieldValue $value) {
+            return $value->getObjectId();
+        }, $customFieldValues);
+
+        /** @var QueryBuilder $elementsQuery */
+        $elementsQuery = $this->em->getRepository($entity)->createQueryBuilder('element');
+        $elementsQuery
+            ->andWhere('element.id IN (:elementsIds)')
+            ->setParameter('elementsIds', $elementsIds)
+        ;
+
+        if($criterias) {
+            foreach ($criterias as $criteria => $value) {
+                $elementsQuery->andWhere('element.'.$criteria.' = '.$value);
+            }
+        }
+
+        if($orders) {
+            foreach ($orders as $criteria => $order) {
+                $elementsQuery->addOrderBy('element.'.$criteria, $order);
+            }
+        }
+
+        if($limit) {
+            $elementsQuery->setMaxResults($limit);
+        }
+
+        if($offset) {
+            $elementsQuery->setFirstResult($offset);
+        }
+
+        return $elementsQuery->getQuery()->getResult();
+
     }
 }
