@@ -494,7 +494,7 @@ class CoreExtension extends AbstractExtension
 
         switch ($customField->getType()) {
             case 'entity':
-                $customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue);
+                $customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue->getValue());
                 break;
             default:
                 $customFieldValue = $customFieldValue->getValue();
