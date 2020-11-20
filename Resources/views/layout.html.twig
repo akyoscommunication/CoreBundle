@@ -8,6 +8,7 @@
          <!-- Page Content  -->
          <div id="main">
              {% include "@AkyosCore/layout/header.html.twig" %}
+             <div class="flashbag">{{ _self.render_flashbag() }}</div>
              {% block page_content %}{% endblock %}
 {#             {% include "@AkyosCore/layout/footer.html.twig" %}#}
          </div>
@@ -24,3 +25,18 @@
      <link rel="stylesheet" href="{{ asset('bundles/akyoscore/main.css') }}">
      <link rel="stylesheet" href="{{ asset('bundles/akyosfilemanager/main.css') }}">
  {% endblock %}
+
+{% macro render_flashbag() %}
+    {% for type, messages in app.session.flashbag.all() %}
+        {% for message in messages %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-{{ type }} alert-dismissable animation-slideRight">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <p>{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}

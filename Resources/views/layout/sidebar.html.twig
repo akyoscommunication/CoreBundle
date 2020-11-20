@@ -94,6 +94,10 @@
                     <li class="{{ 'rgpd_options' in route ? "active" : "" }}">
                         <a href="{{ path('rgpd_options') }}">RGPD et tracking</a>
                     </li>
+                    {# CUSTOM FIELDS OPTIONS #}
+                    <li class="{{ 'custom_fields' in route ? "active" : "" }}">
+                        <a href="{{ path('custom_fields_group_index') }}">Champs custom</a>
+                    </li>
                     {# BUNDLES OPTIONS EXTENSIONS #}
                     {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getOptionsSidebar', {'route': route})) }}
                 {% endif %}
