@@ -31,8 +31,8 @@ class CustomFieldValueType extends AbstractType
 {
     private $pages;
     private $posts;
-    private EntityManagerInterface $em;
-    private CustomFieldValueRepository $customFieldValueRepository;
+    private $em;
+    private $customFieldValueRepository;
 
     public function __construct(PageRepository $pageRepository, PostRepository $postRepository, EntityManagerInterface $em, CustomFieldValueRepository $customFieldValueRepository) {
         $pages = $pageRepository->findAll();

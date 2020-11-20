@@ -6,6 +6,8 @@ use Akyos\CoreBundle\Controller\Back\CoreBundleController;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
+use Akyos\CoreBundle\Repository\CustomFieldRepository;
+use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
@@ -26,6 +28,8 @@ class CoreExtension extends AbstractExtension
     private $container;
     private $mailer;
     private $twig;
+    private $customFieldValueRepository;
+    private $customFieldRepository;
 
     public function __construct(
         CoreBundleController $coreBundleController,
@@ -35,7 +39,9 @@ class CoreExtension extends AbstractExtension
         CoreService $coreService,
         ContainerInterface $container,
         \Swift_Mailer $mailer,
-        Environment $twig
+        Environment $twig,
+        CustomFieldValueRepository $customFieldValueRepository,
+        CustomFieldRepository $customFieldRepository
     )
     {
         $this->corebundleController = $coreBundleController;
@@ -46,6 +52,8 @@ class CoreExtension extends AbstractExtension
         $this->container = $container;
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->customFieldValueRepository = $customFieldValueRepository;
+        $this->customFieldRepository = $customFieldRepository;
     }
 
     public function getFilters(): array
@@ -94,6 +102,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getBundleTabContent', [$this, 'getBundleTabContent']),
             new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
             new TwigFunction('get_class', 'get_class'),
+            new TwigFunction('getCustomField', [$this, 'getCustomField']),
         ];
     }
 
@@ -469,5 +478,29 @@ class CoreExtension extends AbstractExtension
         } catch (\Exception $e) {
             return $e;
         }
+    }
+
+    public function getCustomField(string $customFieldSlug, $object)
+    {
+        $customField = $this->customFieldRepository->findOneBy(['slug' => $customFieldSlug]);
+        if(!$customField) {
+            return null;
+        }
+
+        $customFieldValue = $this->customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $object->getId()]);
+        if(!$customFieldValue) {
+            return null;
+        }
+
+        switch ($customField->getType()) {
+            case 'entity':
+                $customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue);
+                break;
+            default:
+                $customFieldValue = $customFieldValue->getValue();
+                break;
+        }
+
+        return $customFieldValue;
     }
 }

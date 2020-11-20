@@ -14,9 +14,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ACFType extends AbstractType
 {
-    private CustomFieldValueRepository $customFieldValueRepository;
-    private CustomFieldsGroupRepository $customFieldsGroupRepository;
-    private EntityManagerInterface $entityManager;
+    private $customFieldValueRepository;
+    private $customFieldsGroupRepository;
+    private $entityManager;
 
     public function __construct(CustomFieldValueRepository $customFieldValueRepository, CustomFieldsGroupRepository $customFieldsGroupRepository, EntityManagerInterface $entityManager)
     {
