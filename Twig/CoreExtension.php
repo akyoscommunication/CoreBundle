@@ -6,6 +6,7 @@ use Akyos\CoreBundle\Controller\Back\CoreBundleController;
 use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
+use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\CustomFieldRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
@@ -106,6 +107,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('get_class', 'get_class'),
             new TwigFunction('getCustomField', [$this, 'getCustomField']),
             new TwigFunction('searchByCustomField', [$this, 'searchByCustomField']),
+            new TwigFunction('hasCategory', [$this, 'hasCategory']),
         ];
     }
 
@@ -560,5 +562,16 @@ class CoreExtension extends AbstractExtension
 
         return $elementsQuery->getQuery()->getResult();
 
+    }
+
+    public function hasCategory(string $slug, Post $post): bool
+    {
+        $hasCategory = false;
+        foreach($post->getPostCategories() as $postCategory) {
+            if($postCategory->getSlug() === $slug) {
+                $hasCategory = true;
+            }
+        }
+        return $hasCategory;
     }
 }
