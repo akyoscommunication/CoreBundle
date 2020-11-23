@@ -501,6 +501,8 @@ class CoreExtension extends AbstractExtension
             case 'entity':
                 if($customFieldValue->getValue()) {
                     $customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue->getValue());
+                } else {
+                    $customFieldValue = null;
                 }
                 break;
             default:
