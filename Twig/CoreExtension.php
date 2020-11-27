@@ -150,10 +150,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
-                if(preg_match('/^'.$entity.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
         if(!$entityFullName) {
@@ -169,10 +167,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$entity.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
         if(!$entityFullName) {
@@ -240,10 +236,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
 
@@ -267,10 +261,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
 
@@ -299,11 +291,9 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[count($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                    $entityFields = $m->getFieldNames();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
+                $entityFields = $m->getFieldNames();
             }
         }
 
@@ -332,11 +322,9 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[count($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                    $entityFields = $m->getFieldNames();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
+                $entityFields = $m->getFieldNames();
             }
         }
 
