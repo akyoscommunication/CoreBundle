@@ -67,6 +67,8 @@ class FrontControllerService
             throw new NotFoundHttpException("Cette page n'existe pas! ( Détail )");
         }
 
+        $slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
+
         // GET ELEMENT
         $element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
         if(!$element) {
@@ -111,6 +113,7 @@ class FrontControllerService
     {
         // FIND PAGE
         $entity = 'Page';
+        $slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
         /** @var Page $page */
         $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]) ??
             ( !$this->em->getMetadataFactory()->isTransient(Translation::class)

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@AkyosCore/layout/base.html.twig' %}
 
  {% block body %}
      <div class="wrapper" style="{{ core_options and core_options.backMaincolor ? "--color-back-main-color:"~core_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(core_options.backMaincolor)~";" : "" }}">
