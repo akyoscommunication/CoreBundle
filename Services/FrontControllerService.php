@@ -67,6 +67,8 @@ class FrontControllerService
             throw new NotFoundHttpException("Cette page n'existe pas! ( Détail )");
         }
 
+        $slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
+
         // GET ELEMENT
         $element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
         if(!$element) {
@@ -88,7 +90,7 @@ class FrontControllerService
         // GET COMPONENTS OR CONTENT
         $components = null;
         if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => ($route === 'single_preview'), 'parentComponent' => null], ['position' => 'ASC']);
+            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entityFullName, 'typeId' => $element->getId(), 'isTemp' => ($route === 'single_preview'), 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE
@@ -111,6 +113,7 @@ class FrontControllerService
     {
         // FIND PAGE
         $entity = Page::class;
+        $slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
         /** @var Page $page */
         $page = $this->em->getRepository($entity)->findOneBy(['slug' => $slug]) ??
             ( !$this->em->getMetadataFactory()->isTransient(Translation::class)

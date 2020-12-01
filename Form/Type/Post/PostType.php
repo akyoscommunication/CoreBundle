@@ -3,9 +3,13 @@
 namespace Akyos\CoreBundle\Form\Type\Post;
 
 use Akyos\CoreBundle\Entity\Post;
+use Akyos\CoreBundle\Entity\PostCategory;
+use Akyos\CoreBundle\Entity\PostTag;
+use Akyos\CoreBundle\Form\Type\CustomFields\ACFType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerCollectionType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,9 +59,20 @@ class PostType extends AbstractType
                 'label' => 'Catégorie(s) liée(s)',
                 'help' => '( Sélectionnez les catégories de l\'article )',
             ])
+            ->add('postTags', null, [
+                'by_reference' => false,
+                'attr' => ['class' => 'form-control js-select2'],
+                'label' => 'Étiquettes(s) associée(s)',
+                'help' => '( Sélectionnez les étiquettes de l\'article )',
+            ])
             ->add('createdAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de publication'
+            ])
+            ->add('customFields', ACFType::class, [
+                'entity' => 'Akyos\\CoreBundle\\Entity\\Post',
+                'object_id' => $options['data']->getId(),
+                'mapped' => false,
             ])
         ;
     }

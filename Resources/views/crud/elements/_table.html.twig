@@ -62,6 +62,8 @@
                         {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'slug': el.slug}) %}
                     {% elseif view == 'taxonomy' %}
                         {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'category': el.slug}) %}
+                    {% elseif view == 'tag' %}
+                        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'tag': el.slug}) %}
                     {% else %}
                         {% set details = null %}
                     {% endif %}

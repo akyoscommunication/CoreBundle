@@ -3,10 +3,15 @@
 namespace Akyos\CoreBundle\Twig;
 
 use Akyos\CoreBundle\Controller\Back\CoreBundleController;
+use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
+use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
+use Akyos\CoreBundle\Repository\CustomFieldRepository;
+use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Services\CoreService;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,6 +31,8 @@ class CoreExtension extends AbstractExtension
     private $container;
     private $mailer;
     private $twig;
+    private $customFieldValueRepository;
+    private $customFieldRepository;
 
     public function __construct(
         CoreBundleController $coreBundleController,
@@ -35,7 +42,9 @@ class CoreExtension extends AbstractExtension
         CoreService $coreService,
         ContainerInterface $container,
         \Swift_Mailer $mailer,
-        Environment $twig
+        Environment $twig,
+        CustomFieldValueRepository $customFieldValueRepository,
+        CustomFieldRepository $customFieldRepository
     )
     {
         $this->corebundleController = $coreBundleController;
@@ -46,6 +55,8 @@ class CoreExtension extends AbstractExtension
         $this->container = $container;
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->customFieldValueRepository = $customFieldValueRepository;
+        $this->customFieldRepository = $customFieldRepository;
     }
 
     public function getFilters(): array
@@ -95,6 +106,9 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
             new TwigFunction('get_class', 'get_class'),
             new TwigFunction('class_exists', 'class_exists'),
+            new TwigFunction('getCustomField', [$this, 'getCustomField']),
+            new TwigFunction('searchByCustomField', [$this, 'searchByCustomField']),
+            new TwigFunction('hasCategory', [$this, 'hasCategory']),
         ];
     }
 
@@ -137,10 +151,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|Category/i', $entityName)) {
-                if(preg_match('/^'.$entity.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
         if(!$entityFullName) {
@@ -156,10 +168,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$entity.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$entity.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
         if(!$entityFullName) {
@@ -227,10 +237,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
 
@@ -254,10 +262,8 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[sizeof($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
             }
         }
 
@@ -286,11 +292,9 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[count($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                    $entityFields = $m->getFieldNames();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
+                $entityFields = $m->getFieldNames();
             }
         }
 
@@ -319,11 +323,9 @@ class CoreExtension extends AbstractExtension
         foreach ($meta as $m) {
             $entityName = explode('\\', $m->getName());
             $entityName = $entityName[count($entityName)-1];
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User/i', $entityName)) {
-                if(preg_match('/^'.$type.'$/i', $entityName)) {
-                    $entityFullName = $m->getName();
-                    $entityFields = $m->getFieldNames();
-                }
+            if(preg_match('/^'.$type.'$/i', $entityName)) {
+                $entityFullName = $m->getName();
+                $entityFields = $m->getFieldNames();
             }
         }
 
@@ -470,5 +472,99 @@ class CoreExtension extends AbstractExtension
         } catch (\Exception $e) {
             return $e;
         }
+    }
+
+    public function getCustomField(string $customFieldSlug, $object)
+    {
+        $customField = $this->customFieldRepository->findOneBy(['slug' => $customFieldSlug]);
+        if(!$customField) {
+            return null;
+        }
+
+        $customFieldValue = $this->customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $object->getId()]);
+        if(!$customFieldValue) {
+            return null;
+        }
+
+        switch ($customField->getType()) {
+            case 'entity':
+                if($customFieldValue->getValue()) {
+                    $customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue->getValue());
+                } else {
+                    $customFieldValue = null;
+                }
+                break;
+            default:
+                $customFieldValue = $customFieldValue->getValue();
+                break;
+        }
+
+        return $customFieldValue;
+    }
+
+    public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null)
+    {
+        $customFieldValuesQuery = $this->customFieldValueRepository->createQueryBuilder('cfv')
+            ->innerJoin('cfv.customField', 'cf')
+        ;
+
+        foreach ($customFieldCriterias as $customFieldSlug => $customFieldValue) {
+            $customFieldValuesQuery
+                ->andWhere('cf.slug = :customFieldSlug')
+                ->setParameter('customFieldSlug', $customFieldSlug)
+                ->andWhere('cfv.value = :customFieldValue')
+                ->setParameter('customFieldValue', $customFieldValue)
+            ;
+        }
+
+        $customFieldValues = $customFieldValuesQuery
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $elementsIds = array_map(static function(CustomFieldValue $value) {
+            return $value->getObjectId();
+        }, $customFieldValues);
+
+        /** @var QueryBuilder $elementsQuery */
+        $elementsQuery = $this->em->getRepository($entity)->createQueryBuilder('element');
+        $elementsQuery
+            ->andWhere('element.id IN (:elementsIds)')
+            ->setParameter('elementsIds', $elementsIds)
+        ;
+
+        if($criterias) {
+            foreach ($criterias as $criteria => $value) {
+                $elementsQuery->andWhere('element.'.$criteria.' = '.$value);
+            }
+        }
+
+        if($orders) {
+            foreach ($orders as $criteria => $order) {
+                $elementsQuery->addOrderBy('element.'.$criteria, $order);
+            }
+        }
+
+        if($limit) {
+            $elementsQuery->setMaxResults($limit);
+        }
+
+        if($offset) {
+            $elementsQuery->setFirstResult($offset);
+        }
+
+        return $elementsQuery->getQuery()->getResult();
+
+    }
+
+    public function hasCategory(string $slug, Post $post): bool
+    {
+        $hasCategory = false;
+        foreach($post->getPostCategories() as $postCategory) {
+            if($postCategory->getSlug() === $slug) {
+                $hasCategory = true;
+            }
+        }
+        return $hasCategory;
     }
 }

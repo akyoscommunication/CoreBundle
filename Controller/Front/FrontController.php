@@ -94,7 +94,7 @@ class FrontController extends AbstractController
      * @Route("/{slug}",
      *     methods={"GET","POST"},
      *     requirements={
-     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|file-manager\/).+"
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/).+"
      *     },
      *     name="page")
      * @param $slug
@@ -258,6 +258,69 @@ class FrontController extends AbstractController
             'entity' => $entity,
             'slug' => $category,
             'category' => $categoryObject
+        ]);
+    }
+
+    /**
+     * @Route("/tag/{entitySlug}/{tag}", name="tag", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param $entitySlug
+     * @param $tag
+     * @param CoreService $coreService
+     *
+     * @return Response
+     */
+    public function tag(
+        Filesystem $filesystem,
+        $entitySlug,
+        $tag,
+        CoreService $coreService): Response
+    {
+        // GET ENTITY NAME AND FULLNAME FROM SLUG
+        $meta = $this->getDoctrine()->getManager()->getMetadataFactory()->getAllMetadata();
+        [$entityFullName, $entity] = $coreService->getEntityAndFullString($entitySlug);
+
+        if(!$entityFullName || !$entity) {
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
+        }
+
+        $parentEntity = str_replace('Tag', '', $entity);
+
+        // GET TAG FULLNAME FROM ENTITY SLUG
+        $tagFullName = null;
+        foreach ($meta as $m) {
+            if(preg_match('/'.$entity.'$/i', $m->getName())) {
+                $tagFullName = $m->getName();
+            }
+        }
+
+        if(!$tagFullName) {
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
+        }
+
+        // FIND ELEMENTS FROM TAG OBJECT
+        $tagObject = $this->getDoctrine()->getRepository($tagFullName)->findOneBy(['slug' => $tag]);
+        if(!$tagObject) {
+            throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
+        }
+        if(substr($entity, -1) === "y") {
+            $getter = 'get'.substr(ucfirst($parentEntity), 0,strlen($parentEntity) - 1).'ies';
+        } else {
+            $getter = 'get'.ucfirst($parentEntity).'s';
+        }
+        $elements = $tagObject->$getter();
+
+        // GET TEMPLATE
+        $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$parentEntity.'/tag.html.twig')
+            ? "/${parentEntity}/tag.html.twig"
+            : '@AkyosCore/front/tag.html.twig';
+
+        // RENDER
+        return $this->render($view, [
+            'elements' => $elements,
+            'entity' => $entity,
+            'slug' => $tag,
+            'tag' => $tagObject
         ]);
     }
 }
