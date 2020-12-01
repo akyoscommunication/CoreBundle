@@ -122,7 +122,7 @@ class PostController extends AbstractController
      */
     public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Post';
+        $entity = get_class($post);
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {
@@ -177,7 +177,7 @@ class PostController extends AbstractController
      */
     public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Post';
+        $entity = get_class($post);
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {

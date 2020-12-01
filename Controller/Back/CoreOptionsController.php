@@ -35,9 +35,7 @@ class CoreOptionsController extends AbstractController
         $em =$this->getDoctrine()->getManager();
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                $entities[] = $m->getName();
-            }
+            $entities[] = $m->getName();
         }
 
         $form = $this->createForm(CoreOptionsType::class, $coreOption, [

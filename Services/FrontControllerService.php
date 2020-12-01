@@ -110,17 +110,17 @@ class FrontControllerService
     public function pageAndPreview(string $slug, string $route)
     {
         // FIND PAGE
-        $entity = 'Page';
+        $entity = Page::class;
         /** @var Page $page */
-        $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]) ??
+        $page = $this->em->getRepository($entity)->findOneBy(['slug' => $slug]) ??
             ( !$this->em->getMetadataFactory()->isTransient(Translation::class)
-                ? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, Page::class)
+                ? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, $entity)
                 : null );
 
         if(!$page) {
-            $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
+            $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entity]);
             if($redirect301) {
-                $page = $this->em->getRepository(Page::class)->find($redirect301->getObjectId());
+                $page = $this->em->getRepository($entity)->find($redirect301->getObjectId());
                 $redirectUrl = $this->router->generate($route, ['slug' => $page->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }

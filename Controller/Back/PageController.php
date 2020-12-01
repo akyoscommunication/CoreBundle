@@ -97,7 +97,7 @@ class PageController extends AbstractController
      */
     public function edit(Request $request, Page $page, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Page';
+        $entity = get_class($page);
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(PageType::class, $page);
         $form->handleRequest($request);
@@ -125,7 +125,7 @@ class PageController extends AbstractController
         return $this->render('@AkyosCore/crud/edit.html.twig', [
             'el' => $page,
             'title' => '"'.$page->getTitle().'"',
-            'entity' => 'Page',
+            'entity' => $entity,
             'route' => 'page',
             'header_route' => 'page_index',
             'parameters' => [
@@ -149,7 +149,7 @@ class PageController extends AbstractController
      */
     public function delete(Request $request, Page $page, PageRepository $pageRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Page';
+        $entity = get_class($page);
         if ($this->isCsrfTokenValid('delete'.$page->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 

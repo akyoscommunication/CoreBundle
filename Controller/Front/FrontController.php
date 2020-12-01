@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Controller\Front;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\BuilderBundle\Entity\Component;
+use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
@@ -46,7 +47,7 @@ class FrontController extends AbstractController
         Environment $environment): Response
     {
         // FIND HOMEPAGE
-        $entity = 'Page';
+        $entity = Page::class;
         $coreOptions = $coreOptionsRepository->findAll();
         $homePage = $coreOptions ? $coreOptions[0]->getHomepage() : $pageRepository->findOneBy([], ['position' => "ASC"]);
 

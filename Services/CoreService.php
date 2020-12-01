@@ -16,9 +16,9 @@ class CoreService
 
     public function checkIfSingleEnable($entity): bool
     {
-        $coreOptions = $this->em->getRepository(CoreOptions::class)->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasSingleEntities())) {
+        $opt = $this->em->getRepository(CoreOptions::class)->findAll();
+        if ($opt) {
+            if (in_array($entity, $opt[0]->getHasSingleEntities())) {
                 return true;
             } else return false;
         } else return false;
@@ -26,9 +26,9 @@ class CoreService
 
     public function checkIfArchiveEnable($entity): bool
     {
-        $coreOptions = $this->em->getRepository(CoreOptions::class)->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasArchiveEntities())) {
+        $opt = $this->em->getRepository(CoreOptions::class)->findAll();
+        if ($opt) {
+            if (in_array($entity, $opt[0]->getHasArchiveEntities())) {
                 return true;
             } else return false;
         } else return false;
@@ -36,9 +36,9 @@ class CoreService
 
     public function checkIfSeoEnable($entity): bool
     {
-        $coreOptions = $this->em->getRepository(CoreOptions::class)->findAll();
-        if ($coreOptions) {
-            if (preg_grep('/'.$entity.'$/i', $coreOptions[0]->getHasSeoEntities())) {
+        $opt = $this->em->getRepository(CoreOptions::class)->findAll();
+        if ($opt) {
+            if (in_array($entity, $opt[0]->getHasSeoEntities())) {
                 return true;
             } else return false;
         } else return false;
@@ -49,7 +49,7 @@ class CoreService
         if (class_exists($bundle)) {
             $opt = $this->em->getRepository($options)->findAll();
             if ($opt) {
-                if (preg_grep('/'.$entity.'$/i', $opt[0]->getHasBuilderEntities())) {
+                if (in_array($entity, $opt[0]->getHasBuilderEntities())) {
                     return true;
                 } else return false;
             } else return false;
@@ -61,18 +61,16 @@ class CoreService
         $entity = null;
         $meta = $this->em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                try {
-                    $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
-                    $constant_value = $constant_reflex->getValue();
-                } catch (\ReflectionException $e) {
-                    $constant_value = null;
-                }
-                if(null !== $constant_value) {
-                    if($m->getName()::ENTITY_SLUG === $entitySlug) {
-                        $entityFullName = $m->getName();
-                        $entity = array_reverse(explode('\\', $entityFullName))[0];
-                    }
+            try {
+                $constant_reflex = new \ReflectionClassConstant($m->getName(), 'ENTITY_SLUG');
+                $constant_value = $constant_reflex->getValue();
+            } catch (\ReflectionException $e) {
+                $constant_value = null;
+            }
+            if(null !== $constant_value) {
+                if($m->getName()::ENTITY_SLUG === $entitySlug) {
+                    $entityFullName = $m->getName();
+                    $entity = array_reverse(explode('\\', $entityFullName))[0];
                 }
             }
         }

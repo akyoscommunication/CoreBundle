@@ -125,42 +125,24 @@ class CoreBundleController extends AbstractController
         }
     }
 
-//    /**
-//     * @Route("/reset-position/{route}/{el}", name="reset_position", methods={"POST"})
-//     */
-//    public function resetPosition($route, $el, Request $request)
-//    {
-//        $entity = $this->getDoctrine()->getRepository('Akyos\CoreBundle\Entity\\'.$el);
-//
-//        $entityManager = $this->getDoctrine()->getManager();
-//        $entityOne->setPosition($request->get('position'));
-//        $entityManager->flush();
-//
-//        return $this->redirectToRoute($route.'_index');
-//    }
-
     /**
-     * @Route("/change-status/{route}/{el}/{id}/{bundle}", name="change_status", methods={"POST"})
-     * @param $route
-     * @param $el
+     * @Route("/change-status/{redirect}/{entity}/{id}", name="change_status", methods={"POST"})
+     * @param $redirect
+     * @param $entity
      * @param $id
-     * @param $bundle
-     * @param Request $request
      * @return RedirectResponse
      */
-    public function changeStatus($route, $el, $id, $bundle = null, Request $request)
+    public function changeStatus($redirect, $entity, $id)
     {
-        if($bundle) {
-            $repository = $this->getDoctrine()->getRepository('Akyos\\'.$bundle.'\Entity\\'.$el)->find($id);
-        } else {
-            $repository = $this->getDoctrine()->getRepository('App\Entity\\'.$el)->find($id);
-        }
+        $el = $this->getDoctrine()->getRepository($entity)->find($id);
 
         $entityManager = $this->getDoctrine()->getManager();
-        $repository->setPublished(!$repository->getPublished());
+        if (property_exists($el, 'published')) {
+            $el->setPublished(!$el->getPublished());
+        }
         $entityManager->flush();
 
-        return $this->redirectToRoute($route.'_index');
+        return $this->redirect(urldecode($redirect));
     }
 
     public function sidebar($route)

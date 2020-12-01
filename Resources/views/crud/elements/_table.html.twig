@@ -18,7 +18,7 @@
                 {% set dynamicVariable = dynamicVariable(el, field) %}
                 {% if field == 'Published' %}
                     <td>
-                        <form action="{{ path('core_change_status', {'route' : route, 'el' : entity, 'id' : el.id, 'bundle' : (bundle is defined ? bundle : null) }) }}" class="custom-switch-form" method="post">
+                        <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}" class="custom-switch-form" method="post">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input custom-switch-published" id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="switch_{{ el.id }}"></label>
