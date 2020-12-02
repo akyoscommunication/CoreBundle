@@ -63,7 +63,7 @@ class FrontControllerService
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         [$entityFullName, $entity] = $this->coreService->getEntityAndFullString($entitySlug);
 
-        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
+        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entityFullName)) {
             throw new NotFoundHttpException("Cette page n'existe pas! ( Détail )");
         }
 
@@ -71,6 +71,8 @@ class FrontControllerService
 
         // GET ELEMENT
         $element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
+        $now = new \DateTime();
+
         if(!$element) {
             $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
             if($redirect301) {
@@ -79,11 +81,21 @@ class FrontControllerService
                 return new RedirectResponse($redirectUrl, 301);
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${route} )");
-        } elseif (property_exists($element, 'published') and !$element->getPublished() and $route !== 'single_preview') {
-            if($this->checker->isGranted('ROLE_ADMIN')) {
-                return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+        } elseif (property_exists($element, 'published') and $route !== 'single_preview') {
+            if (!$element->getPublished()) {
+                if($this->checker->isGranted('ROLE_ADMIN')) {
+                    return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+                } else {
+                    throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                }
             } else {
-                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                if (property_exists($element, 'publishedAt') and ($element->getPublishedAt() > $now)) {
+                    if($this->checker->isGranted('ROLE_ADMIN')) {
+                        return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+                    } else {
+                        throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                    }
+                }
             }
         }
 
@@ -119,6 +131,7 @@ class FrontControllerService
             ( !$this->em->getMetadataFactory()->isTransient(Translation::class)
                 ? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, $entity)
                 : null );
+        $now = new \DateTime();
 
         if(!$page) {
             $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entity]);
@@ -128,11 +141,21 @@ class FrontControllerService
                 return new RedirectResponse($redirectUrl, 301);
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
-        } elseif (!$page->getPublished() and $route !== 'page_preview') {
-            if($this->checker->isGranted('ROLE_ADMIN')) {
-                return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+        } elseif ($route !== 'page_preview') {
+            if (!$page->getPublished()) {
+                if($this->checker->isGranted('ROLE_ADMIN')) {
+                    return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+                } else {
+                    throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                }
             } else {
-                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                if ($page->getPublishedAt() > $now) {
+                    if($this->checker->isGranted('ROLE_ADMIN')) {
+                        return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+                    } else {
+                        throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                    }
+                }
             }
         }
 

@@ -7,6 +7,7 @@ use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,6 +51,10 @@ class PageType extends AbstractType
             ])
             ->add('thumbnail', FileManagerType::class, [
                 'label' => 'Image de mise en avant',
+            ])
+            ->add('publishedAt', DateType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date de publication'
             ])
         ;
     }

@@ -75,6 +75,11 @@ class Page implements Translatable
      */
     private $locale;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $publishedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,5 +177,17 @@ class Page implements Translatable
     public function __toString()
     {
         return (string)$this->title;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
     }
 }

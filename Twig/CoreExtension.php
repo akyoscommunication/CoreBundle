@@ -378,7 +378,6 @@ class CoreExtension extends AbstractExtension
     public function getPermalink($item)
     {
         $urlPaterne = "/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:_\/?#[\]@!\$&'\(\)\*\+,;=.]+$/";
-
         $link = '';
         if($item->getUrl()) {
             if(preg_match($urlPaterne, $item->getUrl())){
@@ -402,7 +401,10 @@ class CoreExtension extends AbstractExtension
                     $link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
                 }
             } elseif ( ($item->getType() != 'Page') && $item->getIdType() ) {
-                $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
+                $slug = $this->getElementSlug($item->getType(), $item->getIdType());
+                if ($slug) {
+                    $link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $slug]);
+                }
             } elseif ( ($item->getType() != 'Page') &&  !$item->getIdType()) {
                 $link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($item->getType())]);
             } else {

@@ -90,6 +90,11 @@ class Post implements Translatable
      */
     private $postTags;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $publishedAt;
+
     public function __construct()
     {
         $this->postCategories = new ArrayCollection();
@@ -285,6 +290,18 @@ class Post implements Translatable
         if ($this->postTags->removeElement($postTag)) {
             $postTag->removePost($this);
         }
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
