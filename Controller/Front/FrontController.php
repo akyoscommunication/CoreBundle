@@ -115,6 +115,8 @@ class FrontController extends AbstractController
      * @param $entitySlug
      * @param CoreService $coreService
      *
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
     public function archive(
@@ -142,8 +144,18 @@ class FrontController extends AbstractController
                 10
             );
         }else{
+            $param = [];
+            $order = [];
+
+            if (property_exists($entityFullName, 'published')) {
+                $param['published'] = true;
+            }
+            if (property_exists($entityFullName, 'publishedAt')) {
+                $order['publishedAt'] = 'ASC';
+            }
+
             $elements = $paginator->paginate(
-                $this->getDoctrine()->getRepository($entityFullName)->findAll(),
+                $this->getDoctrine()->getRepository($entityFullName)->findBy($param, $order),
                 $request->query->getInt('page', 1),
                 10
             );
