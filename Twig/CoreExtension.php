@@ -242,9 +242,15 @@ class CoreExtension extends AbstractExtension
             }
         }
 
-        $slug = $this->em->getRepository($entityFullName)->find($typeId)->getSlug();
+        $el = $this->em->getRepository($entityFullName)->find($typeId);
 
-        return $slug;
+        if (!$el) {
+            return false;
+        } else {
+            $slug = $el->getSlug();
+
+            return $slug;
+        }
     }
 
     public function getElement($type, $typeId)
