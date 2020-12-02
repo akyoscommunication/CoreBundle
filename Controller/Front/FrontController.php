@@ -129,7 +129,7 @@ class FrontController extends AbstractController
 
         if(!$entityFullName || !$entity) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
-        } else if(!$this->coreService->checkIfArchiveEnable($entity)) {
+        } else if(!$this->coreService->checkIfArchiveEnable($entityFullName)) {
             throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
         }
 
