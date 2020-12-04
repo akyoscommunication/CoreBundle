@@ -83,7 +83,6 @@ class CustomFieldsGroupController extends AbstractController
         $entities = [];
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            dump($m->getName());
             if(!preg_match('/Component|Option|ContactForm/i', $m->getName()) && stripos($m->getName(), 'Akyos') !== false) {
                 $entities[] = $m->getName();
             }
