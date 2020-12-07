@@ -91,7 +91,7 @@ class Post implements Translatable
     private $postTags;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable =true)
      */
     private $publishedAt;
 
@@ -299,7 +299,7 @@ class Post implements Translatable
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
