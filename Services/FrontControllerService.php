@@ -101,7 +101,7 @@ class FrontControllerService
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entityFullName)) {
             $components = $this->em->getRepository(Component::class)->findBy(['type' => $entityFullName, 'typeId' => $element->getId(), 'isTemp' => ($route === 'single_preview'), 'parentComponent' => null], ['position' => 'ASC']);
         }
 

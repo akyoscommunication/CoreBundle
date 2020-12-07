@@ -510,7 +510,7 @@ class CoreExtension extends AbstractExtension
         return $customFieldValue;
     }
 
-    public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null)
+    public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null, $query = false)
     {
         $customFieldValuesQuery = $this->customFieldValueRepository->createQueryBuilder('cfv')
             ->innerJoin('cfv.customField', 'cf')
@@ -561,7 +561,7 @@ class CoreExtension extends AbstractExtension
             $elementsQuery->setFirstResult($offset);
         }
 
-        return $elementsQuery->getQuery()->getResult();
+        return $query ? $elementsQuery->getQuery() : $elementsQuery->getQuery()->getResult();
 
     }
 
