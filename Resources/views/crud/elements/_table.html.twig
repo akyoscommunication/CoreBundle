@@ -69,10 +69,10 @@
                     {% endif %}
                 {% endif %}
                 {% if details != '' %}
-                    <a class="btn btn-second btn-sm" href="{{ details }}"><i class="fas fa-eye"></i></a>
+                    <a class="btn btn-second btn-sm" href="{{ details }}" data-toggle ="tooltip" title="Voir"><i class="fas fa-eye"></i></a>
                 {% endif %}
-                <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}"><i class="fas fa-pencil-alt"></i></a>
-                <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
+                <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
                     <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>

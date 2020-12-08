@@ -18,6 +18,7 @@ class Core {
         this.toggleSidebar();
         this.initSelect2();
         this.initAjaxPublished();
+        this.tooltip();
         MenuItem.init();
         Seo.init();
         SubmitForm.init();
@@ -42,6 +43,9 @@ class Core {
         $('.custom-switch-published').on('change', function () {
             $(this).parents('.custom-switch-form').submit();
         });
+    }
+    static tooltip() {
+        $('[data-toggle="tooltip"]').tooltip()
     }
 }
 

@@ -122,6 +122,7 @@ class PageController extends AbstractController
             throw $this->createNotFoundException("Formulaire invalide.");
         }
 
+
         return $this->render('@AkyosCore/crud/edit.html.twig', [
             'el' => $page,
             'title' => '"'.$page->getTitle().'"',
