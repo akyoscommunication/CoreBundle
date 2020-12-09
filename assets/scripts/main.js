@@ -1,6 +1,6 @@
 // import external dependencies
 import 'jquery';
-// import 'bootstrap';
+import 'bootstrap';
 import 'jquery-ui/ui/widgets/sortable';
 
 // Import everything from autoload

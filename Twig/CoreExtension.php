@@ -532,9 +532,9 @@ class CoreExtension extends AbstractExtension
         ;
 
         foreach ($customFieldCriterias as $customField) {
-            if (!$customField['slug']) return "Il manque l'entrée slug de tableau.";
-            if (!$customField['operator']) return "Il manque l'entrée operator de tableau.";
-            if (!$customField['value']) return "Il manque l'entrée value de tableau.";
+            if (!isset($customField['slug'])) return "Il manque l'entrée slug de tableau.";
+            if (!isset($customField['operator'])) return "Il manque l'entrée operator de tableau.";
+            if (!isset($customField['value'])) return "Il manque l'entrée value de tableau.";
 
             $slug = $customField['slug'];
             $operator = $customField['operator'];
@@ -565,16 +565,17 @@ class CoreExtension extends AbstractExtension
         ;
 
         if($criterias) {
-            foreach ($criterias as $criteria) {
-                if (!$criteria['prop']) return "Il manque l'entrée prop de tableau.";
-                if (!$criteria['operator']) return "Il manque l'entrée operator de tableau.";
-                if (!$criteria['value']) return "Il manque l'entrée value de tableau.";
+            foreach ($criterias as $key => $criteria) {
+                if (!isset($criteria['prop'])) return "Il manque l'entrée prop de tableau.";
+                if (!isset($criteria['operator'])) return "Il manque l'entrée operator de tableau.";
+                if (!isset($criteria['value'])) return "Il manque l'entrée value de tableau.";
 
                 $prop = $criteria['prop'];
                 $operator = $criteria['operator'];
                 $value = $criteria['value'];
 
-                $elementsQuery->andWhere('element.'.$prop.' '.$operator.' '.$value);
+                $elementsQuery->andWhere('element.'.$prop.' '.$operator.' :val'.$prop.$key);
+                $elementsQuery->setParameter('val'.$prop.$key, $value);
             }
         }
 

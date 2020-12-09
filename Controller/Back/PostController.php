@@ -78,7 +78,7 @@ class PostController extends AbstractController
                 'Catégorie(s)' => 'PostCategories',
                 'Position' => 'Position',
                 'En ligne ?' => 'Published',
-                'Publié le'=>'PublishedAt',
+                'Publié le' => 'PublishedAt',
                 'Mis à jour le'=>'UpdatedAt',
             ],
         ]);
