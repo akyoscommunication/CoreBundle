@@ -59,9 +59,11 @@
             <a href="{{ path('user_index') }}">Utilisateurs</a>
         </li>
         {# EXPORT #}
-        <li class="{{ 'export_' in route ? "active" : "" }}">
-            <a href="{{ path('export_index') }}">Exporter</a>
-        </li>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <li class="{{ 'export_' in route ? "active" : "" }}">
+                <a href="{{ path('export_index') }}">Exporter</a>
+            </li>
+        {% endif %}
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <li class="divider"></li>
             {# BUNDLES EXTENSIONS #}

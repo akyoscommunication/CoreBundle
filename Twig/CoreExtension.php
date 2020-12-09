@@ -510,18 +510,41 @@ class CoreExtension extends AbstractExtension
         return $customFieldValue;
     }
 
+    /**
+     * @param array $customFieldCriterias
+     * @param string $entity
+     * array['fields']
+     *      [fieldName]
+     *          ['slug']
+     *          ['operator']
+     *          ['value']
+     * @param array|null $criterias
+     * @param array|null $orders
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param bool $query
+     * @return \Doctrine\ORM\Query|int|mixed|string
+     */
     public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null, $query = false)
     {
         $customFieldValuesQuery = $this->customFieldValueRepository->createQueryBuilder('cfv')
             ->innerJoin('cfv.customField', 'cf')
         ;
 
-        foreach ($customFieldCriterias as $customFieldSlug => $customFieldValue) {
+        foreach ($customFieldCriterias as $customField) {
+            if (!$customField['slug']) return "Il manque l'entrée slug de tableau.";
+            if (!$customField['operator']) return "Il manque l'entrée operator de tableau.";
+            if (!$customField['value']) return "Il manque l'entrée value de tableau.";
+
+            $slug = $customField['slug'];
+            $operator = $customField['operator'];
+            $value = $customField['value'];
+
             $customFieldValuesQuery
                 ->andWhere('cf.slug = :customFieldSlug')
-                ->setParameter('customFieldSlug', $customFieldSlug)
-                ->andWhere('cfv.value = :customFieldValue')
-                ->setParameter('customFieldValue', $customFieldValue)
+                ->setParameter('customFieldSlug', $slug)
+                ->andWhere('cfv.value '.$operator.' :customFieldValue')
+                ->setParameter('customFieldValue', $value)
             ;
         }
 
@@ -542,8 +565,16 @@ class CoreExtension extends AbstractExtension
         ;
 
         if($criterias) {
-            foreach ($criterias as $criteria => $value) {
-                $elementsQuery->andWhere('element.'.$criteria.' = '.$value);
+            foreach ($criterias as $criteria) {
+                if (!$criteria['prop']) return "Il manque l'entrée prop de tableau.";
+                if (!$criteria['operator']) return "Il manque l'entrée operator de tableau.";
+                if (!$criteria['value']) return "Il manque l'entrée value de tableau.";
+
+                $prop = $customField['props'];
+                $operator = $customField['operator'];
+                $value = $customField['value'];
+
+                $elementsQuery->andWhere('element.'.$prop.' '.$operator.' '.$value);
             }
         }
 
