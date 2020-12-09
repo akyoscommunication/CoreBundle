@@ -570,9 +570,9 @@ class CoreExtension extends AbstractExtension
                 if (!$criteria['operator']) return "Il manque l'entrée operator de tableau.";
                 if (!$criteria['value']) return "Il manque l'entrée value de tableau.";
 
-                $prop = $customField['prop'];
-                $operator = $customField['operator'];
-                $value = $customField['value'];
+                $prop = $criteria['prop'];
+                $operator = $criteria['operator'];
+                $value = $criteria['value'];
 
                 $elementsQuery->andWhere('element.'.$prop.' '.$operator.' '.$value);
             }
