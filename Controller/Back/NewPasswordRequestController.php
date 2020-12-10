@@ -40,7 +40,7 @@ class NewPasswordRequestController extends AbstractController
             $coreOptions = $coreOptions[0];
         }
 
-        $type = explode(';', $type);
+        $type = explode(';', urldecode($type));
 
         $newPasswordRequest = new NewPasswordRequest();
         $newPasswordRequest->setUserRoute($route);
