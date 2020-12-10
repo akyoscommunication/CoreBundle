@@ -47,6 +47,9 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'required' => true,
+                'attr' => [
+                    'class' => 'js-select2',
+                ]
             ])
             ->add('password', PasswordType::class, [
                 'label' => "Mot de passe",

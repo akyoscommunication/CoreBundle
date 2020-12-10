@@ -44,6 +44,9 @@ class UserEditType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'required' => true,
+                'attr' => [
+                    'class' => 'js-select2',
+                ]
             ])
             ->add('image', FileManagerType::class, [
                 'label' => 'Image de profil',
