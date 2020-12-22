@@ -31,7 +31,7 @@
                             'route' : route,
                             'id' : el.id,
                             'namespace': get_class(el), }) }}" method="post">
-                            <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0" max="{{ els|length - 1 }}">
+                            <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0" max="{{ countElements(get_class(el)) }}">
                         </form>
                     </td>
                 {% elseif dynamicVariable.timezone is defined  %}

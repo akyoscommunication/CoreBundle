@@ -13,6 +13,7 @@ use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Integer;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -109,6 +110,7 @@ class CoreExtension extends AbstractExtension
             new TwigFunction('getCustomField', [$this, 'getCustomField']),
             new TwigFunction('searchByCustomField', [$this, 'searchByCustomField']),
             new TwigFunction('hasCategory', [$this, 'hasCategory']),
+            new TwigFunction('countElements', [$this, 'countElements']),
         ];
     }
 
@@ -607,4 +609,9 @@ class CoreExtension extends AbstractExtension
         }
         return $hasCategory;
     }
+	
+	public function countElements(string $entity): int
+	{
+		return $this->em->getRepository($entity)->count([]);
+	}
 }
