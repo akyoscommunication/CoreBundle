@@ -18,15 +18,15 @@ class CustomFieldType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Nom du champ',
-                'help' => 'Donnes un petit nom à ton champ (ce sera le label du champ custom, le client le verra, donc fais pas trop le con!)',
+                'help' => 'Ce sera le label du champ',
             ])
             ->add('slug', TextType::class, [
                 'label' => 'Slug',
-                'help' => 'On a besoin d\'un slug pour pouvoir récupérer la value dans le code',
+                'help' => 'On a besoin d\'un slug pour pouvoir récupérer la valeur dans le code: c\'est le nom sans majusculesn espaces, ni caractères spéciaux',
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'Type de champ',
-                'help' => 'Tu veux quoi comme input mec ?',
+                'help' => 'Quel type de champ faut-il afficher ?',
                 'choices'  => [
                     'Champ texte'    => 'text',
                     'CKEditor'       => 'textarea_html',
@@ -47,7 +47,7 @@ class CustomFieldType extends AbstractType
             ])
             ->add('entity', ChoiceType::class, [
                 'label' => 'Entité liée',
-                'help' => 'Si tu as choisi "entité", faut me dire laquelle c\'est stp',
+                'help' => 'Si vous avez choisi "entité", précisez laquelle',
                 'required' => false,
                 'choices' => $options['entities'],
                 'choice_label' => function ($choice, $key, $value) {
@@ -58,11 +58,11 @@ class CustomFieldType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'help' => 'De quoi ça s\'agit ?',
+                'help' => 'Description du champ: à quoi sert-il ?',
             ])
             ->add('isRequired', CheckboxType::class, [
                 'label' => 'Obligatoire ?',
-                'help' => 'Si j\'en ai rien à foutre, est-ce que je peux zapper le champ ou est-ce que je dois quand même mettre un truc ?',
+                'help' => 'Est-ce qu\'il faut obligatoirement remplir ce champ ? ',
             ])
         ;
     }
