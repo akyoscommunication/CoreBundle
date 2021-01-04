@@ -75,12 +75,7 @@
                 <a href="{{ path('user_index') }}">Utilisateurs</a>
             </li>
         {% endif %}
-        {% if is_granted('gestion-des-droits') %}
-            {# ADMIN ACCESS #}
-            <li class="{{ 'admin_access_' in route ? "active" : "" }}">
-                <a href="{{ path('admin_access_index') }}">Accès admin</a>
-            </li>
-        {% endif %}
+
         {% if is_granted('exports') %}
             {# EXPORT #}
                 <li class="{{ 'export_' in route ? "active" : "" }}">
@@ -104,6 +99,12 @@
             <li class="{{ 'option' in route ? "active" : "" }}">
                 <a href="#option" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Réglages</a>
                 <ul class="collapse list-unstyled" id="option">
+                    {% if is_granted('gestion-des-droits') %}
+                        {# ADMIN ACCESS #}
+                        <li class="{{ 'admin_access_' in route ? "active" : "" }}">
+                            <a href="{{ path('admin_access_index') }}">Gestion des droits</a>
+                        </li>
+                    {% endif %}
                     {% if is_granted('options-du-site') %}
                         {# FRONT OPTIONS #}
                         <li class="{{ 'option_index' in route ? "active" : "" }}">

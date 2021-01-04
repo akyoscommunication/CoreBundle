@@ -31,10 +31,8 @@ class AccessVoter extends Voter
     {
         $authorizedRoles = $this->adminAccessRepository->findOneBySlug($attribute)->getRoles();
         if (!empty($authorizedRoles)){
-            foreach ($authorizedRoles as $role) {
-                if ($this->security->isGranted($role)){
-                    return true;
-                }
+            if ($this->security->isGranted($authorizedRoles)){
+                return true;
             }
             return false;
         }
