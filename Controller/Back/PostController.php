@@ -55,6 +55,8 @@ class PostController extends AbstractController
                 ->setParameter('keyword', '%'.$request->query->get('search').'%')
             ;
         }
+        $query->orderBy('a.position', 'ASC');
+
         $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         $post = new Post();
