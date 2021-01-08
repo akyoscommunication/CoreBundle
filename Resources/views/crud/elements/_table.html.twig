@@ -5,7 +5,7 @@
             <th{% if instanceOf(els, 'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination') %}
                 {% if els.isSorted((field|split(';')|length > 1 ? field|split(';')[0]~'.' : 'a.')~(field|split(';')|length > 1 ? field|split(';')[1] : field)|lcfirst) %} class="sorted"{% endif %}
                     {% endif %} >
-                {{ instanceOf(els, 'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination') ? knp_pagination_sortable(els, name, (field|split(';')|length > 1 ? field|split(';')[0]~'.' : 'a.')~(field|split(';')|length > 1 ? field|split(';')[1] : field)|lcfirst) : name }}
+                {{ instanceOf(els, 'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination') ? knp_pagination_sortable(els, name, (field|split(';')|length > 1 ? field|split(';')[0]|lower~'.' : 'a.')~(field|split(';')|length > 1 ? field|split(';')[1] : field)|lcfirst) : name }}
             </th>
         {% endfor %}
         <th style="width: 15%">Action</th>
