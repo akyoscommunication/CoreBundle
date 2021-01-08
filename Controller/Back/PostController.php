@@ -20,9 +20,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/post", name="post_")
+ * @isGranted("liste-des-articles")
  */
 class PostController extends AbstractController
 {
@@ -53,6 +55,8 @@ class PostController extends AbstractController
                 ->setParameter('keyword', '%'.$request->query->get('search').'%')
             ;
         }
+        $query->orderBy('a.position', 'ASC');
+
         $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         $post = new Post();

@@ -96,7 +96,7 @@ class FrontController extends AbstractController
      * @Route("/{slug}",
      *     methods={"GET","POST"},
      *     requirements={
-     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/).+"
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/).+"
      *     },
      *     name="page")
      * @param $slug
@@ -263,7 +263,7 @@ class FrontController extends AbstractController
         // Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "searchByCategory"
         if(method_exists($this->getDoctrine()->getRepository($entityFullName), 'searchByCategory')){
             $elements = $paginator->paginate(
-                $this->getDoctrine()->getRepository($entityFullName)->searchByCategory($request->query->get('search') ?? null),
+                $this->getDoctrine()->getRepository($entityFullName)->searchByCategory($categoryObject, $request->query->get('search') ?? null),
                 $request->query->getInt('page', 1),
                 10
             );
