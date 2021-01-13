@@ -75,7 +75,7 @@ class Post implements Translatable
     private $thumbnailArchive;
 
     /**
-     * @ORM\OneToMany(targetEntity=PostDocument::class, mappedBy="post")
+     * @ORM\OneToMany(targetEntity=PostDocument::class, mappedBy="post", orphanRemoval=true)
      */
     private $postDocuments;
 

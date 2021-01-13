@@ -1,24 +1,27 @@
 class initCollectionType {
 
-    static initDataPrototype(proto = '.collection_prototype', childs = '.card-header__title') {
+    static initDataPrototype(proto = '.collection_prototype', children = '.card-header__title') {
         const _this = this;
 
         const collectionHolder = $(proto);
-        collectionHolder.after('<button id="add_component" class="btn btn-outline-primary">Ajouter un champ</button>');
+        collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
+        const buttonAddLabel = collectionHolder.data('button_add');
+        const buttonDeleteLabel = collectionHolder.data('button_delete');
+        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">'+(buttonAddLabel ? buttonAddLabel : 'Ajouter un champ')+'</button>');
         const addFieldLink = $('#add_component');
         collectionHolder.data('index', collectionHolder.children('.form-group').length);
 
-        collectionHolder.children(childs).each(function() {
-            _this.addCloneFormDeleteLink($(this));
+        collectionHolder.children('.form-group').each(function() {
+            _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
         });
 
         addFieldLink.on('click', function(e) {
             e.preventDefault();
-            _this.addCloneForm(collectionHolder);
+            _this.addCloneForm(collectionHolder, buttonDeleteLabel);
         });
     }
 
-    static addCloneForm($collectionHolder) {
+    static addCloneForm($collectionHolder, deleteLabel) {
         // get the new index
         const index = $collectionHolder.data('index');
 
@@ -31,14 +34,20 @@ class initCollectionType {
         $collectionHolder.data('index', index + 1);
 
         // add a delete link to the new form
-        this.addCloneFormDeleteLink($prototype);
+        this.addCloneFormDeleteLink($prototype, deleteLabel);
 
         // Display the form in the page
         $collectionHolder.append($prototype);
+
+        if($prototype.find('.js-select2').length) {
+            $('.js-select2').select2({
+                width: '100%'
+            });
+        }
     }
 
-    static addCloneFormDeleteLink($newForm) {
-        const $deleteFormLink = $('<a href="#" class="btn btn-outline-danger">Supprimer ce champ <i class="fas fa-times"></i></a>');
+    static addCloneFormDeleteLink($newForm, label) {
+        const $deleteFormLink = $('<a href="#" class="btn btn-sm btn-outline-danger ml-auto">'+(label ? label : 'Supprimer ce champ <i class="fas fa-times"></i>')+'</a>');
         $newForm.append($deleteFormLink);
 
         $deleteFormLink.on('click', function(e) {

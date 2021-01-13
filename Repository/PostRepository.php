@@ -29,6 +29,19 @@ class PostRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    public function searchByCategory($categoryObject, $keyword = null)
+    {
+        return $this->createQueryBuilder('p')
+        ->andWhere('p.title LIKE :keyword')
+        ->andWhere('p = :category')
+        ->setParameter('keyword', '%'.$keyword.'%')
+        ->setParameter('category', $categoryObject)
+        ->orderBy('p.position')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
     // /**
     //  * @return Post[] Returns an array of Post objects
     //  */
