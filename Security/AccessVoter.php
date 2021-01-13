@@ -20,7 +20,7 @@ class AccessVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        if($this->adminAccessRepository->findOneBySlug($attribute) or $this->security->isGranted('ROLE_SUPER_ADMIN'))
+        if($this->adminAccessRepository->findOneBySlug($attribute))
         {
             return true;
         }
