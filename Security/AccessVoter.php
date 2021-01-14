@@ -24,6 +24,9 @@ class AccessVoter extends Voter
         {
             return true;
         }
+        if ($this->security->getUser() and !$this->adminAccessRepository->count([])) {
+            return true;
+        }
         return false;
     }
 
