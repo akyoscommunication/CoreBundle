@@ -32,18 +32,21 @@ class CoreMailer {
 	}
 	
 	
-	public function sendMail($to, $subject, $body, $title, $template = '@AkyosCore/email/default.html.twig', $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
+	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
 	{
 		$email = new Email();
 		$from = (is_null($from)) ? $this->from : $from;
 		$replyTo = (is_null($replyTo)) ? $this->reply : $replyTo;
 		
-		$body = $this->twig->render($template, array(
+		$bodyParams = [
 			'subject' => $subject,
 			'title' => $title,
 			'body' => $body,
-			...$options['templateParams']
-		));
+		];
+		if(isset($options['templateParams'])) {
+			$bodyParams = array_merge($bodyParams, $options['templateParams']);
+		}
+		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
 		
 		if(is_array($from) && count($from)) {
 			if(array_values($from) !== $from) {
@@ -55,6 +58,8 @@ class CoreMailer {
 			} else {
 				$email->from(...$from);
 			}
+		} else {
+			$email->from($from);
 		}
 		
 		if(is_array($to) && count($to)) {
@@ -67,6 +72,8 @@ class CoreMailer {
 			} else {
 				$email->to(...$to);
 			}
+		} else {
+			$email->to($to);
 		}
 		
 		if(is_array($bcc) && count($bcc)) {
@@ -79,6 +86,8 @@ class CoreMailer {
 			} else {
 				$email->bcc(...$bcc);
 			}
+		} else {
+			$email->bcc($bcc);
 		}
 		
 		$email
