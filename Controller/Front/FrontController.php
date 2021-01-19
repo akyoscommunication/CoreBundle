@@ -5,11 +5,14 @@ namespace Akyos\CoreBundle\Controller\Front;
 use Akyos\BuilderBundle\AkyosBuilderBundle;
 use Akyos\BuilderBundle\Entity\BuilderOptions;
 use Akyos\BuilderBundle\Entity\Component;
+use Akyos\CoreBundle\Entity\Page;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Akyos\CoreBundle\Services\FrontControllerService;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -46,7 +49,7 @@ class FrontController extends AbstractController
         Environment $environment): Response
     {
         // FIND HOMEPAGE
-        $entity = 'Page';
+        $entity = Page::class;
         $coreOptions = $coreOptionsRepository->findAll();
         $homePage = $coreOptions ? $coreOptions[0]->getHomepage() : $pageRepository->findOneBy([], ['position' => "ASC"]);
 
@@ -93,7 +96,7 @@ class FrontController extends AbstractController
      * @Route("/{slug}",
      *     methods={"GET","POST"},
      *     requirements={
-     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/).+"
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/).+"
      *     },
      *     name="page")
      * @param $slug
@@ -114,6 +117,8 @@ class FrontController extends AbstractController
      * @param $entitySlug
      * @param CoreService $coreService
      *
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
     public function archive(
@@ -128,7 +133,7 @@ class FrontController extends AbstractController
 
         if(!$entityFullName || !$entity) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
-        } else if(!$this->coreService->checkIfArchiveEnable($entity)) {
+        } else if(!$this->coreService->checkIfArchiveEnable($entityFullName)) {
             throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
         }
 
@@ -141,8 +146,18 @@ class FrontController extends AbstractController
                 10
             );
         }else{
+            $param = [];
+            $order = [];
+
+            if (property_exists($entityFullName, 'published')) {
+                $param['published'] = true;
+            }
+            if (property_exists($entityFullName, 'publishedAt')) {
+                $order['publishedAt'] = 'ASC';
+            }
+
             $elements = $paginator->paginate(
-                $this->getDoctrine()->getRepository($entityFullName)->findAll(),
+                $this->getDoctrine()->getRepository($entityFullName)->findBy($param, $order),
                 $request->query->getInt('page', 1),
                 10
             );
@@ -206,13 +221,17 @@ class FrontController extends AbstractController
      * @param $category
      * @param CoreService $coreService
      *
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
     public function category(
         Filesystem $filesystem,
         $entitySlug,
         $category,
-        CoreService $coreService): Response
+        CoreService $coreService,
+        Request $request,
+        PaginatorInterface $paginator): Response
     {
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         $meta = $this->getDoctrine()->getManager()->getMetadataFactory()->getAllMetadata();
@@ -239,12 +258,40 @@ class FrontController extends AbstractController
         if(!$categoryObject) {
             throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
         }
-        if(substr($entity, -1) === "y") {
-            $getter = 'get'.substr(ucfirst($entity), 0,strlen($entity) - 1).'ies';
-        } else {
-            $getter = 'get'.ucfirst($entity).'s';
+
+        // GET ELEMENTS
+        // Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "searchByCategory"
+        if(method_exists($this->getDoctrine()->getRepository($entityFullName), 'searchByCategory')){
+            $elements = $paginator->paginate(
+                $this->getDoctrine()->getRepository($entityFullName)->searchByCategory($categoryObject, $request->query->get('search') ?? null),
+                $request->query->getInt('page', 1),
+                10
+            );
+        }else{
+            /** @var QueryBuilder $qb */
+            $qb = $this->getDoctrine()->getRepository($entityFullName)->createQueryBuilder('a');
+            $params = [];
+
+            if (property_exists($entityFullName, 'postCategories')) {
+                $qb
+                    ->innerJoin('a.postCategories', 'apc')
+                    ->andWhere($qb->expr()->eq('apc', ':cat'))
+                ;
+                $params['cat'] = $categoryObject;
+            }
+            if (property_exists($entityFullName, 'published')) {
+                $qb->andWhere($qb->expr()->eq('a.published', true));
+            }
+            if (property_exists($entityFullName, 'publishedAt')) {
+                $qb->orderBy('a.publishedAt', 'ASC');
+            }
+
+            $elements = $paginator->paginate(
+                $qb->setParameters($params)->getQuery(),
+                $request->query->getInt('page', 1),
+                10
+            );
         }
-        $elements = $categoryObject->$getter();
 
         // GET TEMPLATE
         $view = $filesystem->exists($this->kernel->getProjectDir().'/templates/'.$entity.'/category.html.twig')

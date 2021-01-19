@@ -9,9 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/core/options", name="core_options")
+ * @isGranted("options-du-core")
  */
 class CoreOptionsController extends AbstractController
 {
@@ -35,9 +37,7 @@ class CoreOptionsController extends AbstractController
         $em =$this->getDoctrine()->getManager();
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if(!preg_match('/Component|Option|Menu|ContactForm|Seo|User|PostCategory/i', $m->getName())) {
-                $entities[] = $m->getName();
-            }
+            $entities[] = $m->getName();
         }
 
         $form = $this->createForm(CoreOptionsType::class, $coreOption, [

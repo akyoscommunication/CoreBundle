@@ -75,7 +75,7 @@ class Post implements Translatable
     private $thumbnailArchive;
 
     /**
-     * @ORM\OneToMany(targetEntity=PostDocument::class, mappedBy="post")
+     * @ORM\OneToMany(targetEntity=PostDocument::class, mappedBy="post", orphanRemoval=true)
      */
     private $postDocuments;
 
@@ -89,6 +89,11 @@ class Post implements Translatable
      * @ORM\JoinColumn(nullable=true)
      */
     private $postTags;
+
+    /**
+     * @ORM\Column(type="datetime", nullable =true)
+     */
+    private $publishedAt;
 
     public function __construct()
     {
@@ -285,6 +290,18 @@ class Post implements Translatable
         if ($this->postTags->removeElement($postTag)) {
             $postTag->removePost($this);
         }
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

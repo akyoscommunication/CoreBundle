@@ -15,9 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/page", name="page_")
+ * @isGranted("pages")
  */
 class PageController extends AbstractController
 {
@@ -53,7 +55,7 @@ class PageController extends AbstractController
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,
             'title' => 'Page',
-            'entity' => 'Page',
+            'entity' => Page::class,
             'view' => 'page',
             'route' => 'page',
             'header_route' => 'page',
@@ -97,7 +99,7 @@ class PageController extends AbstractController
      */
     public function edit(Request $request, Page $page, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Page';
+        $entity = get_class($page);
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(PageType::class, $page);
         $form->handleRequest($request);
@@ -122,10 +124,11 @@ class PageController extends AbstractController
             throw $this->createNotFoundException("Formulaire invalide.");
         }
 
+
         return $this->render('@AkyosCore/crud/edit.html.twig', [
             'el' => $page,
             'title' => '"'.$page->getTitle().'"',
-            'entity' => 'Page',
+            'entity' => $entity,
             'route' => 'page',
             'header_route' => 'page_index',
             'parameters' => [
@@ -149,7 +152,7 @@ class PageController extends AbstractController
      */
     public function delete(Request $request, Page $page, PageRepository $pageRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Page';
+        $entity = get_class($page);
         if ($this->isCsrfTokenValid('delete'.$page->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 

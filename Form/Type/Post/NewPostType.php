@@ -19,6 +19,10 @@ class NewPostType extends AbstractType
                 'label' => 'Titre',
                 'help' => 'Insérez votre titre ici',
             ])
+            ->add('publishedAt', DateType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date de publication'
+            ])
         ;
     }
 

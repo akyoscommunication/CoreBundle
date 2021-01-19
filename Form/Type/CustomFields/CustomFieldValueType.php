@@ -56,8 +56,8 @@ class CustomFieldValueType extends AbstractType
                     case 'textarea_html':
                         $form
                             ->add('value', CKEditorType::class, [
-                                'required'    => false,
-                                'config'      => [
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+                                'config' => [
                                     'placeholder'    => "Texte",
                                     'height'         => 300,
                                     'entities'       => false,
@@ -65,7 +65,7 @@ class CustomFieldValueType extends AbstractType
                                     'entities_greek' => false,
                                     'entities_latin' => false,
                                 ],
-                                'label'    => $field->getTitle(),
+                                'label' => $field->getTitle(),
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -74,7 +74,7 @@ class CustomFieldValueType extends AbstractType
                     case 'textarea':
                         $form
                             ->add('value', TextareaType::class, [
-                                'label'    => $field->getTitle(),
+                                'label' => $field->getTitle(),
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -83,11 +83,11 @@ class CustomFieldValueType extends AbstractType
                     case 'tel':
                         $form
                             ->add('value', TelType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Numéro",
+                                'attr' => [
+                                    'placeholder' => "Numéro",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -96,11 +96,11 @@ class CustomFieldValueType extends AbstractType
                     case 'mail':
                         $form
                             ->add('value', EmailType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Email",
+                                'attr' => [
+                                    'placeholder' => "Email",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -110,7 +110,7 @@ class CustomFieldValueType extends AbstractType
                         $form
                             ->add('value', ChoiceType::class, [
                                 'choices' => $this->pages,
-                                'required' => false,
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'label'  => $field->getTitle(),
                                 'help' => $field->getDescription(),
                             ])
@@ -121,7 +121,7 @@ class CustomFieldValueType extends AbstractType
                         $form
                             ->add('value', ChoiceType::class, [
                                 'choices' => $this->posts,
-                                'required' => false,
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'label' => $field->getTitle(),
                                 'help' => $field->getDescription(),
                             ])
@@ -136,7 +136,7 @@ class CustomFieldValueType extends AbstractType
                         $form
                             ->add('value', ChoiceType::class, [
                                 'choices'=> $choices,
-                                'required' => false,
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'label'=> $field->getTitle(),
                                 'placeholder'=> "Sélectionnez un élément",
                                 'help' => $field->getDescription(),
@@ -148,11 +148,11 @@ class CustomFieldValueType extends AbstractType
                     case 'link':
                         $form
                             ->add('value', UrlType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Lien",
+                                'attr' => [
+                                    'placeholder' => "Lien",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -182,11 +182,11 @@ class CustomFieldValueType extends AbstractType
                     case 'int':
                         $form
                             ->add('value', IntegerType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Valeur",
+                                'attr' => [
+                                    'placeholder' => "Valeur",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -201,26 +201,26 @@ class CustomFieldValueType extends AbstractType
 
                         $form
                             ->add('value', ChoiceType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Valeur",
+                                'attr' => [
+                                    'placeholder' => "Valeur",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
-                                'choices'               => $values,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+                                'choices' => $values,
                                 'help' => $field->getDescription(),
                             ])
                         ;
                         break;
                     case 'bool':
 
-                        $customFieldValue->setValue((bool)$customFieldValue->getValue());
                         $form
                             ->add('value' , CheckboxType::class, [
                                 'attr' => [
-                                    'placeholder'       => "Valeur",
+                                    'placeholder' => "Valeur",
                                 ],
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+                                'data' => (bool)$customFieldValue->getValue(),
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -229,8 +229,8 @@ class CustomFieldValueType extends AbstractType
                     case 'color':
                         $form
                             ->add('value', ColorType::class, [
-                                'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'label' => $field->getTitle(),
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -243,7 +243,7 @@ class CustomFieldValueType extends AbstractType
                                     'placeholder'       => "Valeur",
                                 ],
                                 'label'                 => $field->getTitle(),
-                                'required'              => false,
+                                'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])
                         ;

@@ -27,12 +27,13 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $roles = $this->container->getParameter('user_roles');
-
         if(!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')){
             unset($roles['Super Admin']);
         }
         if(!$this->authorizationChecker->isGranted('ROLE_AKYOS')){
-            unset($roles['Akyos']);
+            if (array_key_exists('ROLE_AKYOS', $roles)){
+                unset($roles['Akyos']);
+            }
         }
 
         $builder
@@ -47,6 +48,9 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'required' => true,
+                'attr' => [
+                    'class' => 'js-select2',
+                ]
             ])
             ->add('password', PasswordType::class, [
                 'label' => "Mot de passe",

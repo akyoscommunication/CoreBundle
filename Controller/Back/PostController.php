@@ -20,9 +20,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/post", name="post_")
+ * @isGranted("liste-des-articles")
  */
 class PostController extends AbstractController
 {
@@ -53,6 +55,8 @@ class PostController extends AbstractController
                 ->setParameter('keyword', '%'.$request->query->get('search').'%')
             ;
         }
+        $query->orderBy('a.position', 'ASC');
+
         $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
 
         $post = new Post();
@@ -78,7 +82,7 @@ class PostController extends AbstractController
                 'Catégorie(s)' => 'PostCategories',
                 'Position' => 'Position',
                 'En ligne ?' => 'Published',
-                'Publié le'=>'CreatedAt',
+                'Publié le' => 'PublishedAt',
                 'Mis à jour le'=>'UpdatedAt',
             ],
         ]);
@@ -122,7 +126,7 @@ class PostController extends AbstractController
      */
     public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Post';
+        $entity = get_class($post);
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {
@@ -177,7 +181,7 @@ class PostController extends AbstractController
      */
     public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
     {
-        $entity = 'Post';
+        $entity = get_class($post);
         $coreOptions = $coreOptionsRepository->findAll();
         if($coreOptions) {
             if(!$coreOptions[0]->getHasPosts()) {

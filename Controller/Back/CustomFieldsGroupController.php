@@ -3,19 +3,27 @@
 namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\CustomFieldsGroup;
+use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Form\Type\CustomFields\CustomFieldsGroupType;
 use Akyos\CoreBundle\Form\Type\CustomFields\NewCustomFieldsGroupType;
 use Akyos\CoreBundle\Form\Handler\CrudHandler;
+use Akyos\CoreBundle\Repository\CustomFieldRepository;
 use Akyos\CoreBundle\Repository\CustomFieldsGroupRepository;
+use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
+use Akyos\CoreBundle\Twig\CoreExtension;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/admin/custom-fields-group", name="custom_fields_group_")
+ * @isGranted("champs-personnalises")
  */
 class CustomFieldsGroupController extends AbstractController
 {
@@ -83,7 +91,6 @@ class CustomFieldsGroupController extends AbstractController
         $entities = [];
         $meta = $em->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            dump($m->getName());
             if(!preg_match('/Component|Option|ContactForm/i', $m->getName()) && stripos($m->getName(), 'Akyos') !== false) {
                 $entities[] = $m->getName();
             }
@@ -170,5 +177,40 @@ class CustomFieldsGroupController extends AbstractController
         }
 
         return $this->redirectToRoute('custom_fields_group_index');
+    }
+
+    /**
+     * @Route("/change-value/{entity}/{id}/{slug}/{callback}", name="change_value", methods={"POST"})
+     * @param $entity
+     * @param $id
+     * @param $slug
+     * @param $callback
+     * @param Request $request
+     * @param CustomFieldValueRepository $customFieldValueRepository
+     * @param CustomFieldRepository $customFieldRepository
+     * @return null
+     */
+    public function changeValue($entity, $id, $slug, $callback, Request $request, CustomFieldValueRepository $customFieldValueRepository, CustomFieldRepository $customFieldRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $newValue = $request->get('data');
+        $customField = $customFieldRepository->findOneBy(['slug' => $slug]);
+        $customFieldValue = $customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $id]);
+
+        if (!$customFieldValue) {
+            $customFieldValue = new CustomFieldValue();
+            $customFieldValue
+                ->setCustomField($customField)
+                ->setValue($newValue)
+                ->setObjectId($id)
+            ;
+            $em->persist($customFieldValue);
+        } else {
+            $customFieldValue->setValue($newValue);
+        }
+
+        $em->flush();
+
+        return $this->redirect(urldecode($callback));
     }
 }

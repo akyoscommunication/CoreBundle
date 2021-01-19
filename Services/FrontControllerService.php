@@ -63,7 +63,7 @@ class FrontControllerService
         // GET ENTITY NAME AND FULLNAME FROM SLUG
         [$entityFullName, $entity] = $this->coreService->getEntityAndFullString($entitySlug);
 
-        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entity)) {
+        if(!$entityFullName || !$entity || !$this->coreService->checkIfSingleEnable($entityFullName)) {
             throw new NotFoundHttpException("Cette page n'existe pas! ( Détail )");
         }
 
@@ -71,6 +71,8 @@ class FrontControllerService
 
         // GET ELEMENT
         $element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
+        $now = new \DateTime();
+
         if(!$element) {
             $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
             if($redirect301) {
@@ -79,18 +81,28 @@ class FrontControllerService
                 return new RedirectResponse($redirectUrl, 301);
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${route} )");
-        } elseif (property_exists($element, 'published') and !$element->getPublished() and $route !== 'single_preview') {
-            if($this->checker->isGranted('ROLE_ADMIN')) {
-                return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+        } elseif (property_exists($element, 'published') and $route !== 'single_preview') {
+            if (!$element->getPublished()) {
+                if($this->checker->isGranted('ROLE_ADMIN')) {
+                    return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+                } else {
+                    throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                }
             } else {
-                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                if (property_exists($element, 'publishedAt') and ($element->getPublishedAt() > $now)) {
+                    if($this->checker->isGranted('ROLE_ADMIN')) {
+                        return new RedirectResponse($this->router->generate('single_preview', ['entitySlug' => $entitySlug, 'slug' => $slug]));
+                    } else {
+                        throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                    }
+                }
             }
         }
 
         // GET COMPONENTS OR CONTENT
         $components = null;
-        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entity)) {
-            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entity, 'typeId' => $element->getId(), 'isTemp' => ($route === 'single_preview'), 'parentComponent' => null], ['position' => 'ASC']);
+        if($this->coreService->checkIfBundleEnable(AkyosBuilderBundle::class, BuilderOptions::class, $entityFullName)) {
+            $components = $this->em->getRepository(Component::class)->findBy(['type' => $entityFullName, 'typeId' => $element->getId(), 'isTemp' => ($route === 'single_preview'), 'parentComponent' => null], ['position' => 'ASC']);
         }
 
         // GET TEMPLATE
@@ -112,27 +124,38 @@ class FrontControllerService
     public function pageAndPreview(string $slug, string $route)
     {
         // FIND PAGE
-        $entity = 'Page';
+        $entity = Page::class;
         $slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
         /** @var Page $page */
-        $page = $this->em->getRepository(Page::class)->findOneBy(['slug' => $slug]) ??
+        $page = $this->em->getRepository($entity)->findOneBy(['slug' => $slug]) ??
             ( !$this->em->getMetadataFactory()->isTransient(Translation::class)
-                ? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, Page::class)
+                ? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, $entity)
                 : null );
+        $now = new \DateTime();
 
         if(!$page) {
-            $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => Page::class]);
+            $redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entity]);
             if($redirect301) {
-                $page = $this->em->getRepository(Page::class)->find($redirect301->getObjectId());
+                $page = $this->em->getRepository($entity)->find($redirect301->getObjectId());
                 $redirectUrl = $this->router->generate($route, ['slug' => $page->getSlug()]);
                 return new RedirectResponse($redirectUrl, 301);
             }
             throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
-        } elseif (!$page->getPublished() and $route !== 'page_preview') {
-            if($this->checker->isGranted('ROLE_ADMIN')) {
-                return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+        } elseif ($route !== 'page_preview') {
+            if (!$page->getPublished()) {
+                if($this->checker->isGranted('ROLE_ADMIN')) {
+                    return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+                } else {
+                    throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                }
             } else {
-                throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                if ($page->getPublishedAt() > $now) {
+                    if($this->checker->isGranted('ROLE_ADMIN')) {
+                        return new RedirectResponse($this->router->generate('page_preview', ['slug' => $slug]));
+                    } else {
+                        throw new NotFoundHttpException("Cette page n'existe pas! ( ${entity} )");
+                    }
+                }
             }
         }
 

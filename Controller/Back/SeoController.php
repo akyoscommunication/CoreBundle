@@ -27,6 +27,7 @@ class SeoController extends AbstractController
      */
     public function index($type, $typeId, $route, SeoRepository $seoRepository): Response
     {
+        $type = urldecode($type);
         $seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
 
         if (!$seo) {
@@ -52,6 +53,7 @@ class SeoController extends AbstractController
      */
     public function submit($type, $typeId, Request $request, SeoRepository $seoRepository)
     {
+        $type = urldecode($type);
         $seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
 
         if (!$seo) {
