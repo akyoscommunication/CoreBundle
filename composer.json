@@ -15,7 +15,6 @@
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.3",
         "stof/doctrine-extensions-bundle": "^1.4",
-        "symfony/swiftmailer-bundle": "^3.4",
         "symfony/apache-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
         "karser/karser-recaptcha3-bundle": "^0.1.0@dev"

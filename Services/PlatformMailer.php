@@ -1,0 +1,36 @@
+<?php
+//
+// A DUPLIQUER DANS LE CODE DE VOTRE PROJET, dans src/Services/Mailers
+//
+//namespace App\Services\Mailers;
+//
+//use Akyos\CoreBundle\Services\CoreMailer;
+//use App\Repository\Platform\PlatformOptionsRepository;
+//use Symfony\Component\HttpFoundation\RequestStack;
+//
+//class PlatformMailer {
+//
+//	private CoreMailer $mailer;
+//	private string $from;
+//	private string $reply;
+//
+//	public function __construct(CoreMailer $mailer, PlatformOptionsRepository $platformOptionsRepository, RequestStack $requestStack)
+//	{
+//		$this->mailer = $mailer;
+//
+//		$platformOptions = $platformOptionsRepository->findAll();
+//		if($platformOptions) {
+//			$platformOptions = $platformOptions[0];
+//		}
+//		$noreply = ($platformOptions ? $platformOptions->getPlatformTitle() : 'noreply').' <noreply@' . $requestStack->getCurrentRequest()->getHost().'>';
+//		$this->from = $noreply;
+//		$this->reply = $noreply;
+//	}
+//
+//	public function sendMail($to, $subject, $body, $title, $template = '@AkyosCore/email/platform_default.html.twig', $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
+//	{
+//		$from = (is_null($from)) ? $this->from : $from;
+//		$replyTo = (is_null($replyTo)) ? $this->reply : $replyTo;
+//		$this->mailer->sendMail($to, $subject, $body, $title, $template, $from, $bcc, $replyTo, $attachment, $options);
+//	}
+//}

@@ -10,6 +10,7 @@ use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\CustomFieldRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
+use Akyos\CoreBundle\Services\CoreMailer;
 use Akyos\CoreBundle\Services\CoreService;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +42,7 @@ class CoreExtension extends AbstractExtension
         CoreOptionsRepository $coreOptionsRepository,
         CoreService $coreService,
         ContainerInterface $container,
-        \Swift_Mailer $mailer,
+        CoreMailer $mailer,
         Environment $twig,
         CustomFieldValueRepository $customFieldValueRepository,
         CustomFieldRepository $customFieldRepository
@@ -458,27 +459,16 @@ class CoreExtension extends AbstractExtension
 
     public function sendExceptionMail($exceptionMessage)
     {
-        $mail = new \Swift_Message();
-
-
-        $body = $this->twig->render('@AkyosCore/email/default.html.twig', array(
-            'subject' => 'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
-            'title' => 'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
-            'body' => $exceptionMessage,
-        ));
-
-
-        $mail->setFrom("noreply@".$_SERVER['SERVER_NAME'])
-            ->setTo(["thomas.sebert.akyos@gmail.com"])
-            ->setBcc(["lilian.akyos@gmail.com", "johan@akyos.com"])
-            ->setSubject('Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'])
-            ->setBody($body)
-            ->setReplyTo("noreply@".$_SERVER['SERVER_NAME'])
-            ->setContentType("text/html")
-        ;
-
         try {
-            $this->mailer->send($mail);
+			$this->mailer->sendMail(
+				["thomas.sebert.akyos@gmail.com"],
+				'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
+				$exceptionMessage,
+				'Nouvelle erreur sur le site '.$_SERVER['SERVER_NAME'],
+				null,
+				null,
+				["lilian.akyos@gmail.com", "johan@akyos.com"]
+			);
             return true;
         } catch (\Exception $e) {
             return $e;
