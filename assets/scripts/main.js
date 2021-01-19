@@ -19,6 +19,7 @@ class Core {
         this.initSelect2();
         this.initAjaxPublished();
         this.tooltip();
+        this.clearSearch();
         MenuItem.init();
         Seo.init();
         SubmitForm.init();
@@ -46,6 +47,14 @@ class Core {
     }
     static tooltip() {
         $('[data-toggle="tooltip"]').tooltip()
+    }
+    static clearSearch() {
+        $('.icon-close').click(function() {
+            $(this).parents('form').find('input').val('');
+        })
+        $('.icon-search').click(function() {
+            $(this).parents('form').submit();
+        })
     }
 }
 

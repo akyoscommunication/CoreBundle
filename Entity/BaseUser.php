@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @MappedSuperclass
- * @UniqueEntity("email")
+ * @UniqueEntity("email", message="email_already_used")
 */
 class BaseUser implements UserInterface
 {
