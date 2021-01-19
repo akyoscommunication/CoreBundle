@@ -86,7 +86,7 @@ class CoreMailer {
 			} else {
 				$email->bcc(...$bcc);
 			}
-		} else {
+		} elseif ($bcc) {
 			$email->bcc($bcc);
 		}
 		
