@@ -26,12 +26,8 @@ class CoreMailer {
 		if($coreOptions) {
 			$coreOptions = $coreOptions[0];
 		}
-		if ($requestStack->getCurrentRequest()!== null){
-		    $domain = $requestStack->getCurrentRequest()->getHost();
-        }else{
-		    $domain = 'exemple.com';
-        }
-		$noreply = ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $domain.'>';
+
+		$noreply = ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>';
 		$this->from = $noreply;
 		$this->reply = $noreply;
 	}
