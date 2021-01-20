@@ -20,7 +20,7 @@ class AccessVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        if($this->adminAccessRepository->findOneBySlug($attribute) or !$this->adminAccessRepository->count([]))
+        if(($this->adminAccessRepository->findOneBySlug($attribute) or !$this->adminAccessRepository->count([])) and $this->security->getUser())
         {
             return true;
         }
