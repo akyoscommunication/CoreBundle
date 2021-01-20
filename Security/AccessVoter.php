@@ -20,11 +20,8 @@ class AccessVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        if($this->adminAccessRepository->findOneBySlug($attribute))
+        if(($this->adminAccessRepository->findOneBySlug($attribute) or !$this->adminAccessRepository->count([])) and $this->security->getUser())
         {
-            return true;
-        }
-        if ($this->security->getUser() and !$this->adminAccessRepository->count([])) {
             return true;
         }
         return false;
@@ -32,15 +29,15 @@ class AccessVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        if (!$this->adminAccessRepository->count([]) and $this->security->isGranted('ROLE_SUPER_ADMIN')) {
-            return true;
-        }
-        $authorizedRoles = $this->adminAccessRepository->findOneBySlug($attribute)->getRoles();
-        if (!empty($authorizedRoles)){
-            if ($this->security->isGranted($authorizedRoles)){
-                return true;
+        $role = $this->adminAccessRepository->findOneBySlug($attribute);
+        if ($role) {
+            $authorizedRoles = $role->getRoles();
+            if (!empty($authorizedRoles)){
+                if ($this->security->isGranted($authorizedRoles)){
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
         return true;
     }
