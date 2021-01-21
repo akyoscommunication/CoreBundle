@@ -16,25 +16,25 @@ class CoreMailer {
 	private $twig;
 	private $from;
 	private $reply;
+	private $coreOptions;
+	private $requestStack;
 	
 	public function __construct(MailerInterface $mailer, Environment $twig, CoreOptionsRepository $coreOptionsRepository, RequestStack $requestStack)
 	{
 		$this->mailer = $mailer;
 		$this->twig = $twig;
-		
+		$this->requestStack = $requestStack;
+		$this->coreOptions = null;
 		$coreOptions = $coreOptionsRepository->findAll();
 		if($coreOptions) {
-			$coreOptions = $coreOptions[0];
+			$this->coreOptions = $coreOptions[0];
 		}
-
-		$noreply = ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>';
-		$this->from = $noreply;
-		$this->reply = $noreply;
 	}
 	
 	
 	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
 	{
+		$this->setDefaults();
 		$email = new Email();
 		$from = (is_null($from)) ? $this->from : $from;
 		$replyTo = (is_null($replyTo)) ? $this->reply : $replyTo;
@@ -116,5 +116,11 @@ class CoreMailer {
 		} catch (TransportExceptionInterface $e) {
 			return $e;
 		}
+	}
+	
+	private function setDefaults() {
+		$noreply = ($this->coreOptions ? $this->coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $this->requestStack->getCurrentRequest()->getHost().'>';
+		$this->from = $noreply;
+		$this->reply = $noreply;
 	}
 }
