@@ -21,7 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  * Class AdminAccessController
  * @package Akyos\CoreBundle\Controller\Back
  * @Route("/admin/gestion-des-droits", name="admin_access_")
- * @isGranted("gestion-des-droits")
  */
 class AdminAccessController extends AbstractController
 {

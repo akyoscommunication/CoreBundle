@@ -18,17 +18,17 @@ class AccessVoter extends Voter
         $this->adminAccessRepository = $adminAccessRepository;
     }
 
-    protected function supports($attribute, $subject)
-    {
-        if(($this->adminAccessRepository->findOneBySlug($attribute) or !$this->adminAccessRepository->count([])) and $this->security->getUser())
+    protected function supports($attribute, $subject): bool
+	{
+        if($this->adminAccessRepository->findOneBySlug($attribute) and $this->security->getUser())
         {
             return true;
         }
         return false;
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
-    {
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+	{
         $role = $this->adminAccessRepository->findOneBySlug($attribute);
         if ($role) {
             $authorizedRoles = $role->getRoles();
@@ -38,6 +38,7 @@ class AccessVoter extends Voter
                 }
                 return false;
             }
+            return true;
         }
         return true;
     }
