@@ -117,8 +117,8 @@ class CoreBundleController extends AbstractController
         $entityManager->flush();
         if($parentId && $namespaceParent){
             return $this->redirectToRoute($route.'_edit', [
-                'id'=>$parentId,
-                'tab'=>$tab
+                'id' => $parentId,
+                'tab' => $tab
             ]);
         }else{
             return $this->redirectToRoute($route.'_index');

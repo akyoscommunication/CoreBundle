@@ -74,12 +74,16 @@
                 {% if show is defined and show %}
                     <a class="btn btn-success btn-sm" href="{{ path(route~'_show', {'id': el.id}) }}" data-toggle ="tooltip" title="Voir le détail"><i class="fas fa-eye"></i></a>
                 {% endif %}
-                <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
-                <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
-                    <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
-                </form>
+                {% if (button_edit is defined and button_edit) or button_edit is not defined %}
+                    <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
+                {% endif %}
+                {% if (button_delete is defined and button_delete) or button_delete is not defined %}
+                    <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
+                        <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
+                    </form>
+                {% endif %}
             </td>
         </tr>
     {% else %}
