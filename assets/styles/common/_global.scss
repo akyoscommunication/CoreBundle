@@ -115,6 +115,13 @@
     }
 }
 
+.required{
+    &:after{
+        content: '*';
+        color: red;
+        margin-left: 4px;
+    }
+}
 @keyframes loaderRotate {
     from {
         transform: rotate(0deg);

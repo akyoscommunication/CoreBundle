@@ -13787,6 +13787,12 @@ body h4 {
           animation-timing-function: ease;
 }
 
+.required:after {
+  content: '*';
+  color: red;
+  margin-left: 4px;
+}
+
 @-webkit-keyframes loaderRotate {
   from {
     -webkit-transform: rotate(0deg);
