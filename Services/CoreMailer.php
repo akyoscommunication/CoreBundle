@@ -27,7 +27,7 @@ class CoreMailer {
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();
 		if($coreOptions) {
-			$this->coreOptions = $coreOptions[0];
+			$coreOptions = $coreOptions[0];
 		}
 		
 		$email = new Email();
