@@ -26,8 +26,8 @@ class CoreMailer {
 		if($coreOptions) {
 			$this->coreOptions = $coreOptions[0];
 		}
-		
-		$noreply = ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>';
+
+		$noreply = ($coreOptions ? $this->coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>';
 		$this->from = $noreply;
 		$this->reply = $noreply;
 	}
