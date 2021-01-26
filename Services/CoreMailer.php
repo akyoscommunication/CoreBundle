@@ -3,7 +3,6 @@
 namespace Akyos\CoreBundle\Services;
 
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -14,30 +13,26 @@ class CoreMailer {
 	
 	private $mailer;
 	private $twig;
-	private $from;
-	private $reply;
+	private $coreOptionsRepository;
 	
 	public function __construct(MailerInterface $mailer, Environment $twig, CoreOptionsRepository $coreOptionsRepository)
 	{
 		$this->mailer = $mailer;
 		$this->twig = $twig;
-		
-		$coreOptions = $coreOptionsRepository->findAll();
-		if($coreOptions) {
-			$this->coreOptions = $coreOptions[0];
-		}
-		
-		$noreply = ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>';
-		$this->from = $noreply;
-		$this->reply = $noreply;
+		$this->coreOptionsRepository = $coreOptionsRepository;
 	}
 	
 	
 	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
 	{
+		$coreOptions = $this->coreOptionsRepository->findAll();
+		if($coreOptions) {
+			$this->coreOptions = $coreOptions[0];
+		}
+		
 		$email = new Email();
-		$from = (is_null($from)) ? $this->from : $from;
-		$replyTo = (is_null($replyTo)) ? $this->reply : $replyTo;
+		$from = (is_null($from)) ? ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>' : $from;
+		$replyTo = (is_null($replyTo)) ? ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>' : $replyTo;
 		
 		$bodyParams = [
 			'subject' => $subject,
