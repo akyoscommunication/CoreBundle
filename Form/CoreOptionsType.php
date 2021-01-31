@@ -83,6 +83,7 @@ class CoreOptionsType extends AbstractType
 					'Symfony Mailer' => 'Symfony Mailer',
 					'Mailjet API' => 'Mailjet API',
 				],
+				'data' => 'Symfony Mailer',
 			])
 			->add('smsTransport', ChoiceType::class, [
 				'label' => 'Quel transport utiliser pour l\'envoi des SMS (service CoreSMS) ?',
