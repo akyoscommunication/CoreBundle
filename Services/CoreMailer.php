@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Services;
 
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
+use Akyos\CoreBundle\Services\MailApi\MailjetEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -14,16 +15,20 @@ class CoreMailer {
 	private $mailer;
 	private $twig;
 	private $coreOptionsRepository;
+	private $messageLogger;
+	private $mailjetEmail;
 	
-	public function __construct(MailerInterface $mailer, Environment $twig, CoreOptionsRepository $coreOptionsRepository)
+	public function __construct(MailerInterface $mailer, Environment $twig, CoreOptionsRepository $coreOptionsRepository, MailjetEmail $mailjetEmail, MessageLogger $messageLogger)
 	{
 		$this->mailer = $mailer;
 		$this->twig = $twig;
 		$this->coreOptionsRepository = $coreOptionsRepository;
+		$this->messageLogger = $messageLogger;
+		$this->mailjetEmail = $mailjetEmail;
 	}
 	
 	
-	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
+	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null)
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();
 		if($coreOptions) {
@@ -31,8 +36,8 @@ class CoreMailer {
 		}
 		
 		$email = new Email();
-		$from = (is_null($from)) ? ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>' : $from;
-		$replyTo = (is_null($replyTo)) ? ($coreOptions ? $coreOptions->getSiteTitle() : 'noreply').' <noreply@' . $_SERVER['SERVER_NAME'].'>' : $replyTo;
+		$from = (is_null($from)) ? ($coreOptions && $coreOptions->getSiteTitle() ? $coreOptions->getSiteTitle() : 'noreply').' <' . ($_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@'.$_SERVER['SERVER_NAME']) .'>' : $from;
+		$replyTo = (is_null($replyTo)) ? ($coreOptions && $coreOptions->getSiteTitle() ? $coreOptions->getSiteTitle() : 'noreply').' <' . ($_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@'.$_SERVER['SERVER_NAME']) .'>' : $replyTo;
 		
 		$bodyParams = [
 			'subject' => $subject,
@@ -43,6 +48,10 @@ class CoreMailer {
 			$bodyParams = array_merge($bodyParams, $options['templateParams']);
 		}
 		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
+		
+		if($coreOptions->getEmailTransport() === "Mailjet API") {
+			return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
+		}
 		
 		if(is_array($from) && count($from)) {
 			if(array_values($from) !== $from) {
@@ -107,8 +116,10 @@ class CoreMailer {
 		
 		try {
 			$this->mailer->send($email);
+			$this->messageLogger->saveLog($email, null, 'core_email', null);
 			return true;
 		} catch (TransportExceptionInterface $e) {
+			$this->messageLogger->saveLog($email, $e, 'core_email', null);
 			return $e;
 		}
 	}

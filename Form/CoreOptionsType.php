@@ -72,6 +72,30 @@ class CoreOptionsType extends AbstractType
                 'label' => 'Clé privée reCaptcha',
                 'required' => false
             ])
+			->add('emailTransport', ChoiceType::class, [
+				'label' => 'Quel transport utiliser pour l\'envoi des emails (service CoreMailer) ?',
+				'help' => 'L\'utilisation d\'une API nécéssite probablement de renseigner les clés API dans le fichier config/packages/core_bundle.yaml. Pour savoir comment créer ce fichier, regardez dans le Corebundle/InstallFiles/Config/core_bundle.yaml. Veuiller vérifier également que l\'expéditeur noreply@nom_de_domaine soit bien autorisé sur le compte du service.',
+				'required' => false,
+				'attr' => [
+					'class' => 'js-select2'
+				],
+				'choices' => [
+					'Symfony Mailer' => 'Symfony Mailer',
+					'Mailjet API' => 'Mailjet API',
+				],
+			])
+			->add('smsTransport', ChoiceType::class, [
+				'label' => 'Quel transport utiliser pour l\'envoi des SMS (service CoreSMS) ?',
+				'help' => 'L\'utilisation d\'une API nécéssite probablement de renseigner les clés API dans le fichier config/packages/core_bundle.yaml. Pour savoir comment créer ce fichier, regardez dans le Corebundle/InstallFiles/Config/core_bundle.yaml.',
+				'required' => false,
+				'attr' => [
+					'class' => 'js-select2'
+				],
+				'choices' => [
+					'Mailjet SMS' => 'Mailjet SMS',
+					'Twilio SMS' => 'Twilio SMS',
+				]
+			])
             ->add('hasArchiveEntities', ChoiceType::class, [
                 'label' => 'Activer la page archive sur les entités :',
                 'choices' => $options['entities'],

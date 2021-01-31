@@ -27,10 +27,10 @@
 //		$this->reply = $noreply;
 //	}
 //
-//	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null)
+//	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null)
 //	{
 //		$from = (is_null($from)) ? $this->from : $from;
 //		$replyTo = (is_null($replyTo)) ? $this->reply : $replyTo;
-//		$this->mailer->sendMail($to, $subject, $body, $title, $template ?: '@AkyosCore/email/platform_default.html.twig', $from, $bcc, $replyTo, $attachment, $options);
+//		$this->mailer->sendMail($to, $subject, $body, $title, $template ?: '@AkyosCore/email/platform_default.html.twig', $from, $bcc, $replyTo, $attachment, $options, $doNotFlush);
 //	}
 //}

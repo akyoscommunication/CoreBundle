@@ -86,6 +86,16 @@ class CoreOptions
      */
     private $hasPostDocuments;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $emailTransport;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $smsTransport;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -255,6 +265,30 @@ class CoreOptions
     public function setHasPostDocuments(?bool $hasPostDocuments): self
     {
         $this->hasPostDocuments = $hasPostDocuments;
+
+        return $this;
+    }
+
+    public function getEmailTransport(): ?string
+    {
+        return $this->emailTransport;
+    }
+
+    public function setEmailTransport(?string $emailTransport): self
+    {
+        $this->emailTransport = $emailTransport;
+
+        return $this;
+    }
+
+    public function getSmsTransport(): ?string
+    {
+        return $this->smsTransport;
+    }
+
+    public function setSmsTransport(?string $smsTransport): self
+    {
+        $this->smsTransport = $smsTransport;
 
         return $this;
     }

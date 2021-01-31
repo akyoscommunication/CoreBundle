@@ -1,0 +1,22 @@
+core_bundle:
+    user_roles:
+        'Utilisateur': 'ROLE_USER'
+        'Admin': 'ROLE_ADMIN'
+        'Super admin': 'ROLE_SUPER_ADMIN'
+        'Akyos': 'ROLE_AKYOS'
+
+    # Twilio SMS
+    twilio_accountSID: 'ACe745711c080f8ac90bcac210adff34ed'
+    twilio_authToken: '73c059f232dd7047e0b9a590f43556ae'
+    twilio_sender: '+16513834762'
+
+    # Mailjet SMS
+    mailjet_smsToken: 'e4e31c428d114e48a48b74190b90d6eb'
+    mailjet_sender: 'AkyosCom'
+
+    # Mailjet Email
+    mailjet_apiKey: 'da24bfa22137d3fb6e3cfe6bb3e5985c'
+    mailjet_secretKey: 'a978ccee43c6ff2e13cd96fb04614d13'
+
+    # Google API Key
+    google_apiKey: 'AIzaSyD6-wd-qhuzRXUpNKNxHLFcXE9o8BKWYNQ'
