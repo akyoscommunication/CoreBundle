@@ -53,6 +53,11 @@ class CustomField
      */
     private $entity;
 
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    private $options;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +143,18 @@ class CustomField
     public function setEntity(?string $entity): self
     {
         $this->entity = $entity;
+
+        return $this;
+    }
+
+    public function getOptions(): ?string
+    {
+        return $this->options;
+    }
+
+    public function setOptions(?string $options): self
+    {
+        $this->options = $options;
 
         return $this;
     }

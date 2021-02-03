@@ -193,20 +193,28 @@ class CustomFieldValueType extends AbstractType
                         break;
 
                     case 'select':
-                        $values = [];
-                        foreach($field->getFieldValues() as $fieldValue) {
-                            $exploded = explode(':', $fieldValue);
-                            $values[$exploded[0]] = $exploded[1];
+                        $choices = [];
+                        $values = explode('|', $field->getOptions());
+                        $fieldOptions = array_slice($values, 1);
+                        foreach ($fieldOptions as $option) {
+                            $vs = explode(';', $option);
+                            if (count($vs) < 2) {
+                                $choices[$vs[0]] = $vs[0];
+                            } else {
+                                if ($vs[1] === '') {
+                                    $choices[$vs[0]] = $vs[0];
+                                } else {
+                                    $choices[$vs[0]] = $vs[1];
+                                }
+                            }
                         }
 
                         $form
                             ->add('value', ChoiceType::class, [
-                                'attr' => [
-                                    'placeholder' => "Valeur",
-                                ],
+                                'placeholder' => $values[0],
                                 'label' => $field->getTitle(),
                                 'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
-                                'choices' => $values,
+                                'choices' => $choices,
                                 'help' => $field->getDescription(),
                             ])
                         ;
@@ -239,10 +247,10 @@ class CustomFieldValueType extends AbstractType
                     default:
                         $form
                             ->add('value', TextType::class, [
-                                'attr'              => [
-                                    'placeholder'       => "Valeur",
+                                'attr' => [
+                                    'placeholder' => "Valeur",
                                 ],
-                                'label'                 => $field->getTitle(),
+                                'label' => $field->getTitle(),
                                 'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
                                 'help' => $field->getDescription(),
                             ])

@@ -143,23 +143,7 @@ class CoreExtension extends AbstractExtension
 
     public function getEntitySlug($entity)
     {
-        if(preg_match('/Category/i', $entity)) {
-            $entity = str_replace('Category', '', $entity);
-        }
-
-        $entityFullName = null;
-        $meta = $this->em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            $entityName = explode('\\', $m->getName());
-            $entityName = $entityName[sizeof($entityName)-1];
-            if(preg_match('/^'.$entity.'$/i', $entityName)) {
-                $entityFullName = $m->getName();
-            }
-        }
-        if(!$entityFullName) {
-            return $entity;
-        }
-        return $entityFullName::ENTITY_SLUG;
+        return defined($entity.'::ENTITY_SLUG') ? $entity::ENTITY_SLUG : false;
     }
 
     public function getEntityNameSpace($entity)
