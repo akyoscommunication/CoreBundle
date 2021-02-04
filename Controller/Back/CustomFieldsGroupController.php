@@ -155,7 +155,7 @@ class CustomFieldsGroupController extends AbstractController
         return $this->render('@AkyosCore/crud/edit.html.twig', [
             'el' => $customFieldsGroup,
             'title' => 'Groupe de champs',
-            'entity' => 'CustomFieldsGroup',
+            'entity' => CustomFieldsGroup::class,
             'route' => 'custom_fields_group',
             'form' => $form->createView(),
         ]);

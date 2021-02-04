@@ -56,6 +56,11 @@ class CustomFieldType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
             ])
+            ->add('options', TextType::class, [
+                'label' => 'Options',
+                'required' => false,
+                'help' => "On en a besoin si tu veux mettres tes choix d'un select, sépare les par des | mon gars et ensuite par un ; pour séparé le nom du choix et sa value si tu veux que ça marche. La première string sera le placeholder donc fait pas le con.",
+            ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'help' => 'Description du champ: à quoi sert-il ?',

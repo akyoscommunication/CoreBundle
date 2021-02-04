@@ -71,7 +71,7 @@ class PostController extends AbstractController
         return $this->render('@AkyosCore/crud/index.html.twig', [
             'els' => $els,
             'title' => 'Article',
-            'entity' => 'Post',
+            'entity' => Post::class,
             'view' => 'single',
             'route' => 'post',
             'formModal' => $newPostForm->createView(),
