@@ -36,4 +36,9 @@ class CoreSMS {
 		
 		return false;
 	}
+	
+	public function getCode(): int
+	{
+		return random_int(10000000, 99999999);
+	}
 }

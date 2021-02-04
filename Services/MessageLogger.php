@@ -24,9 +24,9 @@ class MessageLogger {
 		if($message) {
 			$messageLog->setMessage($this->serializer->serialize($message, 'json'));
 		}
-		if($error) {
-			$messageLog->setError($this->serializer->serialize($error, 'json'));
-		}
+//		if($error) {
+//			$messageLog->setError($this->serializer->serialize($error, 'json'));
+//		}
 		if($type) {
 			$messageLog->setType($type);
 		}
