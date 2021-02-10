@@ -144,7 +144,7 @@ class CoreExtension extends AbstractExtension
     public function getEntitySlug($entity)
     {
     	if(!class_exists($entity)) {
-        	$entity = $this->getEntityNameSpace($entity));
+        	$entity = $this->getEntityNameSpace($entity);
 		}
 		return defined($entity.'::ENTITY_SLUG') ? $entity::ENTITY_SLUG : false;
     }
