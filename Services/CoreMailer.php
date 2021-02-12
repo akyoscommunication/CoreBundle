@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Services;
 
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Services\MailApi\MailjetEmail;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -17,14 +18,16 @@ class CoreMailer {
 	private $coreOptionsRepository;
 	private $messageLogger;
 	private $mailjetEmail;
+	private $parameterBag;
 	
-	public function __construct(MailerInterface $mailer, Environment $twig, CoreOptionsRepository $coreOptionsRepository, MailjetEmail $mailjetEmail, MessageLogger $messageLogger)
+	public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, CoreOptionsRepository $coreOptionsRepository, MailjetEmail $mailjetEmail, MessageLogger $messageLogger)
 	{
 		$this->mailer = $mailer;
 		$this->twig = $twig;
 		$this->coreOptionsRepository = $coreOptionsRepository;
 		$this->messageLogger = $messageLogger;
 		$this->mailjetEmail = $mailjetEmail;
+		$this->parameterBag = $parameterBag;
 	}
 	
 	
@@ -49,7 +52,7 @@ class CoreMailer {
 		}
 		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
 		
-		if($coreOptions->getEmailTransport() === "Mailjet API") {
+		if($coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
 			return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
 		}
 		
