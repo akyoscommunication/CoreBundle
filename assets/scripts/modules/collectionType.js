@@ -4,7 +4,6 @@ class initCollectionType {
         const _this = this;
 
         const collectionHolder = $(proto);
-        console.log(collectionHolder);
         collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
         const buttonAddLabel = collectionHolder.data('button_add');
         const buttonDeleteLabel = collectionHolder.data('button_delete');
