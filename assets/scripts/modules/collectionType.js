@@ -4,18 +4,19 @@ class initCollectionType {
         const _this = this;
 
         const collectionHolder = $(proto);
+        console.log(collectionHolder);
         collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
         const buttonAddLabel = collectionHolder.data('button_add');
         const buttonDeleteLabel = collectionHolder.data('button_delete');
-        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">'+(buttonAddLabel ? buttonAddLabel : 'Ajouter un champ')+'</button>');
+        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">'+(buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ')+' <i class="fas fa-plus"></i></button>');
         const addFieldLink = $('#add_component');
-        collectionHolder.data('index', collectionHolder.children('.form-group').length);
+        collectionHolder.attr('data-index', collectionHolder.children('.form-group').length);
 
         collectionHolder.children('.form-group').each(function() {
             _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
         });
 
-        addFieldLink.on('click', function(e) {
+        $(document).on('click', addFieldLink, function(e) {
             e.preventDefault();
             _this.addCloneForm(collectionHolder, buttonDeleteLabel);
         });
