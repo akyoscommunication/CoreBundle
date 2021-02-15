@@ -50,6 +50,15 @@ class Configuration implements ConfigurationInterface
 				->scalarNode('mailjet_secretKey')
 					->defaultValue('a978ccee43c6ff2e13cd96fb04614d13')
 				->end()
+                ->scalarNode('universign_user')
+                    ->defaultValue('thomas@akyos.com')
+                ->end()
+                ->scalarNode('universign_password')
+                    ->defaultValue('XFRdzu9Vs9J5cwe')
+                ->end()
+                ->scalarNode('universign_mode')
+                    ->defaultValue('prod')
+                ->end()
             ->end()
         ;
 
