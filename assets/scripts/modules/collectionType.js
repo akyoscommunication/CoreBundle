@@ -15,7 +15,7 @@ class initCollectionType {
             _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
         });
 
-        $(document).on('click', addFieldLink, function(e) {
+        addFieldLink.on('click', function(e) {
             e.preventDefault();
             _this.addCloneForm(collectionHolder, buttonDeleteLabel);
         });
