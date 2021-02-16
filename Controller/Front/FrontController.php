@@ -244,7 +244,7 @@ class FrontController extends AbstractController
         // GET CATEGORY FULLNAME FROM ENTITY SLUG
         $categoryFullName = null;
         foreach ($meta as $m) {
-            if(preg_match('/'.$entity.'Category$/i', $m->getName())) {
+            if(preg_match('/\x5c'.$entity.'Category$/i', $m->getName())) {
                 $categoryFullName = $m->getName();
             }
         }
