@@ -51,7 +51,7 @@ class CoreMailer {
 			$bodyParams = array_merge($bodyParams, $options['templateParams']);
 		}
 		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
-		
+
 		if($coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
 			return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
 		}
