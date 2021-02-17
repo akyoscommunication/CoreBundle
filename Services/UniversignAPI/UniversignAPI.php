@@ -92,7 +92,7 @@ class UniversignAPI
             foreach ($docs as $doc) {
                 $return[] = [
                     'name' => $doc->name,
-                    'content' => $doc->content,
+                    'content' => base64_encode($doc->content),
                 ];
             }
         }
