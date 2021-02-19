@@ -38,11 +38,10 @@ class UniversignAPI
 	 * @param null $mode
 	 * @param null $description
 	 * @param null $profile
-	 * @param null $securityLevel
 	 * @param null $language
 	 * @return array
 	 */
-	public function send($to, $docs, $mode = null, $description = null, $profile = null, $securityLevel = null, $language = null): array
+	public function send($to, $docs, $mode = null, $description = null, $language = null): array
 	{
 		$request = new TransactionRequest();
 
@@ -72,8 +71,6 @@ class UniversignAPI
 				TransactionRequest::CHAINING_MODE_EMAIL
 			)
 			->setDescription($description ?: "Demonstration de la signature Universign")
-            ->setProfile($profile ?: "profile_demo")
-            ->setCertificateTypes($securityLevel ?: 'simple')
             ->setLanguage($language ?: 'fr')
         ;
 
