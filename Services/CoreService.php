@@ -65,8 +65,7 @@ class CoreService
 		} else return false;
 	}
 	
-	public function getEntityAndFullString(string $entitySlug)
-	{
+	public function getEntityAndFullString(string $entitySlug) {
 		$entityFullName = null;
 		$entity = null;
 		$meta = $this->em->getMetadataFactory()->getAllMetadata();
@@ -77,8 +76,8 @@ class CoreService
 			} catch (\ReflectionException $e) {
 				$constant_value = null;
 			}
-			if (null !== $constant_value) {
-				if ($m->getName()::ENTITY_SLUG === $entitySlug) {
+			if(null !== $constant_value) {
+				if($m->getName()::ENTITY_SLUG === $entitySlug) {
 					$entityFullName = $m->getName();
 					$entity = array_reverse(explode('\\', $entityFullName))[0];
 				}
@@ -90,22 +89,21 @@ class CoreService
 			$entity
 		];
 	}
-	
 	public function getCustomField(string $customFieldSlug, $object)
 	{
 		$customField = $this->customFieldRepository->findOneBy(['slug' => $customFieldSlug]);
-		if (!$customField) {
+		if(!$customField) {
 			return null;
 		}
 		
 		$customFieldValue = $this->customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $object->getId()]);
-		if (!$customFieldValue) {
+		if(!$customFieldValue) {
 			return null;
 		}
 		
 		switch ($customField->getType()) {
 			case 'entity':
-				if ($customFieldValue->getValue()) {
+				if($customFieldValue->getValue()) {
 					$customFieldValue = $this->em->getRepository($customField->getEntity())->find($customFieldValue->getValue());
 				} else {
 					$customFieldValue = null;
@@ -122,12 +120,12 @@ class CoreService
 	public function setCustomField(string $customFieldSlug, $object, $value)
 	{
 		$customField = $this->customFieldRepository->findOneBy(['slug' => $customFieldSlug]);
-		if (!$customField) {
+		if(!$customField) {
 			return null;
 		}
 		
 		$customFieldValue = $this->customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $object->getId()]);
-		if (!$customFieldValue) {
+		if(!$customFieldValue) {
 			return null;
 		}
 		
@@ -160,7 +158,8 @@ class CoreService
 	public function searchByCustomField(array $customFieldCriterias, string $entity, ?array $criterias = null, ?array $orders = null, ?int $limit = null, ?int $offset = null, $query = false)
 	{
 		$customFieldValuesQuery = $this->customFieldValueRepository->createQueryBuilder('cfv')
-			->innerJoin('cfv.customField', 'cf');
+			->innerJoin('cfv.customField', 'cf')
+		;
 		
 		foreach ($customFieldCriterias as $customField) {
 			if (!isset($customField['slug'])) return "Il manque l'entrée slug de tableau.";
@@ -171,18 +170,28 @@ class CoreService
 			$operator = $customField['operator'];
 			$value = $customField['value'];
 			
+			switch ($operator) {
+				case 'IN':
+					$customFieldValuesQuery->andWhere('cfv.value IN(:customFieldValue)');
+					break;
+				default:
+					$customFieldValuesQuery->andWhere('cfv.value '.$operator.' :customFieldValue');
+					break;
+			}
+			
 			$customFieldValuesQuery
 				->andWhere('cf.slug = :customFieldSlug')
 				->setParameter('customFieldSlug', $slug)
-				->andWhere('cfv.value ' . $operator . ' :customFieldValue')
-				->setParameter('customFieldValue', $value);
+				->setParameter('customFieldValue', $value)
+			;
 		}
 		
 		$customFieldValues = $customFieldValuesQuery
 			->getQuery()
-			->getResult();
+			->getResult()
+		;
 		
-		$elementsIds = array_map(static function (CustomFieldValue $value) {
+		$elementsIds = array_map(static function(CustomFieldValue $value) {
 			return $value->getObjectId();
 		}, $customFieldValues);
 		
@@ -190,9 +199,10 @@ class CoreService
 		$elementsQuery = $this->em->getRepository($entity)->createQueryBuilder('element');
 		$elementsQuery
 			->andWhere('element.id IN (:elementsIds)')
-			->setParameter('elementsIds', $elementsIds);
+			->setParameter('elementsIds', $elementsIds)
+		;
 		
-		if ($criterias) {
+		if($criterias) {
 			foreach ($criterias as $key => $criteria) {
 				if (!isset($criteria['prop'])) return "Il manque l'entrée prop de tableau.";
 				if (!isset($criteria['operator'])) return "Il manque l'entrée operator de tableau.";
@@ -202,22 +212,22 @@ class CoreService
 				$operator = $criteria['operator'];
 				$value = $criteria['value'];
 				
-				$elementsQuery->andWhere('element.' . $prop . ' ' . $operator . ' :val' . $prop . $key);
-				$elementsQuery->setParameter('val' . $prop . $key, $value);
+				$elementsQuery->andWhere('element.'.$prop.' '.$operator.' :val'.$prop.$key);
+				$elementsQuery->setParameter('val'.$prop.$key, $value);
 			}
 		}
 		
-		if ($orders) {
+		if($orders) {
 			foreach ($orders as $criteria => $order) {
-				$elementsQuery->addOrderBy('element.' . $criteria, $order);
+				$elementsQuery->addOrderBy('element.'.$criteria, $order);
 			}
 		}
 		
-		if ($limit) {
+		if($limit) {
 			$elementsQuery->setMaxResults($limit);
 		}
 		
-		if ($offset) {
+		if($offset) {
 			$elementsQuery->setFirstResult($offset);
 		}
 		

@@ -31,14 +31,18 @@ class UniversignAPI
 	{
 		$this->parameterBag = $parameterBag;
 	}
-
+	
 	/**
 	 * @param $to TransactionSigner|TransactionSigner[]
 	 * @param $docs
-	 * @param $mode
+	 * @param null $mode
+	 * @param null $description
+	 * @param null $profile
+	 * @param null $securityLevel
+	 * @param null $language
 	 * @return array
 	 */
-	public function send($to, $docs, $mode = 'prod'): array
+	public function send($to, $docs, $mode = null, $description = null, $profile = null, $securityLevel = null, $language = null): array
 	{
 		$request = new TransactionRequest();
 
@@ -67,55 +71,56 @@ class UniversignAPI
 			->setChainingMode(
 				TransactionRequest::CHAINING_MODE_EMAIL
 			)
-			->setDescription("Demonstration de la signature Universign")
-//            ->setProfile("profile_demo")
-//            ->setCertificateTypes('certified')
-			->setLanguage('fr');
+			->setDescription($description ?: "Demonstration de la signature Universign")
+            ->setProfile($profile ?: "profile_demo")
+            ->setCertificateTypes($securityLevel ?: 'simple')
+            ->setLanguage($language ?: 'fr')
+        ;
 
-		$response = $this->client($mode)->requestTransaction($request);
+        $response = $this->client($mode ?: 'prod')->requestTransaction($request);
 
-		return [
-			'url' => $response->url,
-			'id' => $response->id,
-		];
-	}
+        return [
+            'url' => $response->url,
+            'id' => $response->id,
+        ];
+    }
 
-	public function getDocuments($transactionId, $mode = null)
+    public function getDocuments($transactionId, $mode = null): array
 	{
-		$return = [];
+        $return = [];
 
-		$requester = $this->client($mode);
-		$response = $requester->getTransactionInfo($transactionId);
-		if ($response->status === TransactionInfo::STATUS_COMPLETED) {
-			$docs = $requester->getDocuments($transactionId);
-			foreach ($docs as $doc) {
-				$return[] = [
-					'name' => $doc->name,
-					'content' => $doc->content,
-				];
-			}
-		}
+        $requester = $this->client($mode);
+        $response = $requester->getTransactionInfo($transactionId);
+        if ($response->status === TransactionInfo::STATUS_COMPLETED) {
+            $docs = $requester->getDocuments($transactionId);
+            foreach ($docs as $doc) {
+                $return[] = [
+                    'name' => $doc->name,
+                    'content' => base64_encode($doc->content),
+                ];
+            }
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-	public function client($mode = null)
+    public function client($mode = null): Requester
 	{
-		$paramMode = $this->parameterBag->get('universign_mode');
-		$client = new Client($mode ? ($mode === 'prod' ? $this->urlProd : $this->urlTest) : ($paramMode === 'prod' ? $this->urlProd : $this->urlTest));
+        $paramMode = $this->parameterBag->get('universign_mode');
+        $client = new Client($mode ? ($mode === 'prod' ? $this->urlProd : $this->urlTest) : ($paramMode === 'prod' ? $this->urlProd : $this->urlTest));
 
-		$client->setCredentials(
-			$this->parameterBag->get('universign_user'),
-			$this->parameterBag->get('universign_password')
-		);
+        $client->setCredentials(
+            $this->parameterBag->get('universign_user'),
+            $this->parameterBag->get('universign_password')
+        );
 
-		return new Requester($client);
-	}
+        return new Requester($client);
+    }
 
-	public function getTransaction($transactionId, $mode = null)
+    public function getTransaction($transactionId, $mode = null): TransactionInfo
 	{
-		$requester = $this->client($mode);
+        $requester = $this->client($mode);
 
-		return $requester->getTransactionInfo($transactionId);
-	}
+        return $requester->getTransactionInfo($transactionId);
+    }
 }
