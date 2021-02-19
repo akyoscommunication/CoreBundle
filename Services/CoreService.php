@@ -170,10 +170,18 @@ class CoreService
             $operator = $customField['operator'];
             $value = $customField['value'];
 
+            switch ($operator) {
+                case 'IN':
+                    $customFieldValuesQuery->andWhere('cfv.value IN(:customFieldValue)');
+                    break;
+                default:
+                    $customFieldValuesQuery->andWhere('cfv.value '.$operator.' :customFieldValue');
+                    break;
+            }
+
             $customFieldValuesQuery
                 ->andWhere('cf.slug = :customFieldSlug')
                 ->setParameter('customFieldSlug', $slug)
-                ->andWhere('cfv.value '.$operator.' :customFieldValue')
                 ->setParameter('customFieldValue', $value)
             ;
         }
