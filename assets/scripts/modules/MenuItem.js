@@ -9,11 +9,12 @@ class MenuItem {
         this.ajaxModal();
         this.ajaxMenuForm();
     }
+
     static changePosition() {
         const sort = $(".aky-menuitem-connectedSortable");
         sort.sortable({
             connectWith: ".aky-menuitem-connectedSortable",
-            update: function(event, ui) {
+            update: function (event, ui) {
                 $('.aky-menuitem-parent > .aky-menuitem').each(function (i) {
                     $(this).attr('data-position', i);
                 });
@@ -23,13 +24,14 @@ class MenuItem {
             },
         });
     }
+
     static ajaxModal() {
         $('.btn-modal-menuitem').click(function (e) {
             e.preventDefault();
             const data = $(this).parents('.aky-menuitem-el').data('id');
             const menu = $(this).parents('.aky-menuitem-el').data('menu');
 
-            fetch('/admin/menu/item/'+data+'/edit/'+menu)
+            fetch('/admin/menu/item/' + data + '/edit/' + menu)
                 .then(function (res) {
                     return res.text()
                         .then(function (response) {
@@ -45,17 +47,17 @@ class MenuItem {
 
                                 $.ajax({
                                     method: 'POST',
-                                    url: '/admin/menu/item/'+data+'/edit/'+menu,
+                                    url: '/admin/menu/item/' + data + '/edit/' + menu,
                                     data: $('#modalEditMenuitem > form[name=menu_item]').serialize(),
                                     success: function (res) {
                                         // console.log(res, 'success');
-                                        if ( res === 'valid'){
+                                        if (res === 'valid') {
                                             window.location.reload();
                                         } else {
                                             // TODO : error
                                         }
                                     },
-                                    error: function(er) {
+                                    error: function (er) {
                                         console.log(er, 'error');
                                     }
                                 });
@@ -68,10 +70,11 @@ class MenuItem {
         //     $('#modalEditMenuitem').html('<img class="loader" border="0" src="http://www.pictureshack.us/images/16942_Preloader_10.gif" alt="loader" width="128" height="128">');
         // })
     }
+
     static ajaxMenuForm() {
         const _this = this;
         const btn = document.querySelector('#editMenuPosition');
-        if(btn) {
+        if (btn) {
             btn.addEventListener('click', async function (e) {
                 e.preventDefault();
                 const endpoint = this.getAttribute('data-endpoint');

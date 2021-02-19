@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 // Needs composer require mikehaertl/php-pdftk
-class PDFFormFiller {
+class PDFFormFiller
+{
 	
 	private $kernel;
 	
@@ -18,23 +19,22 @@ class PDFFormFiller {
 		$this->kernel = $kernel;
 	}
 	
-	public function fillPDFForm(String $filepath, String $filename, Array $fields)
+	public function fillPDFForm(string $filepath, string $filename, array $fields)
 	{
-		$filename = $filename.'.pdf';
+		$filename = $filename . '.pdf';
 		$pdf = new Pdf($filepath);
-		$filledPdfDir = $this->kernel->getProjectDir().'/filledPdf';
+		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
 		if (!is_dir($filledPdfDir)) {
 			mkdir($filledPdfDir, 0755, true);
 		}
-		$absoluteDir = $filledPdfDir.'/'.$filename;
-		$relativeDir = '/filledPdf/'.$filename;
+		$absoluteDir = $filledPdfDir . '/' . $filename;
+		$relativeDir = '/filledPdf/' . $filename;
 		$result = $pdf
 			->fillForm($fields)
 			->needAppearances()
 			->flatten()
-			->saveAs($absoluteDir)
-		;
-
+			->saveAs($absoluteDir);
+		
 		if ($result === false) {
 			return $pdf->getError();
 		}

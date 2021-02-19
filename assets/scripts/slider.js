@@ -1,12 +1,13 @@
 import Swiper from 'swiper/dist/js/swiper.min';
 
 class Slider {
-    constructor() {}
+    constructor() {
+    }
 
     static initThumbs() {
         let galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 10,
-            onSlideChangeEnd: function() {
+            onSlideChangeEnd: function () {
                 $(document).trigger("slide-change");
             },
             loopedSlides: $(".gallery-top .swiper-wrapper .swiper-slide").length,

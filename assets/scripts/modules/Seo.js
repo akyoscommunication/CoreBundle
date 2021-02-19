@@ -1,4 +1,5 @@
 import Toast from "./Toast";
+
 class Seo {
     static init() {
         $('form[name=seo]').on('submit', function (e) {
@@ -6,18 +7,18 @@ class Seo {
 
             $.ajax({
                 method: 'POST',
-                url: '/admin/seo/submit/'+$(this).parents('.content').data('type')+'/'+$(this).parents('.content').data('typeid'),
+                url: '/admin/seo/submit/' + $(this).parents('.content').data('type') + '/' + $(this).parents('.content').data('typeid'),
                 data: $(this).serialize(),
                 success: function (res) {
                     console.log(res, 'success');
-                    if ( res === 'valid'){
+                    if (res === 'valid') {
                         window.location.reload();
                     } else {
                         // TODO : error
-                        new Toast('Problème de..', 'error', 'oui', 600 );
+                        new Toast('Problème de..', 'error', 'oui', 600);
                     }
                 },
-                error: function(er) {
+                error: function (er) {
                     console.log(er, 'error');
                 }
             })

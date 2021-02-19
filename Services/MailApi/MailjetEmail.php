@@ -8,7 +8,8 @@ use Mailjet\Resources;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 // Needs composer require mailjet/mailjet-apiv3-php
-class MailjetEmail {
+class MailjetEmail
+{
 	
 	private $apiKey;
 	private $secretKey;
@@ -23,8 +24,8 @@ class MailjetEmail {
 	
 	public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, array $options = null, bool $doNotFlush = null)
 	{
-		if(is_array($from) && count($from)) {
-			if(array_values($from) !== $from) {
+		if (is_array($from) && count($from)) {
+			if (array_values($from) !== $from) {
 				$from = ['Email' => array_keys($from)[0], 'Name' => $from[array_keys($from)[0]] ? $from[array_keys($from)[0]] : array_keys($from)[0]];
 			} else {
 				$from = ['Email' => $from[0], 'Name' => $from[0]];
@@ -36,8 +37,8 @@ class MailjetEmail {
 		}
 		
 		$toArray = [];
-		if(is_array($to) && count($to)) {
-			if(array_values($to) !== $to) {
+		if (is_array($to) && count($to)) {
+			if (array_values($to) !== $to) {
 				foreach ($to as $key => $value) {
 					$toArray[] = ['Email' => $key, 'Name' => $value];
 				}
@@ -51,9 +52,9 @@ class MailjetEmail {
 		}
 		
 		$bccArray = [];
-		if($bcc) {
-			if(is_array($bcc) && count($bcc)) {
-				if(array_values($bcc) !== $bcc) {
+		if ($bcc) {
+			if (is_array($bcc) && count($bcc)) {
+				if (array_values($bcc) !== $bcc) {
 					foreach ($bcc as $key => $value) {
 						$bccArray[] = ['Email' => $key, 'Name' => $value];
 					}
@@ -77,7 +78,7 @@ class MailjetEmail {
 		}
 		if (isset($options['attachments']) && !empty($options['attachments']) && !is_null($options['attachments'])) {
 			foreach ($options['attachments'] as $attachment) {
-				if(is_array($attachment)) {
+				if (is_array($attachment)) {
 					$attachmentsArray[] = [
 						'ContentType' => mime_content_type($attachment['path']),
 						'Filename' => $attachment['name'],
@@ -93,7 +94,7 @@ class MailjetEmail {
 			}
 		}
 		
-		$mailjet = new Client($this->apiKey, $this->secretKey,true,['version' => 'v3.1']);
+		$mailjet = new Client($this->apiKey, $this->secretKey, true, ['version' => 'v3.1']);
 		$email = [
 			'SandboxMode' => "true",
 			'Messages' => [
@@ -111,7 +112,7 @@ class MailjetEmail {
 		
 		try {
 			$response = $mailjet->post(Resources::$Email, ['body' => $email]);
-			if(!$response->success()) {
+			if (!$response->success()) {
 				throw new \Exception(json_encode($response->getData()));
 			}
 			$this->messageLogger->saveLog($email, null, 'mailjet_email', $doNotFlush);

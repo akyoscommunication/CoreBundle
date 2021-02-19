@@ -3,12 +3,14 @@
 {% block title %}Erreur 403{% endblock %}
 
 {% block content %}
-    <div class="container aky-error-403" style="height: 50vh;display: flex;flex-direction: column;justify-content: center;">
+    <div class="container aky-error-403"
+         style="height: 50vh;display: flex;flex-direction: column;justify-content: center;">
         <h1 class="mb-2 font-weight-bolder text-center">Désolé,</h1>
         <h2 class="mb-5 text-center">l'accès vous est refusé !</h2>
         <p class="text-center">Vous n'avez pas l'autorisation d'accéder à ce contenu.</p>
         <div class="text-center  aky-error-403-back">
-            <a href="{{ path('home') }}" class="mt-5 text-center"><i class="fas fa-long-arrow-alt-left"></i> Retour à l'accueil</a>
+            <a href="{{ path('home') }}" class="mt-5 text-center"><i class="fas fa-long-arrow-alt-left"></i> Retour à
+                l'accueil</a>
         </div>
         <div class="mt-5 small  aky-error-403-message">
             <div>Message d'origine:</div>

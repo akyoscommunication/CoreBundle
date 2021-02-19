@@ -14,30 +14,30 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RecaptchaController extends AbstractController
 {
-    /**
-     * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify")
-     * @param string $action
-     * @param string $token
-     * @param Request $request
-     * @param CoreOptionsRepository $coreOptionsRepository
-     * @return JsonResponse
-     */
-    public function recaptchaV3Verify(string $action, string $token, Request $request, CoreOptionsRepository $coreOptionsRepository)
-    {
-        $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            $coreOptions = $coreOptions[0];
-        }
+	/**
+	 * @Route("/recaptcha-v3-verify/{action}/{token}", name="v3_verify")
+	 * @param string $action
+	 * @param string $token
+	 * @param Request $request
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @return JsonResponse
+	 */
+	public function recaptchaV3Verify(string $action, string $token, Request $request, CoreOptionsRepository $coreOptionsRepository)
+	{
+		$coreOptions = $coreOptionsRepository->findAll();
+		if ($coreOptions) {
+			$coreOptions = $coreOptions[0];
+		}
 
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_private = ($coreOptions->getRecaptchaPrivateKey() ? $coreOptions->getRecaptchaPrivateKey() : null);
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_private . '&response=' . $token);
-        $recaptcha = json_decode($recaptcha);
-        if($recaptcha->success) {
-            if ($recaptcha->score >= 0.8) {
-                return new JsonResponse(['error' => false]);
-            }
-        }
-        return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, ou le délai est expiré, veuillez réessayer l\'envoi du formulaire.']);
-    }
+		$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+		$recaptcha_private = ($coreOptions->getRecaptchaPrivateKey() ? $coreOptions->getRecaptchaPrivateKey() : null);
+		$recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_private . '&response=' . $token);
+		$recaptcha = json_decode($recaptcha);
+		if ($recaptcha->success) {
+			if ($recaptcha->score >= 0.8) {
+				return new JsonResponse(['error' => false]);
+			}
+		}
+		return new JsonResponse(['error' => true, 'message' => 'La vérification recaptcha est invalide, ou le délai est expiré, veuillez réessayer l\'envoi du formulaire.']);
+	}
 }

@@ -1,5 +1,5 @@
 class Toast {
-    constructor(title ='new Toast!', status = 'info', message = 'new Toast!', duration = 600) {
+    constructor(title = 'new Toast!', status = 'info', message = 'new Toast!', duration = 600) {
         this.title = title;
         this.status = status;
         this.message = message;
@@ -20,7 +20,7 @@ class Toast {
     createToast() {
         const containerToast = $('.aky-toast-container');
 
-        if (!(containerToast.length > 0)){
+        if (!(containerToast.length > 0)) {
             this.createToastContainer();
         }
 
@@ -40,17 +40,17 @@ class Toast {
 
         let $html = '';
 
-        $html += '<div class="aky-toast aky-toast-'+this.status+'">';
-            $html += '<div class="aky-toast-el aky-toast-ico">';
-                $html += ico;
-            $html += '</div>';
-            $html += '<div class="aky-toast-el aky-toast-message">';
-                $html += '<b>'+this.title+'</b><br>';
-                $html += this.message;
-            $html += '</div>';
-            $html += '<div class="aky-toast-el aky-toast-close">';
-                $html += '<i class="fas fa-times"></i>';
-            $html += '</div>';
+        $html += '<div class="aky-toast aky-toast-' + this.status + '">';
+        $html += '<div class="aky-toast-el aky-toast-ico">';
+        $html += ico;
+        $html += '</div>';
+        $html += '<div class="aky-toast-el aky-toast-message">';
+        $html += '<b>' + this.title + '</b><br>';
+        $html += this.message;
+        $html += '</div>';
+        $html += '<div class="aky-toast-el aky-toast-close">';
+        $html += '<i class="fas fa-times"></i>';
+        $html += '</div>';
         $html += '</div>';
 
 

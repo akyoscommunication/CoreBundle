@@ -1,4 +1,4 @@
-[![](https://data.jsdelivr.com/v1/package/gh/AmauriC/tarteaucitron.js/badge)](https://www.jsdelivr.com/package/gh/AmauriC/tarteaucitron.js) 
+[![](https://data.jsdelivr.com/v1/package/gh/AmauriC/tarteaucitron.js/badge)](https://www.jsdelivr.com/package/gh/AmauriC/tarteaucitron.js)
 [![npm](https://img.shields.io/npm/v/tarteaucitronjs.svg)](https://www.npmjs.com/package/tarteaucitronjs) [![GitHub contributors](https://img.shields.io/github/contributors/AmauriC/tarteaucitron.js.svg)](https://github.com/AmauriC/tarteaucitron.js/graphs/contributors)
 
 tarteaucitron.js
@@ -6,9 +6,12 @@ tarteaucitron.js
 Comply to the european cookie law is simple with the french *tarte au citron*.
 
 # What is this script?
-The european cookie law regulates the management of cookies and you should ask your visitors their consent before exposing them to third party services.
+
+The european cookie law regulates the management of cookies and you should ask your visitors their consent before
+exposing them to third party services.
 
 Clearly this script will:
+
 - Disable all services by default,
 - Display a banner on the first page view and a small one on other pages,
 - Display a panel to allow or deny each services one by one,
@@ -16,13 +19,13 @@ Clearly this script will:
 - Store the consent in a cookie for 365 days.
 
 Bonus:
+
 - Load service when user click on Allow (without reload of the page),
 - Incorporate a fallback system (display a link instead of social button and a static banner instead of advertising).
 
-
 # Installation guide
-[Visit opt-out.ferank.eu](https://opt-out.ferank.eu/)
 
+[Visit opt-out.ferank.eu](https://opt-out.ferank.eu/)
 
 # How to use
 
@@ -57,6 +60,7 @@ tarteaucitron.init({
 ```
 
 # Create custom service
+
 ```js
 tarteaucitron.services.mycustomservice = {
   "key": "mycustomservice",

@@ -7,15 +7,15 @@ class initCollectionType {
         collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
         const buttonAddLabel = collectionHolder.data('button_add');
         const buttonDeleteLabel = collectionHolder.data('button_delete');
-        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">'+(buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ')+' <i class="fas fa-plus"></i></button>');
+        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">' + (buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ') + ' <i class="fas fa-plus"></i></button>');
         const addFieldLink = $('#add_component');
         collectionHolder.attr('data-index', collectionHolder.children('.form-group').length);
 
-        collectionHolder.children('.form-group').each(function() {
+        collectionHolder.children('.form-group').each(function () {
             _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
         });
 
-        addFieldLink.on('click', function(e) {
+        addFieldLink.on('click', function (e) {
             e.preventDefault();
             _this.addCloneForm(collectionHolder, buttonDeleteLabel);
         });
@@ -39,7 +39,7 @@ class initCollectionType {
         // Display the form in the page
         $collectionHolder.append($prototype);
 
-        if($prototype.find('.js-select2').length) {
+        if ($prototype.find('.js-select2').length) {
             $('.js-select2').select2({
                 width: '100%'
             });
@@ -47,10 +47,10 @@ class initCollectionType {
     }
 
     static addCloneFormDeleteLink($newForm, label) {
-        const $deleteFormLink = $('<a href="#" class="btn btn-sm btn-outline-danger ml-auto">'+(label ? label : 'Supprimer ce champ <i class="fas fa-times"></i>')+'</a>');
+        const $deleteFormLink = $('<a href="#" class="btn btn-sm btn-outline-danger ml-auto">' + (label ? label : 'Supprimer ce champ <i class="fas fa-times"></i>') + '</a>');
         $newForm.append($deleteFormLink);
 
-        $deleteFormLink.on('click', function(e) {
+        $deleteFormLink.on('click', function (e) {
             e.preventDefault();
 
             // remove the div for the invitationProduct form

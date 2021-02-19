@@ -1,8 +1,9 @@
-.aky-slider{
+.aky-slider {
 }
 
-.aky-slide{
+.aky-slide {
     position: relative;
+
     &-img {
         position: absolute;
         top: 0;
@@ -18,7 +19,8 @@
             width: 100%;
         }
     }
-    &-content{
+
+    &-content {
         @extend .container;
         @include flex(column, nowrap, center, flex-start);
         color: white;

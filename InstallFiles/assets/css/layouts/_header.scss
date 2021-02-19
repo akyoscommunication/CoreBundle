@@ -1,5 +1,5 @@
-$hBorder : 3px;
-$wBorder : 44.15%;
+$hBorder: 3px;
+$wBorder: 44.15%;
 
 .breadcrumbs {
     @extend .container;
@@ -72,7 +72,7 @@ $wBorder : 44.15%;
         max-height: 75px;
         height: 100%;
 
-        #mainLogo{
+        #mainLogo {
             @include objectFit(contain, left, 100%, 100%);
         }
     }
@@ -108,6 +108,7 @@ $wBorder : 44.15%;
 
                 &:hover {
                     text-decoration: none;
+
                     &:after {
                         transform: translateY(100%) scaleY(1);
                     }
@@ -162,7 +163,7 @@ $wBorder : 44.15%;
                     padding: 0 1rem;
                     text-align: center;
 
-                    $hw : 11px;
+                    $hw: 11px;
 
                 }
             }

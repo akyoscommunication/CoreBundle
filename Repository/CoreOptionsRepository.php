@@ -14,37 +14,37 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CoreOptionsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, CoreOptions::class);
-    }
-
-    // /**
-    //  * @return CoreOptions[] Returns an array of CoreOptions objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?CoreOptions
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, CoreOptions::class);
+	}
+	
+	// /**
+	//  * @return CoreOptions[] Returns an array of CoreOptions objects
+	//  */
+	/*
+	public function findByExampleField($value)
+	{
+		return $this->createQueryBuilder('c')
+			->andWhere('c.exampleField = :val')
+			->setParameter('val', $value)
+			->orderBy('c.id', 'ASC')
+			->setMaxResults(10)
+			->getQuery()
+			->getResult()
+		;
+	}
+	*/
+	
+	/*
+	public function findOneBySomeField($value): ?CoreOptions
+	{
+		return $this->createQueryBuilder('c')
+			->andWhere('c.exampleField = :val')
+			->setParameter('val', $value)
+			->getQuery()
+			->getOneOrNullResult()
+		;
+	}
+	*/
 }

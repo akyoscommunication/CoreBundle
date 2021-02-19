@@ -5,8 +5,8 @@ import 'jquery-ui/ui/widgets/sortable';
 
 // Import everything from autoload
 import "./autoload/**/*";
-import initCollectionType from  './modules/collectionType';
-import MenuItem from  './modules/MenuItem';
+import initCollectionType from './modules/collectionType';
+import MenuItem from './modules/MenuItem';
 
 import Seo from "./modules/Seo";
 import SubmitForm from "./modules/SubmitForms";
@@ -45,14 +45,16 @@ class Core {
             $(this).parents('.custom-switch-form').submit();
         });
     }
+
     static tooltip() {
         $('[data-toggle="tooltip"]').tooltip()
     }
+
     static clearSearch() {
-        $('.icon-close').click(function() {
+        $('.icon-close').click(function () {
             $(this).parents('form').find('input').val('');
         })
-        $('.icon-search').click(function() {
+        $('.icon-search').click(function () {
             $(this).parents('form').submit();
         })
     }

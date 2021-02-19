@@ -10,22 +10,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SeoType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('metaTitle')
-            ->add('metaDescription')
-            ->add('noIndex')
-            ->add('metaRobots')
-            ->add('type', HiddenType::class)
-            ->add('typeId', HiddenType::class)
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Seo::class,
-        ]);
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		$builder
+			->add('metaTitle')
+			->add('metaDescription')
+			->add('noIndex')
+			->add('metaRobots')
+			->add('type', HiddenType::class)
+			->add('typeId', HiddenType::class);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		$resolver->setDefaults([
+			'data_class' => Seo::class,
+		]);
+	}
 }

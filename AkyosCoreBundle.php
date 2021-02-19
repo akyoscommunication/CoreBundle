@@ -7,11 +7,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AkyosCoreBundle extends Bundle
 {
-    public function getContainerExtension()
-    {
-        if (null === $this->extension) {
-            $this->extension = new CoreBundleExtension();
-        }
-        return $this->extension;
-    }
+	public function getContainerExtension()
+	{
+		if (null === $this->extension) {
+			$this->extension = new CoreBundleExtension();
+		}
+		return $this->extension;
+	}
 }

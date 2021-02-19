@@ -1,7 +1,7 @@
 class Rgpd {
     static init() {
         const akyCookiesgestion = $('#akyCookiesGestion');
-        if(akyCookiesgestion) {
+        if (akyCookiesgestion) {
             akyCookiesgestion.removeClass('hidden');
             $(window).on('scroll', function () {
                 if ($(window).scrollTop() + $(window).height() == $(document).height()) {
@@ -10,17 +10,18 @@ class Rgpd {
                     akyCookiesgestion.removeClass('active');
                 }
             });
-            akyCookiesgestion.click(function() {
+            akyCookiesgestion.click(function () {
                 tarteaucitron.userInterface.openPanel();
             })
-            
-            if(akyCookiesgestion.data('ua').length) {
+
+            if (akyCookiesgestion.data('ua').length) {
                 tarteaucitron.user.analyticsUa = akyCookiesgestion.data('ua');
-                tarteaucitron.user.analyticsMore = function () { /* add here your optionnal ga.push() */ };
+                tarteaucitron.user.analyticsMore = function () { /* add here your optionnal ga.push() */
+                };
                 (tarteaucitron.job = tarteaucitron.job || []).push("analytics");
             }
-    
-            if(akyCookiesgestion.data('gtm').length) {
+
+            if (akyCookiesgestion.data('gtm').length) {
                 tarteaucitron.user.googletagmanagerId = akyCookiesgestion.data('gtm');
                 (tarteaucitron.job = tarteaucitron.job || []).push("googletagmanager");
             }

@@ -7,6 +7,7 @@
 
     &-parent {
         padding: 0;
+
         > .aky-menuitem {
             max-width: 50%;
         }
@@ -45,6 +46,7 @@
     border: dotted 1px $black;
     border-radius: 4px;
     background-color: $second !important;
+
     > .aky-menuitem-el {
         color: $white;
 
@@ -57,6 +59,7 @@
 
 .ui-sortable-handle {
     cursor: grab;
+
     &:active {
         cursor: grabbing;
     }

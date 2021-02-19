@@ -9,11 +9,11 @@ const config = {
         dist: path.join(rootPath, 'Resources/public')
     },
     entry: {
-        "main" : [
+        "main": [
             "./assets/scripts/main.js",
             "./assets/styles/main.scss"
         ],
-        "front" : [
+        "front": [
             "./assets/scripts/front/front.js",
             "./assets/styles/front/front.scss"
         ]

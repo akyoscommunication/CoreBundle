@@ -17,38 +17,38 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class ProfileController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
-    public function index()
-    {
-        return $this->render('@AkyosCore/profile/index.html.twig', [
-            'title' => 'Votre profil',
-            'user' => $this->getUser(),
-        ]);
-    }
+	/**
+	 * @Route("/", name="index")
+	 */
+	public function index()
+	{
+		return $this->render('@AkyosCore/profile/index.html.twig', [
+			'title' => 'Votre profil',
+			'user' => $this->getUser(),
+		]);
+	}
 
-    /**
-     * @Route("/{id}/edit", name="edit")
-     * @param Request $request
-     * @param User $user
-     *
-     * @return RedirectResponse|Response
-     */
-    public function edit(Request $request, User $user)
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+	/**
+	 * @Route("/{id}/edit", name="edit")
+	 * @param Request $request
+	 * @param User $user
+	 *
+	 * @return RedirectResponse|Response
+	 */
+	public function edit(Request $request, User $user)
+	{
+		$form = $this->createForm(UserType::class, $user);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('profile_index');
-        }
+			return $this->redirectToRoute('profile_index');
+		}
 
-        return $this->render('@AkyosCore/profile/edit.html.twig', [
-            'title' => 'votre profile',
-            'form' => $form->createView(),
-        ]);
-    }
+		return $this->render('@AkyosCore/profile/edit.html.twig', [
+			'title' => 'votre profile',
+			'form' => $form->createView(),
+		]);
+	}
 }

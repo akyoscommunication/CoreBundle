@@ -32,7 +32,8 @@
     </footer>
     <div id="copyright">
         <div class="container">
-            <p>{{ core_options.siteTitle }} © {{ "now"|date("Y") }} - Tous droits réservés - <a href="{{ core_options.agencyLink }}">Réalisation {{ core_options.agencyName }}</a>  </p>
+            <p>{{ core_options.siteTitle }} © {{ "now"|date("Y") }} - Tous droits réservés - <a
+                        href="{{ core_options.agencyLink }}">Réalisation {{ core_options.agencyName }}</a></p>
         </div>
     </div>
     {% block rgpd %} {% include '@AkyosCore/front/layouts/rgpd.html.twig' %} {% endblock %}

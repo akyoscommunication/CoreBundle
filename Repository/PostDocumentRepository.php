@@ -14,37 +14,37 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostDocumentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, PostDocument::class);
-    }
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, PostDocument::class);
+	}
 
-    // /**
-    //  * @return PostDocument[] Returns an array of PostDocument objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+	// /**
+	//  * @return PostDocument[] Returns an array of PostDocument objects
+	//  */
+	/*
+	public function findByExampleField($value)
+	{
+		return $this->createQueryBuilder('p')
+			->andWhere('p.exampleField = :val')
+			->setParameter('val', $value)
+			->orderBy('p.id', 'ASC')
+			->setMaxResults(10)
+			->getQuery()
+			->getResult()
+		;
+	}
+	*/
 
-    /*
-    public function findOneBySomeField($value): ?PostDocument
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+	/*
+	public function findOneBySomeField($value): ?PostDocument
+	{
+		return $this->createQueryBuilder('p')
+			->andWhere('p.exampleField = :val')
+			->setParameter('val', $value)
+			->getQuery()
+			->getOneOrNullResult()
+		;
+	}
+	*/
 }

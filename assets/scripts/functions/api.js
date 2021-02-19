@@ -4,7 +4,7 @@
  * @param {RequestInit} params
  * @return {Promise<Object>}
  */
-export async function jsonFetch (url, params= {}) {
+export async function jsonFetch(url, params = {}) {
     params = Object.assign({
         headers: {
             'Content-Type': 'application/json',

@@ -18,9 +18,11 @@
                 {% set dynamicVariable = dynamicVariable(el, field) %}
                 {% if field == 'Published' %}
                     <td>
-                        <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}" class="custom-switch-form" method="post">
+                        <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}"
+                              class="custom-switch-form" method="post">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input custom-switch-published" id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
+                                <input type="checkbox" class="custom-control-input custom-switch-published"
+                                       id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="switch_{{ el.id }}"></label>
                             </div>
                         </form>
@@ -31,10 +33,11 @@
                             'route' : route,
                             'id' : el.id,
                             'namespace': get_class(el), }) }}" class="not-submit" method="post">
-                            <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0" max="{{ countElements(get_class(el)) }}">
+                            <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0"
+                                   max="{{ countElements(get_class(el)) }}">
                         </form>
                     </td>
-                {% elseif dynamicVariable.timezone is defined  %}
+                {% elseif dynamicVariable.timezone is defined %}
                     <td>
                         {{ dynamicVariable|date('d/m/Y') }}
                     </td>
@@ -69,16 +72,21 @@
                     {% endif %}
                 {% endif %}
                 {% if details != '' %}
-                    <a class="btn btn-second btn-sm" href="{{ details }}" data-toggle ="tooltip" title="Voir"><i class="fas fa-eye"></i></a>
+                    <a class="btn btn-second btn-sm" href="{{ details }}" data-toggle="tooltip" title="Voir"><i
+                                class="fas fa-eye"></i></a>
                 {% endif %}
                 {% if show is defined and show %}
-                    <a class="btn btn-success btn-sm" href="{{ path(route~'_show', {'id': el.id}) }}" data-toggle ="tooltip" title="Voir le détail"><i class="fas fa-eye"></i></a>
+                    <a class="btn btn-success btn-sm" href="{{ path(route~'_show', {'id': el.id}) }}"
+                       data-toggle="tooltip" title="Voir le détail"><i class="fas fa-eye"></i></a>
                 {% endif %}
                 {% if (button_edit is defined and button_edit) or button_edit is not defined %}
-                    <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
+                    <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}"
+                       data-toggle="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
                 {% endif %}
                 {% if (button_delete is defined and button_delete) or button_delete is not defined %}
-                    <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                    <form method="post" class="not-submit index-delete"
+                          action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle="tooltip" title="Supprimer"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
                         <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>

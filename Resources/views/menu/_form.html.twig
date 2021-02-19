@@ -3,7 +3,7 @@
 
 {{ form_start(form) }}
     {{ form_rest(form) }}
-    <button class="btn btn-outline-success">{{ button_label|default('Enregistrer') }}</button>
+<button class="btn btn-outline-success">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
 
 <div class="row pt-5">
@@ -12,7 +12,10 @@
             <h2 class="aky-header-page__title">Liste des éléments</h2>
         </div>
         {% if menuItems is not empty %}
-            <button class="btn btn-outline-success" id="editMenuPosition" data-endpoint="{{ path('menu_change_position_menu_item', { 'id' : form.vars.value.id }) }}">Mettre à jour les positions</button>
+            <button class="btn btn-outline-success" id="editMenuPosition"
+                    data-endpoint="{{ path('menu_change_position_menu_item', { 'id' : form.vars.value.id }) }}">Mettre à
+                jour les positions
+            </button>
         {% endif %}
         <div id="menuItemsForms" data-menu="{{ form.vars.value.id }}">
             <ul class="aky-menuitem-connectedSortable aky-menuitem-parent">
@@ -20,7 +23,8 @@
                     <li class="aky-menuitem" data-position="{{ parentkey }}" data-id="{{ item.id }}">
                         <div class="aky-menuitem-el" data-id="{{ item.id }}" data-menu="{{ form.vars.value.id }}">
                             {{ item.title }}
-                            <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
+                            <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal"
+                                    data-target="#modal">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </div>
@@ -42,7 +46,8 @@
                         </button>
                     </div>
                     <div class="modal-body" id="modalEditMenuitem">
-                        <img class="loader" border="0" src="http://www.pictureshack.us/images/16942_Preloader_10.gif" alt="loader" width="128" height="128">
+                        <img class="loader" border="0" src="http://www.pictureshack.us/images/16942_Preloader_10.gif"
+                             alt="loader" width="128" height="128">
                     </div>
                 </div>
             </div>
@@ -53,8 +58,8 @@
             <h2 class="aky-header-page__title">Ajouter un élément</h2>
         </div>
         {{ form_start(formItem) }}
-            {{ form_rest(formItem) }}
-            <button class="btn btn-outline-success">Ajouter</button>
+        {{ form_rest(formItem) }}
+        <button class="btn btn-outline-success">Ajouter</button>
         {{ form_end(formItem) }}
     </div>
 </div>
@@ -65,7 +70,8 @@
             <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
                 <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
                     {{ itemChild.title }}
-                    <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal" data-target="#modal">
+                    <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal"
+                            data-target="#modal">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                 </div>

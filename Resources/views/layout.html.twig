@@ -1,7 +1,8 @@
 {% extends '@AkyosCore/layout/base.html.twig' %}
 
  {% block body %}
-     <div class="wrapper" style="{{ core_options and core_options.backMaincolor ? "--color-back-main-color:"~core_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(core_options.backMaincolor)~";" : "" }}">
+     <div class="wrapper"
+          style="{{ core_options and core_options.backMaincolor ? "--color-back-main-color:"~core_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(core_options.backMaincolor)~";" : "" }}">
          <!-- Sidebar  -->
          {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\CoreBundleController::sidebar', {'route': app.request.attributes.get('_route')})) }}
 
@@ -10,7 +11,7 @@
              {% include "@AkyosCore/layout/header.html.twig" %}
              <div class="flashbag">{{ _self.render_flashbag() }}</div>
              {% block page_content %}{% endblock %}
-{#             {% include "@AkyosCore/layout/footer.html.twig" %}#}
+             {# {% include "@AkyosCore/layout/footer.html.twig" %} #}
          </div>
      </div>
  {% endblock %}

@@ -28,192 +28,191 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class PostController extends AbstractController
 {
-    /**
-     * @Route("/", name="index", methods={"GET", "POST"})
-     * @param PostRepository $postRepository
-     * @param CoreOptionsRepository $coreOptionsRepository
-     * @param PaginatorInterface $paginator
-     * @param Request $request
-     * @param CrudHandler $crudHandler
-     *
-     * @return Response
-     */
-    public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
-    {
-        $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            if(!$coreOptions[0]->getHasPosts()) {
-                return $this->redirectToRoute('core_index');
-            }
-        }
+	/**
+	 * @Route("/", name="index", methods={"GET", "POST"})
+	 * @param PostRepository $postRepository
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @param PaginatorInterface $paginator
+	 * @param Request $request
+	 * @param CrudHandler $crudHandler
+	 *
+	 * @return Response
+	 */
+	public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
+	{
+		$coreOptions = $coreOptionsRepository->findAll();
+		if ($coreOptions) {
+			if (!$coreOptions[0]->getHasPosts()) {
+				return $this->redirectToRoute('core_index');
+			}
+		}
 
-        $query = $postRepository->createQueryBuilder('a');
-        if($request->query->get('search')) {
-            $query
-                ->leftJoin('a.postCategories', 'postCategories')
-                ->andWhere('a.title LIKE :keyword OR a.position LIKE :keyword OR postCategories.title LIKE :keyword')
-                ->setParameter('keyword', '%'.$request->query->get('search').'%')
-            ;
-        }
-        $query->orderBy('a.position', 'ASC');
+		$query = $postRepository->createQueryBuilder('a');
+		if ($request->query->get('search')) {
+			$query
+				->leftJoin('a.postCategories', 'postCategories')
+				->andWhere('a.title LIKE :keyword OR a.position LIKE :keyword OR postCategories.title LIKE :keyword')
+				->setParameter('keyword', '%' . $request->query->get('search') . '%');
+		}
+		$query->orderBy('a.position', 'ASC');
 
-        $els = $paginator->paginate($query->getQuery(), $request->query->getInt('page',1),12);
+		$els = $paginator->paginate($query->getQuery(), $request->query->getInt('page', 1), 12);
 
-        $post = new Post();
-        $post->setPublished(false);
-        $post->setPosition($postRepository->count([]));
-        $newPostForm = $this->createForm(NewPostType::class, $post);
+		$post = new Post();
+		$post->setPublished(false);
+		$post->setPosition($postRepository->count([]));
+		$newPostForm = $this->createForm(NewPostType::class, $post);
 
-        if ($crudHandler->new($newPostForm, $request)) {
-            return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
-        }
+		if ($crudHandler->new($newPostForm, $request)) {
+			return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
+		}
 
-        return $this->render('@AkyosCore/crud/index.html.twig', [
-            'els' => $els,
-            'title' => 'Article',
-            'entity' => Post::class,
-            'view' => 'single',
-            'route' => 'post',
-            'formModal' => $newPostForm->createView(),
-            'bundle' => 'CoreBundle',
-            'fields' => [
-                'ID' => 'Id',
-                'Title' => 'Title',
-                'Catégorie(s)' => 'PostCategories',
-                'Position' => 'Position',
-                'En ligne ?' => 'Published',
-                'Publié le' => 'PublishedAt',
-                'Mis à jour le'=>'UpdatedAt',
-            ],
-        ]);
-    }
+		return $this->render('@AkyosCore/crud/index.html.twig', [
+			'els' => $els,
+			'title' => 'Article',
+			'entity' => Post::class,
+			'view' => 'single',
+			'route' => 'post',
+			'formModal' => $newPostForm->createView(),
+			'bundle' => 'CoreBundle',
+			'fields' => [
+				'ID' => 'Id',
+				'Title' => 'Title',
+				'Catégorie(s)' => 'PostCategories',
+				'Position' => 'Position',
+				'En ligne ?' => 'Published',
+				'Publié le' => 'PublishedAt',
+				'Mis à jour le' => 'UpdatedAt',
+			],
+		]);
+	}
 
-    /**
-     * @Route("/new", name="new", methods={"GET","POST"})
-     * @param PostRepository $postRepository
-     * @param CoreOptionsRepository $coreOptionsRepository
-     *
-     * @return Response
-     */
-    public function new(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository): Response
-    {
-        $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            if(!$coreOptions[0]->getHasPosts()) {
-                return $this->redirectToRoute('core_index');
-            }
-        }
+	/**
+	 * @Route("/new", name="new", methods={"GET","POST"})
+	 * @param PostRepository $postRepository
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 *
+	 * @return Response
+	 */
+	public function new(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository): Response
+	{
+		$coreOptions = $coreOptionsRepository->findAll();
+		if ($coreOptions) {
+			if (!$coreOptions[0]->getHasPosts()) {
+				return $this->redirectToRoute('core_index');
+			}
+		}
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $post = new Post();
-        $post->setPublished(false);
-        $post->setTitle("Nouvel article");
-        $post->setPosition($postRepository->count(array()));
-        $entityManager->persist($post);
-        $entityManager->flush();
+		$entityManager = $this->getDoctrine()->getManager();
+		$post = new Post();
+		$post->setPublished(false);
+		$post->setTitle("Nouvel article");
+		$post->setPosition($postRepository->count(array()));
+		$entityManager->persist($post);
+		$entityManager->flush();
 
-        return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
-    }
+		return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
+	}
 
-    /**
-     * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
-     * @param Request $request
-     * @param Post $post
-     * @param CoreOptionsRepository $coreOptionsRepository
-     * @param CoreService $coreService
-     *
-     * @return Response
-     */
-    public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository, CoreService $coreService, ContainerInterface $container): Response
-    {
-        $entity = get_class($post);
-        $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            if(!$coreOptions[0]->getHasPosts()) {
-                return $this->redirectToRoute('core_index');
-            }
-        }
+	/**
+	 * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+	 * @param Request $request
+	 * @param Post $post
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @param CoreService $coreService
+	 *
+	 * @return Response
+	 */
+	public function edit(Request $request, Post $post, CoreOptionsRepository $coreOptionsRepository, CoreService $coreService, ContainerInterface $container): Response
+	{
+		$entity = get_class($post);
+		$coreOptions = $coreOptionsRepository->findAll();
+		if ($coreOptions) {
+			if (!$coreOptions[0]->getHasPosts()) {
+				return $this->redirectToRoute('core_index');
+			}
+		}
 
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-        $classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle' ;
-        $classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions' ;
-        if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
-            if (!$form->isSubmitted()) {
-                $container->get('render.builder')->initCloneComponents($entity, $post->getId());
-            }
-        }
+		$form = $this->createForm(PostType::class, $post);
+		$form->handleRequest($request);
+		$classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle';
+		$classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions';
+		if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+			if (!$form->isSubmitted()) {
+				$container->get('render.builder')->initCloneComponents($entity, $post->getId());
+			}
+		}
 
-        if ($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
-                $container->get('render.builder')->tempToProd($entity, $post->getId());
-            }
-            $this->getDoctrine()->getManager()->flush();
+			if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+				$container->get('render.builder')->tempToProd($entity, $post->getId());
+			}
+			$this->getDoctrine()->getManager()->flush();
 
-            return $this->redirect($request->getUri());
-        } elseif($form->isSubmitted() && !($form->isValid())) {
-            throw $this->createNotFoundException("Formulaire invalide.");
-        }
+			return $this->redirect($request->getUri());
+		} elseif ($form->isSubmitted() && !($form->isValid())) {
+			throw $this->createNotFoundException("Formulaire invalide.");
+		}
 
-        return $this->render('@AkyosCore/crud/edit.html.twig', [
-            'el' => $post,
-            'title' => 'Article',
-            'entity' => $entity,
-            'route' => 'post',
-            'view' => 'single',
-            'form' => $form->createView(),
-        ]);
-    }
+		return $this->render('@AkyosCore/crud/edit.html.twig', [
+			'el' => $post,
+			'title' => 'Article',
+			'entity' => $entity,
+			'route' => 'post',
+			'view' => 'single',
+			'form' => $form->createView(),
+		]);
+	}
 
-    /**
-     * @Route("/{id}", name="delete", methods={"DELETE"})
-     * @param Request $request
-     * @param Post $post
-     * @param PostRepository $postRepository
-     * @param CoreOptionsRepository $coreOptionsRepository
-     * @param SeoRepository $seoRepository
-     *
-     * @param CoreService $coreService
-     *
-     * @param ContainerInterface $container
-     * @return Response
-     */
-    public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
-    {
-        $entity = get_class($post);
-        $coreOptions = $coreOptionsRepository->findAll();
-        if($coreOptions) {
-            if(!$coreOptions[0]->getHasPosts()) {
-                return $this->redirectToRoute('core_index');
-            }
-        }
+	/**
+	 * @Route("/{id}", name="delete", methods={"DELETE"})
+	 * @param Request $request
+	 * @param Post $post
+	 * @param PostRepository $postRepository
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @param SeoRepository $seoRepository
+	 *
+	 * @param CoreService $coreService
+	 *
+	 * @param ContainerInterface $container
+	 * @return Response
+	 */
+	public function delete(Request $request, Post $post, PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
+	{
+		$entity = get_class($post);
+		$coreOptions = $coreOptionsRepository->findAll();
+		if ($coreOptions) {
+			if (!$coreOptions[0]->getHasPosts()) {
+				return $this->redirectToRoute('core_index');
+			}
+		}
 
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+		if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
+			$entityManager = $this->getDoctrine()->getManager();
 
-            $classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle' ;
-            $classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions' ;
-            if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
-                $container->get('render.builder')->onDeleteEntity($entity, $post->getId());
-            }
+			$classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle';
+			$classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions';
+			if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+				$container->get('render.builder')->onDeleteEntity($entity, $post->getId());
+			}
 
-            $seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $post->getId()));
-            if ($seo) {
-                $entityManager->remove($seo);
-            }
+			$seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $post->getId()));
+			if ($seo) {
+				$entityManager->remove($seo);
+			}
 
-            $entityManager->remove($post);
-            $entityManager->flush();
+			$entityManager->remove($post);
+			$entityManager->flush();
 
-            $position = 0;
-            foreach ($postRepository->findBy([], ['position' => 'ASC']) as $el) {
-                $el->setPosition($position);
-                $position++;
-            }
-            $entityManager->flush();
-        }
+			$position = 0;
+			foreach ($postRepository->findBy([], ['position' => 'ASC']) as $el) {
+				$el->setPosition($position);
+				$position++;
+			}
+			$entityManager->flush();
+		}
 
-        return $this->redirectToRoute('post_index');
-    }
+		return $this->redirectToRoute('post_index');
+	}
 }

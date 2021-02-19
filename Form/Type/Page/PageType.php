@@ -14,55 +14,54 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        /** @var Page $page */
-        $page = $builder->getData();
-
-        $builder
-            ->add('title', TextType::class, [
-                'label' => 'Titre de la page',
-            ]);
-        if ($page->getSlug()) {
-            $builder
-                ->add('slug', TextType::class, [
-                    'label' => 'Slug de la page',
-                ]);
-        }
-        $builder
-            ->add('published', CheckboxType::class, [
-                'label' => 'Publiée ?',
-            ])
-            ->add('template', TextType::class, [
-                'label' => 'Template de la page',
-                'required' => false
-            ])
-            ->add('content', CKEditorType::class, [
-                'required'    => false,
-                'config'      => array(
-                    'placeholder'    => "Texte",
-                    'height'         => 50,
-                    'entities'       => false,
-                    'basicEntities'  => false,
-                    'entities_greek' => false,
-                    'entities_latin' => false,
-                ),
-                'label' => 'Contenu de la page'
-            ])
-            ->add('thumbnail', FileManagerType::class, [
-                'label' => 'Image de mise en avant',
-            ])
-            ->add('publishedAt', DateType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date de publication'
-            ])
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Page::class,
-        ]);
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		/** @var Page $page */
+		$page = $builder->getData();
+		
+		$builder
+			->add('title', TextType::class, [
+				'label' => 'Titre de la page',
+			]);
+		if ($page->getSlug()) {
+			$builder
+				->add('slug', TextType::class, [
+					'label' => 'Slug de la page',
+				]);
+		}
+		$builder
+			->add('published', CheckboxType::class, [
+				'label' => 'Publiée ?',
+			])
+			->add('template', TextType::class, [
+				'label' => 'Template de la page',
+				'required' => false
+			])
+			->add('content', CKEditorType::class, [
+				'required' => false,
+				'config' => array(
+					'placeholder' => "Texte",
+					'height' => 50,
+					'entities' => false,
+					'basicEntities' => false,
+					'entities_greek' => false,
+					'entities_latin' => false,
+				),
+				'label' => 'Contenu de la page'
+			])
+			->add('thumbnail', FileManagerType::class, [
+				'label' => 'Image de mise en avant',
+			])
+			->add('publishedAt', DateType::class, [
+				'widget' => 'single_text',
+				'label' => 'Date de publication'
+			]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		$resolver->setDefaults([
+			'data_class' => Page::class,
+		]);
+	}
 }

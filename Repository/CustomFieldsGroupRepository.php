@@ -14,37 +14,37 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CustomFieldsGroupRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, CustomFieldsGroup::class);
-    }
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, CustomFieldsGroup::class);
+	}
 
-    // /**
-    //  * @return CustomFieldsGroup[] Returns an array of CustomFieldsGroup objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+	// /**
+	//  * @return CustomFieldsGroup[] Returns an array of CustomFieldsGroup objects
+	//  */
+	/*
+	public function findByExampleField($value)
+	{
+		return $this->createQueryBuilder('c')
+			->andWhere('c.exampleField = :val')
+			->setParameter('val', $value)
+			->orderBy('c.id', 'ASC')
+			->setMaxResults(10)
+			->getQuery()
+			->getResult()
+		;
+	}
+	*/
 
-    /*
-    public function findOneBySomeField($value): ?CustomFieldsGroup
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+	/*
+	public function findOneBySomeField($value): ?CustomFieldsGroup
+	{
+		return $this->createQueryBuilder('c')
+			->andWhere('c.exampleField = :val')
+			->setParameter('val', $value)
+			->getQuery()
+			->getOneOrNullResult()
+		;
+	}
+	*/
 }

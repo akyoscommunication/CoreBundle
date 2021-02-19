@@ -16,63 +16,63 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SeoController extends AbstractController
 {
-    /**
-     * @Route("/render", name="render", methods={"GET"})
-     * @param $type
-     * @param $typeId
-     * @param $route
-     * @param SeoRepository $seoRepository
-     *
-     * @return Response
-     */
-    public function index($type, $typeId, $route, SeoRepository $seoRepository): Response
-    {
-        $type = urldecode($type);
-        $seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
+	/**
+	 * @Route("/render", name="render", methods={"GET"})
+	 * @param $type
+	 * @param $typeId
+	 * @param $route
+	 * @param SeoRepository $seoRepository
+	 *
+	 * @return Response
+	 */
+	public function index($type, $typeId, $route, SeoRepository $seoRepository): Response
+	{
+		$type = urldecode($type);
+		$seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
 
-        if (!$seo) {
-            $seo = new Seo();
-            $seo->setTypeId($typeId);
-            $seo->setType($type);
-        }
-        $formSeo = $this->createForm(SeoType::class, $seo);
+		if (!$seo) {
+			$seo = new Seo();
+			$seo->setTypeId($typeId);
+			$seo->setType($type);
+		}
+		$formSeo = $this->createForm(SeoType::class, $seo);
 
-        return $this->render('@AkyosCore/seo/render.html.twig', [
-            'formSeo' => $formSeo->createView(),
-        ]);
-    }
+		return $this->render('@AkyosCore/seo/render.html.twig', [
+			'formSeo' => $formSeo->createView(),
+		]);
+	}
 
-    /**
-     * @Route("/submit/{type}/{typeId}", name="submit", methods={"POST"}, options={"expose"=true})
-     * @param $type
-     * @param $typeId
-     * @param Request $request
-     * @param SeoRepository $seoRepository
-     *
-     * @return JsonResponse
-     */
-    public function submit($type, $typeId, Request $request, SeoRepository $seoRepository)
-    {
-        $type = urldecode($type);
-        $seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
+	/**
+	 * @Route("/submit/{type}/{typeId}", name="submit", methods={"POST"}, options={"expose"=true})
+	 * @param $type
+	 * @param $typeId
+	 * @param Request $request
+	 * @param SeoRepository $seoRepository
+	 *
+	 * @return JsonResponse
+	 */
+	public function submit($type, $typeId, Request $request, SeoRepository $seoRepository)
+	{
+		$type = urldecode($type);
+		$seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
 
-        if (!$seo) {
-            $seo = new Seo();
-            $seo->setTypeId($typeId);
-            $seo->setType($type);
-        }
+		if (!$seo) {
+			$seo = new Seo();
+			$seo->setTypeId($typeId);
+			$seo->setType($type);
+		}
 
-        $formSeo = $this->createForm(SeoType::class, $seo);
-        $formSeo->handleRequest($request);
+		$formSeo = $this->createForm(SeoType::class, $seo);
+		$formSeo->handleRequest($request);
 
-        if ($formSeo->isSubmitted() && $formSeo->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($seo);
-            $entityManager->flush();
+		if ($formSeo->isSubmitted() && $formSeo->isValid()) {
+			$entityManager = $this->getDoctrine()->getManager();
+			$entityManager->persist($seo);
+			$entityManager->flush();
 
-            return new JsonResponse('valid');
-        }
+			return new JsonResponse('valid');
+		}
 
-        return new JsonResponse('non');
-    }
+		return new JsonResponse('non');
+	}
 }

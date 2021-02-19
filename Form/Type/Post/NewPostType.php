@@ -12,24 +12,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewPostType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('title', null, [
-                'label' => 'Titre',
-                'help' => 'Insérez votre titre ici',
-            ])
-            ->add('publishedAt', DateType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date de publication'
-            ])
-        ;
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		$builder
+			->add('title', null, [
+				'label' => 'Titre',
+				'help' => 'Insérez votre titre ici',
+			])
+			->add('publishedAt', DateType::class, [
+				'widget' => 'single_text',
+				'label' => 'Date de publication'
+			]);
+	}
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Post::class,
-        ]);
-    }
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		$resolver->setDefaults([
+			'data_class' => Post::class,
+		]);
+	}
 }

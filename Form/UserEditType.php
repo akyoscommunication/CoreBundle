@@ -14,50 +14,50 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserEditType extends AbstractType
 {
-    private $authorizationChecker;
-    private $container;
-
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker, ContainerInterface $container)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-        $this->container = $container;
-    }
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $roles = $this->container->getParameter('user_roles');
-        if(!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')){
-            unset($roles['Super Admin']);
-        }
-        if(!$this->authorizationChecker->isGranted('ROLE_AKYOS')){
-            unset($roles['Akyos']);
-        }
-
-        $builder
-            ->add('email', EmailType::class, [
-                'label' => "E-mail",
-                'help' => "Renseignez l'email de l'utilisateur"
-            ])
-            ->add('roles', ChoiceType::class, [
-                'label' => "Rôle de l'utilisateur",
-                'help' => "En fonction de son rôle, l'utilisateur aura accès à différentes fonctionnalités.",
-                'choices' => $roles,
-                'multiple' => true,
-                'expanded' => false,
-                'required' => true,
-                'attr' => [
-                    'class' => 'js-select2',
-                ]
-            ])
-            ->add('image', FileManagerType::class, [
-                'label' => 'Image de profil',
-            ])
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
-    }
+	private $authorizationChecker;
+	private $container;
+	
+	public function __construct(AuthorizationCheckerInterface $authorizationChecker, ContainerInterface $container)
+	{
+		$this->authorizationChecker = $authorizationChecker;
+		$this->container = $container;
+	}
+	
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		$roles = $this->container->getParameter('user_roles');
+		if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
+			unset($roles['Super Admin']);
+		}
+		if (!$this->authorizationChecker->isGranted('ROLE_AKYOS')) {
+			unset($roles['Akyos']);
+		}
+		
+		$builder
+			->add('email', EmailType::class, [
+				'label' => "E-mail",
+				'help' => "Renseignez l'email de l'utilisateur"
+			])
+			->add('roles', ChoiceType::class, [
+				'label' => "Rôle de l'utilisateur",
+				'help' => "En fonction de son rôle, l'utilisateur aura accès à différentes fonctionnalités.",
+				'choices' => $roles,
+				'multiple' => true,
+				'expanded' => false,
+				'required' => true,
+				'attr' => [
+					'class' => 'js-select2',
+				]
+			])
+			->add('image', FileManagerType::class, [
+				'label' => 'Image de profil',
+			]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		$resolver->setDefaults([
+			'data_class' => User::class,
+		]);
+	}
 }

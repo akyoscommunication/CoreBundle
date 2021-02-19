@@ -1,6 +1,4 @@
-@import
-    'aky-header-page'
-;
+@import 'aky-header-page';
 
 
 /* ---------------------------------------------------
@@ -14,6 +12,7 @@
     border-radius: 5px;
     box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 }
+
 .wrapper {
     display: flex;
     width: 100%;
@@ -53,6 +52,7 @@
 
             li {
                 margin-bottom: .8rem;
+
                 a {
                     padding: .5rem 1rem;
                     display: block;
@@ -68,21 +68,23 @@
 
                     &:hover {
                         color: color(back-main-color);
-                        box-shadow: 0 4px 20px 0 rgba(0,0,0,.05);
+                        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
                         background-color: color(back-main-contrast-color);
                         transform: translateY(-2px);
                         text-decoration: none;
                     }
                 }
+
                 &.active {
                     > a {
                         color: color(back-main-color);
-                        box-shadow: 0 4px 20px 0 rgba(0,0,0,.05);
+                        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
                         background-color: color(back-main-contrast-color);
                         transform: translateY(-2px);
                         text-decoration: none;
                     }
                 }
+
                 &.divider {
                     color: color(back-main-contrast-color);
                     width: 100%;
@@ -104,7 +106,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     @include flex(row, nowrap, center, center);
 
     svg {
@@ -115,13 +117,14 @@
     }
 }
 
-.required{
-    &:after{
+.required {
+    &:after {
         content: '*';
         color: red;
         margin-left: 4px;
     }
 }
+
 @keyframes loaderRotate {
     from {
         transform: rotate(0deg);
@@ -164,8 +167,8 @@
         width: 90%;
         max-width: 450px;
         position: relative;
-        -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-        box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
         text-align: center;
         padding: 3rem;
     }

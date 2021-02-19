@@ -3,14 +3,14 @@
 
 $primary: #EC1920;
 $secondary: #061441;
-$third : #F6F6F8;
-$quatre : #dce2f3;
+$third: #F6F6F8;
+$quatre: #dce2f3;
 
 $theme-colors: (
-    primary: $primary,
-    secondary: $secondary,
-    third : $third ,
-    quatre : $quatre ,
+        primary: $primary,
+        secondary: $secondary,
+        third : $third,
+        quatre : $quatre,
 );
 
 //$grid-breakpoints: (
@@ -27,7 +27,7 @@ $theme-colors: (
 //);
 
 $container-max-widths: (
-    md: 1400px,
-    lg: 1250px,
-    xl: 1500px
+        md: 1400px,
+        lg: 1250px,
+        xl: 1500px
 );

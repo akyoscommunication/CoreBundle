@@ -51,23 +51,23 @@
         {% endif %}
         {# MENUS #}
         {% if is_granted('zones-de-menus') or is_granted('liste-de-menus') %}
-        <li class="{{ 'menu_' in route ? "active" : "" }}">
-            <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Menus</a>
-            <ul class="collapse list-unstyled" id="menu">
-            {% if is_granted('liste-de-menus') %}
-                {# MENUS #}
-                <li class="{{ 'menu_' in route and 'menu_area_' not in route ? "active" : "" }}">
-                    <a href="{{ path('menu_index') }}">Liste des menus</a>
-                </li>
-            {% endif %}
-            {% if is_granted('zones-de-menus') %}
-                    {# MENUS AREAS #}
-                    <li class="{{ 'menu_area_' in route ? "active" : "" }}">
-                        <a href="{{ path('menu_area_index') }}">Zones de menu</a>
-                    </li>
-            {% endif %}
-            </ul>
-        </li>
+            <li class="{{ 'menu_' in route ? "active" : "" }}">
+                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Menus</a>
+                <ul class="collapse list-unstyled" id="menu">
+                    {% if is_granted('liste-de-menus') %}
+                        {# MENUS #}
+                        <li class="{{ 'menu_' in route and 'menu_area_' not in route ? "active" : "" }}">
+                            <a href="{{ path('menu_index') }}">Liste des menus</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('zones-de-menus') %}
+                        {# MENUS AREAS #}
+                        <li class="{{ 'menu_area_' in route ? "active" : "" }}">
+                            <a href="{{ path('menu_area_index') }}">Zones de menu</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
         {% endif %}
         {# USERS #}
         {% if is_granted('utilisateurs') %}
@@ -78,16 +78,16 @@
 
         {% if is_granted('exports') %}
             {# EXPORT #}
-                <li class="{{ 'export_' in route ? "active" : "" }}">
-                    <a href="{{ path('export_index') }}">Exporter</a>
-                </li>
+            <li class="{{ 'export_' in route ? "active" : "" }}">
+                <a href="{{ path('export_index') }}">Exporter</a>
+            </li>
         {% endif %}
 
-{#        {% if is_granted('ROLE_SUPER_ADMIN') %}#}
-            <li class="divider"></li>
-            {# BUNDLES EXTENSIONS #}
-            {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getBundleSidebar', {'route': route})) }}
-{#        {% endif %}#}
+        {# {% if is_granted('ROLE_SUPER_ADMIN') %} #}
+        <li class="divider"></li>
+        {# BUNDLES EXTENSIONS #}
+        {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\SidebarController::getBundleSidebar', {'route': route})) }}
+        {# {% endif %} #}
 
         <li class="divider"></li>
         {# CUSTOM EXTENSIONS #}

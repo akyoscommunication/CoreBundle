@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twilio\Rest\Client;
 
 // Needs composer require twilio/sdk
-class TwilioSMS {
+class TwilioSMS
+{
 	
 	private $sender;
 	private $accountSID;
@@ -22,7 +23,7 @@ class TwilioSMS {
 		$this->messageLogger = $messageLogger;
 	}
 	
-	public function sendSMS(String $phoneNumber, String $body, bool $doNotFlush = null)
+	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
 		$phoneNumber = static::transformNum($phoneNumber);
 		if (is_array($phoneNumber)) {

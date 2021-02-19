@@ -8,7 +8,8 @@ use Mailjet\Resources;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 // Needs composer require mailjet/mailjet-apiv3-php
-class MailjetSMS {
+class MailjetSMS
+{
 	
 	private $sender;
 	private $smsToken;
@@ -21,7 +22,7 @@ class MailjetSMS {
 		$this->messageLogger = $messageLogger;
 	}
 	
-	public function sendSMS(String $phoneNumber, String $body, bool $doNotFlush = null)
+	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
 		$phoneNumber = static::transformNum($phoneNumber);
 		if (is_array($phoneNumber)) {
@@ -38,7 +39,7 @@ class MailjetSMS {
 		
 		try {
 			$response = $mailjet->post(Resources::$SmsSend, ['body' => $sms]);
-			if(!$response->success()) {
+			if (!$response->success()) {
 				throw new \Exception(json_encode($response->getBody()));
 			}
 			$this->messageLogger->saveLog($sms, null, 'mailjet_sms', $doNotFlush);

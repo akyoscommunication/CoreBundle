@@ -6,7 +6,8 @@ use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Services\SMSApi\MailjetSMS;
 use Akyos\CoreBundle\Services\SMSApi\TwilioSMS;
 
-class CoreSMS {
+class CoreSMS
+{
 	
 	private $coreOptionsRepository;
 	private $mailjetSMS;
@@ -19,18 +20,18 @@ class CoreSMS {
 		$this->twilioSMS = $twilioSMS;
 	}
 	
-	public function sendSMS(String $phoneNumber, String $body, bool $doNotFlush = null)
+	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();
-		if($coreOptions) {
+		if ($coreOptions) {
 			$coreOptions = $coreOptions[0];
 		}
 		
-		if($coreOptions->getSMSTransport() === "Mailjet SMS") {
+		if ($coreOptions->getSMSTransport() === "Mailjet SMS") {
 			return $this->mailjetSMS->sendSMS($phoneNumber, $body, $doNotFlush);
 		}
 		
-		if($coreOptions->getSMSTransport() === "Twilio SMS") {
+		if ($coreOptions->getSMSTransport() === "Twilio SMS") {
 			return $this->mailjetSMS->sendSMS($phoneNumber, $body, $doNotFlush);
 		}
 		

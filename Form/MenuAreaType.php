@@ -13,36 +13,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MenuAreaType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('name', TextType::class, [
-                'label' => 'Nom',
-                'help' => 'Donnez un titre à votre menu !',
-            ])
-            ->add('description', TextType::class, [
-                'label' => 'Description',
-                'help' => 'Courte description de la zone (où est-elle située sur le site ?)',
-            ])
-            ->add('menu', EntityType::class, [
-                'label' => 'Menu',
-                'help' => 'Souhaitez-vous associer un menu à cette zone ?',
-                'required' => false,
-                'class' => Menu::class,
-                'query_builder' => function (MenuRepository $er) {
-                    return $er->createQueryBuilder('m')
-                        ->orderBy('m.title', 'ASC');
-                },
-                'choice_label' => 'title',
-                'placeholder' => "Choisissez un menu"
-            ])
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => MenuArea::class,
-        ]);
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		$builder
+			->add('name', TextType::class, [
+				'label' => 'Nom',
+				'help' => 'Donnez un titre à votre menu !',
+			])
+			->add('description', TextType::class, [
+				'label' => 'Description',
+				'help' => 'Courte description de la zone (où est-elle située sur le site ?)',
+			])
+			->add('menu', EntityType::class, [
+				'label' => 'Menu',
+				'help' => 'Souhaitez-vous associer un menu à cette zone ?',
+				'required' => false,
+				'class' => Menu::class,
+				'query_builder' => function (MenuRepository $er) {
+					return $er->createQueryBuilder('m')
+						->orderBy('m.title', 'ASC');
+				},
+				'choice_label' => 'title',
+				'placeholder' => "Choisissez un menu"
+			]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		$resolver->setDefaults([
+			'data_class' => MenuArea::class,
+		]);
+	}
 }

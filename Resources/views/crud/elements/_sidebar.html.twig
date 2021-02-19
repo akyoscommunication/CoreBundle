@@ -18,7 +18,8 @@
     {% endif %}
     {% if entitySlug %}
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-sm btn-warning mb-3" target="_blank" href="{{ path('single_preview', {'entitySlug': getEntitySlug(entity), 'slug': el.slug}) }}">Prévisualiser</a>
+            <a class="btn btn-sm btn-warning mb-3" target="_blank"
+               href="{{ path('single_preview', {'entitySlug': getEntitySlug(entity), 'slug': el.slug}) }}">Prévisualiser</a>
         {% endif %}
     {% endif %}
 </div>

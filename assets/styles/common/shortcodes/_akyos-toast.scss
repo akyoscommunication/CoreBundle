@@ -4,14 +4,14 @@
     left: 10px;
     max-width: 20vw;
 
-    .aky-toast{
-        &:last-child{
+    .aky-toast {
+        &:last-child {
             margin-bottom: 0;
         }
     }
 }
 
-.aky-toast{
+.aky-toast {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -24,13 +24,15 @@
     animation: slidein .3s forwards;
     transform-origin: center center;
 
-    &-message{
+    &-message {
         flex: 1 0 80%;
     }
-    &-ico{
+
+    &-ico {
         flex: 1;
     }
-    &-close{
+
+    &-close {
         flex: 1;
         cursor: pointer;
     }
@@ -39,13 +41,15 @@
         padding: 0 1rem;
     }
 
-    &-info{
+    &-info {
         background-color: var(--info);
     }
-    &-error{
+
+    &-error {
         background-color: var(--danger);
     }
-    &-success{
+
+    &-success {
         background-color: var(--success);
     }
 }

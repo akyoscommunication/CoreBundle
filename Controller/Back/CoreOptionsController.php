@@ -17,45 +17,45 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class CoreOptionsController extends AbstractController
 {
-    /**
-     * @Route("/", name="", methods={"GET", "POST"})
-     * @param CoreOptionsRepository $coreOptionsRepository
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function index(CoreOptionsRepository $coreOptionsRepository, Request $request): Response
-    {
-        $coreOption = $coreOptionsRepository->findAll();
-        if(!$coreOption) {
-            $coreOption = new CoreOptions();
-        } else {
-            $coreOption = $coreOption[0];
-        }
+	/**
+	 * @Route("/", name="", methods={"GET", "POST"})
+	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @param Request $request
+	 *
+	 * @return Response
+	 */
+	public function index(CoreOptionsRepository $coreOptionsRepository, Request $request): Response
+	{
+		$coreOption = $coreOptionsRepository->findAll();
+		if (!$coreOption) {
+			$coreOption = new CoreOptions();
+		} else {
+			$coreOption = $coreOption[0];
+		}
 
-        $entities = array();
-        $em =$this->getDoctrine()->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($meta as $m) {
-            $entities[] = $m->getName();
-        }
+		$entities = array();
+		$em = $this->getDoctrine()->getManager();
+		$meta = $em->getMetadataFactory()->getAllMetadata();
+		foreach ($meta as $m) {
+			$entities[] = $m->getName();
+		}
 
-        $form = $this->createForm(CoreOptionsType::class, $coreOption, [
-            'entities' => $entities
-        ]);
-        $form->handleRequest($request);
+		$form = $this->createForm(CoreOptionsType::class, $coreOption, [
+			'entities' => $entities
+		]);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($coreOption);
-            $entityManager->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$entityManager = $this->getDoctrine()->getManager();
+			$entityManager->persist($coreOption);
+			$entityManager->flush();
 
-            return $this->redirectToRoute('core_options');
-        }
+			return $this->redirectToRoute('core_options');
+		}
 
-        return $this->render('@AkyosCore/core_options/new.html.twig', [
-            'core_option' => $coreOption,
-            'form' => $form->createView(),
-        ]);
-    }
+		return $this->render('@AkyosCore/core_options/new.html.twig', [
+			'core_option' => $coreOption,
+			'form' => $form->createView(),
+		]);
+	}
 }

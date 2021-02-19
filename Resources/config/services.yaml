@@ -13,7 +13,7 @@ services:
 
     Akyos\CoreBundle\:
         resource: '../../../../lib/CoreBundle/*'
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         public: true
 
     twig.extension.globals_extension:
@@ -21,14 +21,14 @@ services:
         public: true
 
     Akyos\CoreBundle\DoctrineListener\SlugRedirectListener:
-      arguments: []
-      tags:
-        - { name: 'doctrine.event_listener', event: 'postUpdate' }
-      public: true
+        arguments: [ ]
+        tags:
+            - { name: 'doctrine.event_listener', event: 'postUpdate' }
+        public: true
 
     gedmo.listener.sluggable:
-      class: Gedmo\Sluggable\SluggableListener
-      tags:
-        - { name: doctrine.event_subscriber, connection: default, priority: 1 }
-      calls:
-        - [ setAnnotationReader, [ '@annotation_reader' ] ]
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default, priority: 1 }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]

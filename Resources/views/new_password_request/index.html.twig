@@ -10,14 +10,17 @@
                 <div class="alert alert-danger">{{ message }}</div>
             {% endif %}
             {% if new_password_request and new_password_request.isMailSent %}
-                <div class="alert alert-success">Un email vous a été envoyé avec les instructions à suivre afin de réinitialiser votre mot de passe. Si vous ne le voyez pas dans votre boite de réception, veuillez vérifier vos spams.</div>
+                <div class="alert alert-success">Un email vous a été envoyé avec les instructions à suivre afin de
+                    réinitialiser votre mot de passe. Si vous ne le voyez pas dans votre boite de réception, veuillez
+                    vérifier vos spams.
+                </div>
             {% else %}
                 {{ form_start(form) }}
-                    <div class="label">Veuillez renseigner votre adresse email</div>
-                    <div class="input mt-2">{{ form_widget(form.userEmail) }}</div>
-                    <button class="btn btn-lg btn-outline-primary mt-4" type="submit">
-                        Valider
-                    </button>
+                <div class="label">Veuillez renseigner votre adresse email</div>
+                <div class="input mt-2">{{ form_widget(form.userEmail) }}</div>
+                <button class="btn btn-lg btn-outline-primary mt-4" type="submit">
+                    Valider
+                </button>
                 {{ form_end(form) }}
             {% endif %}
             <div class="mt-4">

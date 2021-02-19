@@ -6,7 +6,8 @@ use Akyos\CoreBundle\Entity\MessageLog;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class MessageLogger {
+class MessageLogger
+{
 	
 	private $entityManager;
 	private $serializer;
@@ -17,23 +18,23 @@ class MessageLogger {
 		$this->serializer = $serializer;
 	}
 	
-	public function saveLog($message = null, $error = null, String $type = null, bool $doNotFlush = null)
+	public function saveLog($message = null, $error = null, string $type = null, bool $doNotFlush = null)
 	{
 		$messageLog = new MessageLog();
 		
-		if($message) {
+		if ($message) {
 			$messageLog->setMessage($this->serializer->serialize($message, 'json'));
 		}
 //		if($error) {
 //			$messageLog->setError($this->serializer->serialize($error, 'json'));
 //		}
-		if($type) {
+		if ($type) {
 			$messageLog->setType($type);
 		}
 		
 		try {
 			$this->entityManager->persist($messageLog);
-			if(!$doNotFlush) {
+			if (!$doNotFlush) {
 				$this->entityManager->flush();
 			}
 			return true;
