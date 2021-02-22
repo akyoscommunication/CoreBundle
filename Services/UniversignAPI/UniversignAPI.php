@@ -86,15 +86,17 @@ class UniversignAPI
 	{
         $return = [];
 
-        $requester = $this->client($mode);
-        $response = $requester->getTransactionInfo($transactionId);
-        if ($response->status === TransactionInfo::STATUS_COMPLETED) {
-            $docs = $requester->getDocuments($transactionId);
-            foreach ($docs as $doc) {
-                $return[] = [
-                    'name' => $doc->name,
-                    'content' => base64_encode($doc->content),
-                ];
+        if ($transactionId) {
+            $requester = $this->client($mode);
+            $response = $requester->getTransactionInfo($transactionId);
+            if ($response->status === TransactionInfo::STATUS_COMPLETED) {
+                $docs = $requester->getDocuments($transactionId);
+                foreach ($docs as $doc) {
+                    $return[] = [
+                        'name' => $doc->name,
+                        'content' => base64_encode($doc->content),
+                    ];
+                }
             }
         }
 
