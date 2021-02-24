@@ -92,6 +92,7 @@ class UniversignAPI
             $docs = $requester->getDocuments($transactionId);
             foreach ($docs as $doc) {
                 $return[] = [
+                	'doc' => $doc,
                     'name' => $doc->name,
                     'content' => base64_encode($doc->content),
                 ];
