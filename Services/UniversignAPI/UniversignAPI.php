@@ -85,7 +85,7 @@ class UniversignAPI
     public function getDocuments($transactionId, $mode = null): array
 	{
         $return = [];
-
+        
         if ($transactionId) {
             $requester = $this->client($mode);
             $response = $requester->getTransactionInfo($transactionId);
@@ -93,6 +93,7 @@ class UniversignAPI
                 $docs = $requester->getDocuments($transactionId);
                 foreach ($docs as $doc) {
                     $return[] = [
+                    	'doc' => $doc,
                         'name' => $doc->name,
                         'content' => base64_encode($doc->content),
                     ];

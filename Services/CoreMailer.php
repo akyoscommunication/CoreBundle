@@ -122,6 +122,7 @@ class CoreMailer
 			$this->messageLogger->saveLog($email, null, 'core_email', null);
 			return true;
 		} catch (TransportExceptionInterface $e) {
+//			dd($e);
 			$this->messageLogger->saveLog($email, $e, 'core_email', null);
 			return $e;
 		}
