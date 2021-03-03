@@ -91,6 +91,7 @@ class CoreExtension extends AbstractExtension
 			new TwigFunction('isArchive', [$this, 'isArchive']),
 			new TwigFunction('getMenu', [$this, 'getMenu']),
 			new TwigFunction('instanceOf', [$this, 'isInstanceOf']),
+			new TwigFunction('useClosure', [$this, 'useClosure']),
 			new TwigFunction('getOption', [$this, 'getOption']),
 			new TwigFunction('getOptions', [$this, 'getOptions']),
 			new TwigFunction('getElementSlug', [$this, 'getElementSlug']),
@@ -190,13 +191,21 @@ class CoreExtension extends AbstractExtension
 		return $menu;
 	}
 	
-	public function isInstanceOf($object, $class)
+	public function isInstanceOf($object, $class = null)
 	{
+		if(!$class) {
+			return gettype($object);
+		}
 		if (!is_object($object)) {
 			return false;
 		}
 		$reflectionClass = new \ReflectionClass($class);
 		return $reflectionClass->isInstance($object);
+	}
+	
+	public function useClosure(\Closure $closure, $params)
+	{
+		return $closure($params);
 	}
 	
 	public function getOption($optionSlug)
