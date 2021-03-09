@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExtendAdminAccess
 {
-	private AdminAccessRepository $adminAccessRepository;
-	private EntityManagerInterface $entityManager;
+    /** @var AdminAccessRepository  */
+	private $adminAccessRepository;
+	/** @var EntityManagerInterface  */
+	private $entityManager;
 	
 	public function __construct(AdminAccessRepository $adminAccessRepository, EntityManagerInterface $entityManager)
 	{

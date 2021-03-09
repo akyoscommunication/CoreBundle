@@ -18,7 +18,7 @@ class CoreFixNamespacesCommand extends Command
 	/** @var EntityManagerInterface */
 	private $em;
 	/** @var CoreExtension */
-	private CoreExtension $coreExtension;
+	private $coreExtension;
 	
 	public function __construct(string $name = null, EntityManagerInterface $em, CoreExtension $coreExtension)
 	{
