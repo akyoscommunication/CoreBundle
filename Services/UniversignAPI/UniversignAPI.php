@@ -25,7 +25,7 @@ class UniversignAPI
 	private $urlProd = 'https://ws.universign.eu/sign/rpc';
 
 	/** @var ParameterBagInterface */
-	private ParameterBagInterface $parameterBag;
+	private $parameterBag;
 
 	public function __construct(ParameterBagInterface $parameterBag)
 	{

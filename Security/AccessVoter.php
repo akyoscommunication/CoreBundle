@@ -10,8 +10,8 @@ use Symfony\Component\Security\Core\Security;
 
 class AccessVoter extends Voter
 {
-	private Security $security;
-	private AdminAccessRepository $adminAccessRepository;
+	private $security;
+	private $adminAccessRepository;
 
 	public function __construct(Security $security, AdminAccessRepository $adminAccessRepository)
 	{
