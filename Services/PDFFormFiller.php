@@ -78,4 +78,25 @@ class PDFFormFiller
 			'b64file' => chunk_split(base64_encode(file_get_contents($absoluteFlattenDir))),
 		];
 	}
+	
+	public function flattenb64File($b64File): string
+	{
+		$filename = uniqid() . '.pdf';
+		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
+		if (!is_dir($filledPdfDir)) {
+			mkdir($filledPdfDir, 0755, true);
+		}
+		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
+		$file = file_put_contents($absoluteFlattenDir, base64_decode($b64File));
+		$pdf = new Pdf($absoluteFlattenDir);
+		$result = $pdf
+			->flatten()
+			->saveAs($absoluteFlattenDir);
+		
+		if ($result === false) {
+			return $pdf->getError();
+		}
+		
+		return chunk_split(base64_encode(file_get_contents($absoluteFlattenDir)));
+	}
 }

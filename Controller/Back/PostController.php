@@ -40,11 +40,13 @@ class PostController extends AbstractController
 	 */
 	public function index(PostRepository $postRepository, CoreOptionsRepository $coreOptionsRepository, PaginatorInterface $paginator, Request $request, CrudHandler $crudHandler): Response
 	{
+		$orderPostsByPosition = false;
 		$coreOptions = $coreOptionsRepository->findAll();
 		if ($coreOptions) {
 			if (!$coreOptions[0]->getHasPosts()) {
 				return $this->redirectToRoute('core_index');
 			}
+			$orderPostsByPosition = $coreOptions[0]->getOrderPostsByPosition();
 		}
 
 		$query = $postRepository->createQueryBuilder('a');
@@ -54,7 +56,12 @@ class PostController extends AbstractController
 				->andWhere('a.title LIKE :keyword OR a.position LIKE :keyword OR postCategories.title LIKE :keyword')
 				->setParameter('keyword', '%' . $request->query->get('search') . '%');
 		}
-		$query->orderBy('a.position', 'ASC');
+		
+		if($orderPostsByPosition) {
+			$query->orderBy('a.position', 'ASC');
+		} else {
+			$query->orderBy('a.createdAt', 'DESC');
+		}
 
 		$els = $paginator->paginate($query->getQuery(), $request->query->getInt('page', 1), 12);
 

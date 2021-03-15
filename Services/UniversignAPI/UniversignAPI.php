@@ -65,7 +65,7 @@ class UniversignAPI
 			->setHandwrittenSignatureMode(
 				TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_DIGITAL
 			)
-			->setMustContactFirstSigner(true)
+			->setMustContactFirstSigner(false)
 			->setFinalDocRequesterSent(true)
 			->setChainingMode(
 				TransactionRequest::CHAINING_MODE_EMAIL

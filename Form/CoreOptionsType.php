@@ -45,6 +45,10 @@ class CoreOptionsType extends AbstractType
 				'label' => 'Activation des documents d\'articles',
 				'required' => false
 			])
+			->add('orderPostsByPosition', CheckboxType::class, [
+				'label' => 'Trier les articles par position ? (dans l\'admin, par défaut triés par date de création)',
+				'required' => false
+			])
 			->add('homepage', EntityType::class, [
 				'label' => "Page d'accueil",
 				'required' => false,

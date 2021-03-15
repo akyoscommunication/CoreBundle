@@ -96,6 +96,11 @@ class CoreOptions
 	 */
 	private $smsTransport;
 	
+	/**
+	 * @ORM\Column(type="boolean", nullable=true)
+	 */
+	private $orderPostsByPosition;
+	
 	public function getId(): ?int
 	{
 		return $this->id;
@@ -289,6 +294,18 @@ class CoreOptions
 	public function setSmsTransport(?string $smsTransport): self
 	{
 		$this->smsTransport = $smsTransport;
+		
+		return $this;
+	}
+	
+	public function getOrderPostsByPosition(): ?bool
+	{
+		return $this->orderPostsByPosition;
+	}
+	
+	public function setOrderPostsByPosition(?bool $orderPostsByPosition): self
+	{
+		$this->orderPostsByPosition = $orderPostsByPosition;
 		
 		return $this;
 	}
