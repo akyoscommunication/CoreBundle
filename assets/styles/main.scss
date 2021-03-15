@@ -1,7 +1,9 @@
 @import "common/variables";
 
 /** Import everything from autoload */
-@import "./autoload/*.scss";
+@import "./autoload/bootstrap";
+@import "./autoload/select2";
+@import "./autoload/swiper";
 
 /** Import theme styles */
 @import "common/mixins";
