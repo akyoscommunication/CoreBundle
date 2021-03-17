@@ -63,7 +63,7 @@ class UniversignAPI
 
 		$request
 			->setHandwrittenSignatureMode(
-				$handwrittenMode ? $handwrittenMode : TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_BASIC
+				$handwrittenMode ?: TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_BASIC
 			)
 			->setMustContactFirstSigner(false)
 			->setFinalDocRequesterSent(true)
