@@ -31,17 +31,17 @@ class UniversignAPI
 	{
 		$this->parameterBag = $parameterBag;
 	}
-	
-	/**
-	 * @param $to TransactionSigner|TransactionSigner[]
-	 * @param $docs
-	 * @param null $mode
-	 * @param null $description
-	 * @param null $profile
-	 * @param null $language
-	 * @return array
-	 */
-	public function send($to, $docs, $mode = null, $description = null, $language = null): array
+
+    /**
+     * @param $to TransactionSigner|TransactionSigner[]
+     * @param $docs
+     * @param null $mode
+     * @param null $description
+     * @param null $language
+     * @param null $handwrittenMode
+     * @return array
+     */
+	public function send($to, $docs, $mode = null, $description = null, $language = null, $handwrittenMode = null): array
 	{
 		$request = new TransactionRequest();
 
@@ -63,7 +63,7 @@ class UniversignAPI
 
 		$request
 			->setHandwrittenSignatureMode(
-				TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_DIGITAL
+				$$handwrittenMode ? $handwrittenMode : TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_BASIC
 			)
 			->setMustContactFirstSigner(false)
 			->setFinalDocRequesterSent(true)
