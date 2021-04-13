@@ -1,0 +1,7 @@
+{% apply spaceless %}
+    {% set params = app.request.get('_route_params') %}
+    <div class="aky-translation">
+        <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'fr'})) }}" class="aky-translation__item{{ ('fr' in params) ? ' active' : false }}">fr</a>
+        <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'en'})) }}" class="aky-translation__item{{ ('en' in params) ? ' active' : false }}">en</a>
+    </div>
+{% endapply %}
