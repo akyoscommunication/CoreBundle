@@ -96,7 +96,7 @@ class MailjetEmail
 		
 		$mailjet = new Client($this->apiKey, $this->secretKey, true, ['version' => 'v3.1']);
 		$email = [
-			'SandboxMode' => "false",
+			'SandboxMode' => false,
 			'Messages' => [
 				[
 					'From' => $from,
