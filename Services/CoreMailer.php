@@ -32,7 +32,7 @@ class CoreMailer
 	}
 	
 	
-	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null)
+	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null, $backupSendMail = null)
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();
 		if ($coreOptions) {
@@ -52,10 +52,12 @@ class CoreMailer
 			$bodyParams = array_merge($bodyParams, $options['templateParams']);
 		}
 		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
-		
-		if ($coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
-			return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
-		}
+
+		if (!$backupSendMail) {
+            if ($coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
+                return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
+            }
+        }
 		
 		if (is_array($from) && count($from)) {
 			if (array_values($from) !== $from) {
