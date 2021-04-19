@@ -77,8 +77,10 @@ class FrontControllerService
 			$redirect301 = $this->em->getRepository(Redirect301::class)->findOneBy(['oldSlug' => $slug, 'objectType' => $entityFullName]);
 			if ($redirect301) {
 				$element = $this->em->getRepository($entityFullName)->find($redirect301->getObjectId());
-				$redirectUrl = $this->router->generate($route, ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
-				return new RedirectResponse($redirectUrl, 301);
+				if($element) {
+					$redirectUrl = $this->router->generate($route, ['entitySlug' => $entitySlug, 'slug' => $element->getSlug()]);
+					return new RedirectResponse($redirectUrl, 301);
+				}
 			}
 			throw new NotFoundHttpException("Cette page n'existe pas! ( ${route} )");
 		} elseif (property_exists($element, 'published') and $route !== 'single_preview') {
