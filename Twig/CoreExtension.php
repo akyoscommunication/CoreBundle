@@ -464,7 +464,12 @@ class CoreExtension extends AbstractExtension
 				'Nouvelle erreur sur le site ' . $_SERVER['SERVER_NAME'],
 				null,
 				null,
-				["lilian.akyos@gmail.com", "johan@akyos.com"]
+				["lilian.akyos@gmail.com", "johan@akyos.com"],
+                null,
+                null,
+                null,
+                null,
+                'SMTP'
 			);
 			return true;
 		} catch (\Exception $e) {
