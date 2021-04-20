@@ -16,7 +16,8 @@
         <div class="mt-5 small">
             <div>Message d'origine:</div>
             <p>{{ exception.message~' '~exception.statusCode~' '~exception.statusText }}</p>
-            {{ sendExceptionMail(exception.message~' '~exception.statusCode~' '~exception.statusText) }}
+            {{ sendExceptionMail(exception.message~' '~exception.statusCode~' '~exception.statusText~' - url : '~url(app.request.attributes.get('_route'),
+                app.request.attributes.get('_route_params'))) }}
         </div>
     </div>
 {% endblock %}
