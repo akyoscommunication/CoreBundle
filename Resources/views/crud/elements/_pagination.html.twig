@@ -1,3 +1,3 @@
 <div class="aky-pagination mt-3">
-    {{ instanceOf(els, 'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination') ? knp_pagination_render(els) : '' }}
+    {{ instanceOf(els, 'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination') ? knp_pagination_render(els, null, {}, {'pageParameterName': pageParameterName is defined ? pageParameterName : 'page'}) : '' }}
 </div>

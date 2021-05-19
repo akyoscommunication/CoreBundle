@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/app/new_password_request", name="new_password")
@@ -29,10 +30,10 @@ class NewPasswordRequestController extends AbstractController
 	 * @param TokenGeneratorInterface $tokenGenerator
 	 * @param CoreMailer $mailer
 	 * @param CoreOptionsRepository $coreOptionsRepository
+	 * @param TranslatorInterface $translator
 	 * @return Response
-	 * @throws \Exception
 	 */
-	public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository): Response
+	public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, TranslatorInterface $translator): Response
 	{
 		$coreOptions = $coreOptionsRepository->findAll();
 		if ($coreOptions) {
@@ -67,7 +68,7 @@ class NewPasswordRequestController extends AbstractController
 				}
 			}
 			if (!$user) {
-				$message = "Cet email ne correspond à aucun compte, veuillez vérifier votre saisie.";
+				$message = $translator->trans('no_account', [], 'new_password_request');
 			} else {
 				$isAlreadyRequested = false;
 				$oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $newPasswordRequest->getUserType()], ['createdAt' => 'DESC']);
@@ -77,7 +78,7 @@ class NewPasswordRequestController extends AbstractController
 					$isAlreadyRequested = $interval < 1800;
 				}
 				if ($isAlreadyRequested) {
-					$message = "La demande de réinitialisation du mot de passe à déjà été faite, veuillez patienter avant de réessayer.";
+					$message = $translator->trans('already_requested', [], 'new_password_request');
 				} else {
 					$newPasswordRequest->setUserId($user->getId());
 					$token = $tokenGenerator->generateToken();
@@ -115,7 +116,7 @@ class NewPasswordRequestController extends AbstractController
 			'message' => $message
 		]);
 	}
-
+	
 	/**
 	 * @Route("/reset/{id}/{token}", name="_change", methods={"GET", "POST"})
 	 * @param int $id
@@ -125,10 +126,10 @@ class NewPasswordRequestController extends AbstractController
 	 * @param CoreMailer $mailer
 	 * @param CoreOptionsRepository $coreOptionsRepository
 	 * @param UserPasswordEncoderInterface $passwordEncoder
+	 * @param TranslatorInterface $translator
 	 * @return Response
-	 * @throws \Exception
 	 */
-	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder): Response
+	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator): Response
 	{
 		$coreOptions = $coreOptionsRepository->findAll();
 		if ($coreOptions) {
@@ -141,14 +142,14 @@ class NewPasswordRequestController extends AbstractController
 		$form->handleRequest($request);
 
 		if (!$newPasswordRequest) {
-			$message = 'Vous n\'avez pas l\'autorisation d\'accéder à cette page.';
+			$message = $translator->trans('unauthorized', [], 'new_password_request');
 		} else {
 			$now = new \DateTime();
 			$interval = $now->getTimestamp() - $newPasswordRequest->getCreatedAt()->getTimestamp();
 			$isRequestedInTime = $interval < 1800;
 
 			if (!$isRequestedInTime) {
-				$message = 'Le délai est dépassé, veuillez effectuer une nouvelle demande.';
+				$message = $translator->trans('deadline_past', [], 'new_password_request');
 			}
 		}
 
