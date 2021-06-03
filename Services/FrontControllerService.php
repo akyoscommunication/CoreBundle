@@ -109,7 +109,7 @@ class FrontControllerService
 		
 		// GET TEMPLATE
 		$view = $this->filesystem->exists($this->kernel->getProjectDir() . "/templates/${entity}/single.html.twig")
-			? "/${entity}/single.html.twig"
+			? "${entity}/single.html.twig"
 			: '@AkyosCore/front/single.html.twig';
 		$this->environment->addGlobal('global_element', $element);
 		
@@ -168,7 +168,7 @@ class FrontControllerService
 		}
 		
 		// GET TEMPLATE
-		$view = $page->getTemplate() ? '/page/' . $page->getTemplate() . '.html.twig' : '@AkyosCore/front/content.html.twig';
+		$view = $page->getTemplate() ? 'page/' . $page->getTemplate() . '.html.twig' : '@AkyosCore/front/content.html.twig';
 		
 		$this->environment->addGlobal('global_page', $page);
 		
