@@ -109,10 +109,17 @@ class UniversignAPI
         $paramMode = $this->parameterBag->get('universign_mode');
         $client = new Client($mode ? ($mode === 'prod' ? $this->urlProd : $this->urlTest) : ($paramMode === 'prod' ? $this->urlProd : $this->urlTest));
 
-        $client->setCredentials(
-            $this->parameterBag->get('universign_user'),
-            $this->parameterBag->get('universign_password')
-        );
+        if ($mode === 'test') {
+            $client->setCredentials(
+                $this->parameterBag->get('universign_user'),
+                $this->parameterBag->get('universign_password_test')
+            );
+        } else {
+            $client->setCredentials(
+                $this->parameterBag->get('universign_user'),
+                $this->parameterBag->get('universign_password')
+            );
+        }
 
         return new Requester($client);
     }
