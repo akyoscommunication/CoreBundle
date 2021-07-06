@@ -64,7 +64,7 @@ class FrontController extends AbstractController
 		}
 
 		// GET TEMPLATE
-		$view = $homePage->getTemplate() ? '/home/' . $homePage->getTemplate() . '.html.twig' : '@AkyosCore/front/content.html.twig';
+		$view = $homePage->getTemplate() ? 'home/' . $homePage->getTemplate() . '.html.twig' : '@AkyosCore/front/content.html.twig';
 
 		$environment->addGlobal('global_page', $homePage);
 
@@ -294,7 +294,7 @@ class FrontController extends AbstractController
 
 		// GET TEMPLATE
 		$view = $filesystem->exists($this->kernel->getProjectDir() . '/templates/' . $entity . '/category.html.twig')
-			? "/${entity}/category.html.twig"
+			? "${entity}/category.html.twig"
 			: '@AkyosCore/front/category.html.twig';
 
 		// RENDER
@@ -357,7 +357,7 @@ class FrontController extends AbstractController
 
 		// GET TEMPLATE
 		$view = $filesystem->exists($this->kernel->getProjectDir() . '/templates/' . $parentEntity . '/tag.html.twig')
-			? "/${parentEntity}/tag.html.twig"
+			? "${parentEntity}/tag.html.twig"
 			: '@AkyosCore/front/tag.html.twig';
 
 		// RENDER

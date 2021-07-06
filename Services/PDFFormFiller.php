@@ -50,7 +50,7 @@ class PDFFormFiller
 		];
 	}
 	
-	public function catFiles($files, string $filename)
+	public function catFiles($files, string $filename, bool $isFlatten = true)
 	{
 		$filename = $filename . '.pdf';
 		$pdf = new Pdf($files);
@@ -59,14 +59,16 @@ class PDFFormFiller
 			mkdir($filledPdfDir, 0755, true);
 		}
 		$absoluteDir = $filledPdfDir . '/' . $filename;
-		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
 		$relativeDir = '/filledPdf/' . $filename;
 		$result = $pdf
 			->saveAs($absoluteDir);
-		
-		$flattenResult = new Pdf($absoluteDir);
-		$flattenResult->flatten()->saveAs($absoluteFlattenDir);
-		
+
+		if ($isFlatten) {
+            $absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
+            $flattenResult = new Pdf($absoluteDir);
+            $flattenResult->flatten()->saveAs($absoluteFlattenDir);
+        }
+
 		if ($result === false) {
 			return $pdf->getError();
 		}
@@ -74,8 +76,8 @@ class PDFFormFiller
 		return [
 			'relative_dir' => $relativeDir,
 			'absolute_dir' => $absoluteDir,
-			'flattenedDir' => $absoluteFlattenDir,
-			'b64file' => chunk_split(base64_encode(file_get_contents($absoluteFlattenDir))),
+			'flattenedDir' => (isset($absoluteFlattenDir) ? $absoluteFlattenDir : null),
+			'b64file' => chunk_split(base64_encode(file_get_contents(($isFlatten ? $absoluteFlattenDir : $absoluteDir)))),
 		];
 	}
 	

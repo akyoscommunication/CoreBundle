@@ -31,17 +31,22 @@ class UniversignAPI
 	{
 		$this->parameterBag = $parameterBag;
 	}
-
-    /**
-     * @param $to TransactionSigner|TransactionSigner[]
-     * @param $docs
-     * @param null $mode
-     * @param null $description
-     * @param null $language
-     * @param null $handwrittenMode
-     * @return array
-     */
-	public function send($to, $docs, $mode = null, $description = null, $language = null, $handwrittenMode = null): array
+	
+	/**
+	 * @param $to TransactionSigner|TransactionSigner[]
+	 * @param $docs
+	 * @param null $mode
+	 * @param null $description
+	 * @param null $language
+	 * @param null $handwrittenMode
+	 * @param bool $mustContactFirstSigner
+	 * @param bool $finalDocRequesterSent
+	 * @param bool $finalDocObserverSent
+	 * @param bool $finalDocSent
+	 * @return array
+	 */
+	public function send($to, $docs, $mode = null, $description = null, $language = null, $handwrittenMode = null,
+						 $mustContactFirstSigner = false, $finalDocRequesterSent = true, $finalDocObserverSent = true, $finalDocSent = false): array
 	{
 		$request = new TransactionRequest();
 
@@ -65,12 +70,14 @@ class UniversignAPI
 			->setHandwrittenSignatureMode(
 				$handwrittenMode ?: TransactionRequest::HANDWRITTEN_SIGNATURE_MODE_BASIC
 			)
-			->setMustContactFirstSigner(false)
-			->setFinalDocRequesterSent(true)
+			->setMustContactFirstSigner($mustContactFirstSigner)
+			->setFinalDocRequesterSent($finalDocRequesterSent)
+			->setFinalDocObserverSent($finalDocObserverSent)
+			->setFinalDocSent($finalDocSent)
 			->setChainingMode(
 				TransactionRequest::CHAINING_MODE_EMAIL
 			)
-			->setDescription($description ?: "Demonstration de la signature Universign")
+			->setDescription($description ?: "Signature Universign")
             ->setLanguage($language ?: 'fr')
         ;
 
@@ -109,10 +116,17 @@ class UniversignAPI
         $paramMode = $this->parameterBag->get('universign_mode');
         $client = new Client($mode ? ($mode === 'prod' ? $this->urlProd : $this->urlTest) : ($paramMode === 'prod' ? $this->urlProd : $this->urlTest));
 
-        $client->setCredentials(
-            $this->parameterBag->get('universign_user'),
-            $this->parameterBag->get('universign_password')
-        );
+        if ($mode === 'test') {
+            $client->setCredentials(
+                $this->parameterBag->get('universign_user'),
+                $this->parameterBag->get('universign_password_test')
+            );
+        } else {
+            $client->setCredentials(
+                $this->parameterBag->get('universign_user'),
+                $this->parameterBag->get('universign_password')
+            );
+        }
 
         return new Requester($client);
     }
