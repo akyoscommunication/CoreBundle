@@ -6,8 +6,8 @@
     {% if core_options and core_options.favicon %}
         <link rel="icon" href="{{ getImagePathById(core_options.favicon) }}"/>
     {% endif %}
-    {% block tarteaucitron %}
-        {% include '@AkyosCore/front/layouts/tarteaucitron.html.twig' %}
+    {% block rgpd_header %}
+        {% include '@AkyosCore/front/layouts/rgpd_header.html.twig' %}
     {% endblock %}
     {% block meta %}{% endblock %}
     <title>{% block title %}Welcome!{% endblock %}</title>
