@@ -3,22 +3,28 @@ class initCollectionType {
     static initDataPrototype(proto = '.collection_prototype', children = '.card-header__title') {
         const _this = this;
 
-        const collectionHolder = $(proto);
-        collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
-        const buttonAddLabel = collectionHolder.data('button_add');
-        const buttonDeleteLabel = collectionHolder.data('button_delete');
-        collectionHolder.after('<button id="add_component" class="btn btn-sm btn-outline-primary ml-auto">' + (buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ') + ' <i class="fas fa-plus"></i></button>');
-        const addFieldLink = $('#add_component');
-        collectionHolder.attr('data-index', collectionHolder.children('.form-group').length);
+        const collectionHolders = $(proto);
 
-        collectionHolder.children('.form-group').each(function () {
-            _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
+        collectionHolders.map((index, collectionHolder) => {
+            collectionHolder = $(collectionHolder)
+            collectionHolder.parent('.col-sm-10').addClass('d-flex flex-column');
+            const buttonAddLabel = collectionHolder.data('button_add');
+            const buttonDeleteLabel = collectionHolder.data('button_delete');
+
+            collectionHolder.after('<button id="add_component_'+index+'" type="button" class="add_component btn btn-sm btn-outline-primary ml-auto">' + (buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ') + ' <i class="fas fa-plus"></i></button>');
+            const addFieldLink = $('#add_component_'+index);
+            collectionHolder.attr('data-index', collectionHolder.children('.form-group').length);
+
+            collectionHolder.children('.form-group').each(function () {
+                _this.addCloneFormDeleteLink($(this), buttonDeleteLabel);
+            });
+
+            addFieldLink.on('click', function (e) {
+                e.preventDefault();
+                _this.addCloneForm(collectionHolder, buttonDeleteLabel);
+            });
         });
 
-        addFieldLink.on('click', function (e) {
-            e.preventDefault();
-            _this.addCloneForm(collectionHolder, buttonDeleteLabel);
-        });
     }
 
     static addCloneForm($collectionHolder, deleteLabel) {
@@ -47,7 +53,7 @@ class initCollectionType {
     }
 
     static addCloneFormDeleteLink($newForm, label) {
-        const $deleteFormLink = $('<a href="#" class="btn btn-sm btn-outline-danger ml-auto">' + (label ? label : 'Supprimer ce champ <i class="fas fa-times"></i>') + '</a>');
+        const $deleteFormLink = $('<a href="#" class="collection-delete-btn btn btn-sm btn-outline-danger ml-auto">' + (label ? label : 'Supprimer ce champ <i class="fas fa-times"></i>') + '</a>');
         $newForm.append($deleteFormLink);
 
         $deleteFormLink.on('click', function (e) {
