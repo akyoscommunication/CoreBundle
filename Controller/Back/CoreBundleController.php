@@ -3,8 +3,6 @@
 namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\MenuArea;
-use Akyos\CoreBundle\Entity\MenuItem;
-use Akyos\CoreBundle\Repository\MenuItemRepository;
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -23,7 +21,7 @@ class CoreBundleController extends AbstractController
 	/**
 	 * @Route("/", name="index")
 	 */
-	public function index()
+	public function index(): Response
 	{
 		return $this->render('@AkyosCore/core_bundle/index.html.twig', [
 			'title' => 'Tableau de Bord',
@@ -39,7 +37,7 @@ class CoreBundleController extends AbstractController
 	 * @param $bundle
 	 * @return RedirectResponse
 	 */
-	public function changePosition($route, $el, $id, Request $request, $bundle = null)
+	public function changePosition($route, $el, $id, Request $request, $bundle = null): RedirectResponse
 	{
 		if ($bundle) {
 			$repository = $this->getDoctrine()->getRepository('Akyos\\' . $bundle . '\Entity\\' . $el);
@@ -84,7 +82,7 @@ class CoreBundleController extends AbstractController
 	 * @param null $tab
 	 * @return RedirectResponse
 	 */
-	public function changePositionSub($route, $id, $namespace, Request $request, $parentId = null, $namespaceParent = null, $tab = null)
+	public function changePositionSub($route, $id, $namespace, Request $request, $parentId = null, $namespaceParent = null, $tab = null): RedirectResponse
 	{
 		$repository = $this->getDoctrine()->getRepository($namespace);
 		$entityOne = $repository->findOneById($id);
@@ -132,7 +130,7 @@ class CoreBundleController extends AbstractController
 	 * @param $id
 	 * @return RedirectResponse
 	 */
-	public function changeStatus($redirect, $entity, $id)
+	public function changeStatus($redirect, $entity, $id): RedirectResponse
 	{
 		$el = $this->getDoctrine()->getRepository($entity)->find($id);
 		
@@ -145,14 +143,14 @@ class CoreBundleController extends AbstractController
 		return $this->redirect(urldecode($redirect));
 	}
 	
-	public function sidebar($route)
+	public function sidebar($route): Response
 	{
 		return $this->render('@AkyosCore/layout/sidebar.html.twig', [
 			'route' => $route
 		]);
 	}
 	
-	public function renderMenu($menu, $page)
+	public function renderMenu($menu, $page): string
 	{
 		$menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]);
 		return $this->renderView('@AkyosCore/menu/render.html.twig', [
@@ -168,7 +166,7 @@ class CoreBundleController extends AbstractController
 	 * @return RedirectResponse
 	 * @throws \Exception
 	 */
-	public function clearCache($env = 'prod', $debug = false)
+	public function clearCache($env = 'prod', $debug = false): RedirectResponse
 	{
 		$kernel = new Kernel($env, $debug);
 		$application = new Application($kernel);
@@ -180,6 +178,28 @@ class CoreBundleController extends AbstractController
 		$application->run($input, $output);
 		
 		$this->addFlash('success', 'Le cache serveur a bien été vidé.');
+		return $this->redirectToRoute('core_index');
+	}
+	
+	/**
+	 * @Route("/restart-messenger", name="restart_messenger", methods={"GET"})
+	 * @param string $env
+	 * @param bool $debug
+	 * @return RedirectResponse
+	 * @throws \Exception
+	 */
+	public function restartMessenger($env = 'prod', $debug = false): RedirectResponse
+	{
+		$kernel = new Kernel($env, $debug);
+		$application = new Application($kernel);
+		$application->setAutoExit(false);
+		$input = new ArrayInput([
+			'command' => 'messenger:stop-workers'
+		]);
+		$output = new BufferedOutput();
+		$application->run($input, $output);
+		
+		$this->addFlash('success', 'Les workers ont tous été stoppés.');
 		return $this->redirectToRoute('core_index');
 	}
 }

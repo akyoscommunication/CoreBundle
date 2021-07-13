@@ -1,0 +1,61 @@
+{% set tarteaucitron = constant('Akyos\\CoreBundle\\Entity\\RgpdOptions::SERVICE_TARTEAUCITRON')%}
+{% set sirdata = constant('Akyos\\CoreBundle\\Entity\\RgpdOptions::SERVICE_SIRDATA') %}
+
+{% if rgpd_options is defined and rgpd_options and rgpd_options.serviceUsed %}
+    {% if rgpd_options.serviceUsed is same as(tarteaucitron) %}
+        <script type="text/javascript" src="{{ asset('bundles/akyoscore/tarteaucitronjs/tarteaucitron.js') }}"></script>
+        <script type="text/javascript">
+		    tarteaucitron.init({
+			    "privacyUrl": "{{ absolute_url(path('page', {'slug' : rgpd_options.policyPage.slug})) }}", /* Privacy policy url */
+
+			    "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+			    "cookieName": "tartaucitron", /* Cookie name */
+
+			    "orientation": "top", /* Banner position (top - bottom) */
+			    "showAlertSmall": false, /* Show the small banner on bottom right */
+			    "cookieslist": false, /* Show the cookie list */
+
+			    "adblocker": false, /* Show a Warning if an adblocker is detected */
+			    "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
+			    "highPrivacy": true, /* Disable auto consent */
+			    "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+
+			    "removeCredit": true, /* Remove credit link */
+			    "moreInfoLink": true, /* Show more info link */
+			    "useExternalCss": true, /* If false, the tarteaucitron.css file will be loaded */
+
+			    //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
+
+			    "readmoreLink": "{{ absolute_url(path('page', {'slug' : rgpd_options.policyPage.slug})) }}" /* Change the default readmore link */
+		    });
+        </script>
+    {% elseif rgpd_options.serviceUsed is same as(sirdata) %}
+        <script type="text/javascript" src="//cache.consentframework.com/js/pa/{{ rgpd_options.idSirDataUser }}/c/{{ rgpd_options.idSirDataSite }}/stub" referrerpolicy="unsafe-url" charset="utf-8"></script>
+        <script type="text/javascript" src="//choices.consentframework.com/js/pa/{{ rgpd_options.idSirDataUser }}/c/{{ rgpd_options.idSirDataSite }}/cmp" referrerpolicy="unsafe-url" charset="utf-8" async></script>
+
+		{% if rgpd_options.analyticsCode %}
+			<!-- Global site tag (gtag.js) - Google Analytics -->
+			<script async src="https://www.googletagmanager.com/gtag/js?id={{ rgpd_options.analyticsCode }}"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+
+				gtag('config', '{{ rgpd_options.analyticsCode }}');
+			</script>
+		{% endif %}
+
+		{% if rgpd_options.tagManagerCode %}
+			<!-- Google Tag Manager -->
+			<script>
+				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+							new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+						j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+						'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','dataLayer','{{ rgpd_options.tagManagerCode }}');
+			</script>
+			<!-- End Google Tag Manager -->
+		{% endif %}
+    {% endif %}
+{% endif %}
+

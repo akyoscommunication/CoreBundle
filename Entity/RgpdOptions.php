@@ -9,6 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RgpdOptions
 {
+    const SERVICE_TARTEAUCITRON = 'tarteaucitron';
+    const SERVICE_SIRDATA = 'sirdata';
+
+    const SERVICES = [
+        'Tarteaucitron' => self::SERVICE_TARTEAUCITRON,
+        'SirData' => self::SERVICE_SIRDATA,
+    ];
+
 	/**
 	 * @ORM\Id()
 	 * @ORM\GeneratedValue()
@@ -62,117 +70,168 @@ class RgpdOptions
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $policyPage;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $idSirDataUser;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $idSirDataSite;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $serviceUsed;
 	
 	public function getId(): ?int
-	{
-		return $this->id;
-	}
+                           	{
+                           		return $this->id;
+                           	}
 	
 	public function getSiteName(): ?string
-	{
-		return $this->siteName;
-	}
+                           	{
+                           		return $this->siteName;
+                           	}
 	
 	public function setSiteName(string $siteName): self
-	{
-		$this->siteName = $siteName;
-		
-		return $this;
-	}
+                           	{
+                           		$this->siteName = $siteName;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getContactMail(): ?string
-	{
-		return $this->contactMail;
-	}
+                           	{
+                           		return $this->contactMail;
+                           	}
 	
 	public function setContactMail(string $contactMail): self
-	{
-		$this->contactMail = $contactMail;
-		
-		return $this;
-	}
+                           	{
+                           		$this->contactMail = $contactMail;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getAddress(): ?string
-	{
-		return $this->address;
-	}
+                           	{
+                           		return $this->address;
+                           	}
 	
 	public function setAddress(string $address): self
-	{
-		$this->address = $address;
-		
-		return $this;
-	}
+                           	{
+                           		$this->address = $address;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getAnalyticsCode(): ?string
-	{
-		return $this->analyticsCode;
-	}
+                           	{
+                           		return $this->analyticsCode;
+                           	}
 	
 	public function setAnalyticsCode(?string $analyticsCode): self
-	{
-		$this->analyticsCode = $analyticsCode;
-		
-		return $this;
-	}
+                           	{
+                           		$this->analyticsCode = $analyticsCode;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getTagManagerCode(): ?string
-	{
-		return $this->tagManagerCode;
-	}
+                           	{
+                           		return $this->tagManagerCode;
+                           	}
 	
 	public function setTagManagerCode(?string $tagManagerCode): self
-	{
-		$this->tagManagerCode = $tagManagerCode;
-		
-		return $this;
-	}
+                           	{
+                           		$this->tagManagerCode = $tagManagerCode;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getHasYoutubeVideos(): ?bool
-	{
-		return $this->hasYoutubeVideos;
-	}
+                           	{
+                           		return $this->hasYoutubeVideos;
+                           	}
 	
 	public function setHasYoutubeVideos(?bool $hasYoutubeVideos): self
-	{
-		$this->hasYoutubeVideos = $hasYoutubeVideos;
-		
-		return $this;
-	}
+                           	{
+                           		$this->hasYoutubeVideos = $hasYoutubeVideos;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getSoppCustomerId(): ?string
-	{
-		return $this->soppCustomerId;
-	}
+                           	{
+                           		return $this->soppCustomerId;
+                           	}
 	
 	public function setSoppCustomerId(?string $soppCustomerId): self
-	{
-		$this->soppCustomerId = $soppCustomerId;
-		
-		return $this;
-	}
+                           	{
+                           		$this->soppCustomerId = $soppCustomerId;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getContactPage(): ?Page
-	{
-		return $this->contactPage;
-	}
+                           	{
+                           		return $this->contactPage;
+                           	}
 	
 	public function setContactPage(Page $contactPage): self
-	{
-		$this->contactPage = $contactPage;
-		
-		return $this;
-	}
+                           	{
+                           		$this->contactPage = $contactPage;
+                           		
+                           		return $this;
+                           	}
 	
 	public function getPolicyPage(): ?Page
-	{
-		return $this->policyPage;
-	}
+                           	{
+                           		return $this->policyPage;
+                           	}
 	
 	public function setPolicyPage(Page $policyPage): self
-	{
-		$this->policyPage = $policyPage;
-		
-		return $this;
-	}
+                           	{
+                           		$this->policyPage = $policyPage;
+                           		
+                           		return $this;
+                           	}
+
+    public function getIdSirDataUser(): ?string
+    {
+        return $this->idSirDataUser;
+    }
+
+    public function setIdSirDataUser(?string $idSirDataUser): self
+    {
+        $this->idSirDataUser = $idSirDataUser;
+
+        return $this;
+    }
+
+    public function getIdSirDataSite(): ?string
+    {
+        return $this->idSirDataSite;
+    }
+
+    public function setIdSirDataSite(?string $idSirDataSite): self
+    {
+        $this->idSirDataSite = $idSirDataSite;
+
+        return $this;
+    }
+
+    public function getServiceUsed(): ?string
+    {
+        return $this->serviceUsed;
+    }
+
+    public function setServiceUsed(string $serviceUsed): self
+    {
+        $this->serviceUsed = $serviceUsed;
+
+        return $this;
+    }
 }

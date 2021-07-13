@@ -8,6 +8,7 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +19,12 @@ class RgpdOptionsType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
-			->add('siteName', TextType::class, [
+            ->add('serviceUsed', ChoiceType::class, [
+                'label' => "Service utilisé",
+                'choices' => RgpdOptions::SERVICES,
+                'required' => true,
+            ])
+            ->add('siteName', TextType::class, [
 				'label' => 'Appellation du site sur la page Politique de confidentialité'
 			])
 			->add('contactMail', EmailType::class, [
@@ -62,7 +68,16 @@ class RgpdOptionsType extends AbstractType
 			->add('soppCustomerId', TextType::class, [
 				'label' => 'Identifiant client (sur mon-agence-web.io)',
 				'required' => false
-			]);
+			])
+            ->add('idSirDataUser', TextType::class, [
+                'label' => "Identifiant SirData (utilisateur)",
+                'required' => false,
+            ])
+            ->add('idSirDataSite', TextType::class, [
+                'label' => "Identifiant SirData (site)",
+                'required' => false,
+            ])
+        ;
 	}
 	
 	public function configureOptions(OptionsResolver $resolver)

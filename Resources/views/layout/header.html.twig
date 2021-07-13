@@ -8,6 +8,8 @@
         <span class="divider mr-2 ml-2"> | </span>
         <a href="{{ path('core_clear_cache') }}"><i class="fas fa-sync-alt"></i> Vider le cache</a>
         <span class="divider mr-2 ml-2"> | </span>
+        <a href="{{ path('core_restart_messenger') }}"><i class="fas fa-sync-alt"></i> Stopper les workers</a>
+        <span class="divider mr-2 ml-2"> | </span>
         <a href="{{ path('app_logout') }}"><i class="fas fa-power-off"></i> Déconnexion</a>
         {% if core_options %}
             <span class="divider mr-2 ml-2"> | </span>

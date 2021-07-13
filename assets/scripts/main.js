@@ -35,9 +35,19 @@ class Core {
     }
 
     static initSelect2() {
-        $('.js-select2').select2({
-            width: '100%'
-        });
+        $('.js-select2').each(function () {
+            let options = {
+                width: '100%'
+            };
+            
+            const modalParent = $(this).parents('.modal');
+            if (modalParent.length) {
+               options.dropdownParent = modalParent
+            }
+            
+            $(this).select2(options);
+        })
+
     }
 
     static initAjaxPublished() {
