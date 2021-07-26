@@ -28,7 +28,8 @@ class SeoController extends AbstractController
 	public function index($type, $typeId, $route, SeoRepository $seoRepository): Response
 	{
 		$type = urldecode($type);
-		$seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
+		$seo = $seoRepository->findOneBy(['type' => $type, 'typeId' => $typeId]);
+//		dump($seo);
 
 		if (!$seo) {
 			$seo = new Seo();

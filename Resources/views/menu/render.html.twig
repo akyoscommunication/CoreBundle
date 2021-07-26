@@ -1,8 +1,8 @@
 {% import _self as macros %}
 
-<nav id="{{ menu.slug }}">
-    <ul class="nav">
-        {% if menu is not null %}
+{% if menu is defined and menu %}
+    <nav id="{{ menu.slug }}">
+        <ul class="nav">
             {% for menuItem in menu.menu.menuItems|filter(menuItem => menu.menu is not null and menuItem.menuItemParent is null) %}
                 {# {{ dump(entity) }} #}
                 <li class="nav-item {{ menuItem.menuItemsChilds is not empty or menuItem.isList or menuItem.isCategoryList ? 'nav-item-parent' : '' }} {{ currentPage is same as(getElement(menuItem.type, menuItem.idType)) or checkChildActive(menuItem, currentPage) or ( menuItem.isList and matchSameEntity(getEntityNameSpace(menuItem.type), currentPage) ) or ( menuItem.isCategoryList and matchSameEntity(getEntityNameSpace(menuItem.type~'Category'), currentPage) ) or isArchive(getEntityNameSpace(menuItem.type), currentPage) ? 'active' : '' }}">
@@ -25,9 +25,9 @@
                     {{ _self.subItems(menuItem, currentPage, 0) }}
                 </li>
             {% endfor %}
-        {% endif %}
-    </ul>
-</nav>
+        </ul>
+    </nav>
+{% endif %}
 
 {% macro subItems(menuItem, currentPage, depth) %}
     {% set depthToClasse = '' %}
