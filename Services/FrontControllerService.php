@@ -115,7 +115,7 @@ class FrontControllerService
 		
 		// RENDER
 		return $this->environment->render($view, [
-			'seo' => $this->em->getRepository(Seo::class)->findOneBy(array('type' => $entity, 'typeId' => $element->getId())),
+			'seo' => $this->em->getRepository(Seo::class)->findOneBy(['type' => $entityFullName, 'typeId' => $element->getId()]),
 			'element' => $element,
 			'components' => $components,
 			'entity' => $entity,
