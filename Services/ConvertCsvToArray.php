@@ -8,24 +8,24 @@ class ConvertCsvToArray {
     {
     }
 
-    public function convert($filename, $delimiter = ',', $hasHeader = false)
+    public function convert($filename, $delimiter = ',', $hasHeader = false, $dropHeader = false)
     {
         if(!file_exists($filename) || !is_readable($filename)) {
             return FALSE;
         }
 
         $header = NULL;
-        $data = array();
+        $data = [];
 
         if (($handle = fopen($filename, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
-                if ($hasHeader) {
-                    if(!$header) {
+                if ($hasHeader && !$dropHeader) {
+                	if(!$header) {
                         $header = $row;
                     } else {
                         $data[] = array_combine($header, $row);
                     }
-                }else{
+                } else {
                     foreach ($row as $key => $r){
                         if($r == 'NULL'){
                             $row[$key] = null;
@@ -36,7 +36,9 @@ class ConvertCsvToArray {
             }
             fclose($handle);
         }
+        if($hasHeader && $dropHeader) {
+        	array_shift($data);
+		}
         return $data;
     }
-
 }
