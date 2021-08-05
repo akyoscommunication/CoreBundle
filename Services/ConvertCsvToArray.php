@@ -19,10 +19,14 @@ class ConvertCsvToArray {
 
         if (($handle = fopen($filename, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
+				$row = array_map(static function($value) { return str_replace('&amp;', ' ', $value); }, $row);
                 if ($hasHeader && !$dropHeader) {
                 	if(!$header) {
                         $header = $row;
                     } else {
+                		if(count($header) !== count($row)) {
+							dd($header, $row);
+						}
                         $data[] = array_combine($header, $row);
                     }
                 } else {
