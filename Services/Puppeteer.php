@@ -23,13 +23,13 @@ class Puppeteer
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function generatePDF($fileName, $path, $dl = true, $pathOutput = false)
+    public function generatePDF($fileName, $path, $dl = true, $pathOutput = false, $margin = '0')
     {
         $linkTo = strtok($path, '?');
         $output = $this->kernel->getProjectDir().'/documents/'.$fileName;
         $pup = $this->kernel->getProjectDir().'/puppeteer/generate.js';
 
-        shell_exec('node '.$pup.' '.$linkTo.' '.$output.' '.$this->request->cookies->get('PHPSESSID').' '.$this->request->getSchemeAndHttpHost());
+        shell_exec('node '.$pup.' '.$linkTo.' '.$output.' '.$this->request->cookies->get('PHPSESSID').' '.$this->request->getSchemeAndHttpHost().' '.$margin);
 
         $content = file_get_contents($output);
         if ($dl) {

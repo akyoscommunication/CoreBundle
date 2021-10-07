@@ -57,9 +57,9 @@ class CrudHandler extends AbstractController
 				$this->addFlash('success', $success);
 			}
 			return true;
-		} else {
-			$this->addFlash('danger', "Une erreur s'est produite.");
-			return false;
 		}
+		
+		$this->addFlash('danger', "Une erreur s'est produite.");
+		return false;
 	}
 }

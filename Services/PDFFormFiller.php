@@ -25,7 +25,9 @@ class PDFFormFiller
 		$pdf = new Pdf($filepath);
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
 		if (!is_dir($filledPdfDir)) {
-			mkdir($filledPdfDir, 0755, true);
+			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+			}
 		}
 		$absoluteDir = $filledPdfDir . '/' . $filename;
 		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
@@ -56,7 +58,9 @@ class PDFFormFiller
 		$pdf = new Pdf($files);
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
 		if (!is_dir($filledPdfDir)) {
-			mkdir($filledPdfDir, 0755, true);
+			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+			}
 		}
 		$absoluteDir = $filledPdfDir . '/' . $filename;
 		$relativeDir = '/filledPdf/' . $filename;
@@ -76,17 +80,19 @@ class PDFFormFiller
 		return [
 			'relative_dir' => $relativeDir,
 			'absolute_dir' => $absoluteDir,
-			'flattenedDir' => (isset($absoluteFlattenDir) ? $absoluteFlattenDir : null),
+			'flattenedDir' => ($absoluteFlattenDir ?? null),
 			'b64file' => chunk_split(base64_encode(file_get_contents(($isFlatten ? $absoluteFlattenDir : $absoluteDir)))),
 		];
 	}
 	
 	public function flattenb64File($b64File): string
 	{
-		$filename = uniqid() . '.pdf';
+		$filename = uniqid('', false) . '.pdf';
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
 		if (!is_dir($filledPdfDir)) {
-			mkdir($filledPdfDir, 0755, true);
+			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+			}
 		}
 		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
 		$file = file_put_contents($absoluteFlattenDir, base64_decode($b64File));

@@ -54,7 +54,7 @@ class MailjetSMS
 		}
 	}
 	
-	public static function transformNum($number)
+	public function transformNum($number)
 	{
 		preg_match_all('/^\+[1-9]\d{1,14}$/', $number, $matches);
 		if (count($matches[0]) === 0) {
