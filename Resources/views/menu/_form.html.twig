@@ -21,7 +21,7 @@
             <ul class="aky-menuitem-connectedSortable aky-menuitem-parent">
                 {% for parentkey, item in menuItems|filter(item => item.menuItemParent is null and menuItems is not null) %}
                     <li class="aky-menuitem" data-position="{{ parentkey }}" data-id="{{ item.id }}">
-                        <div class="aky-menuitem-el" data-id="{{ item.id }}" data-menu="{{ form.vars.value.id }}">
+                        <div class="aky-menuitem-el" data-id="{{ item.id }}" data-menu="{{ form.vars.value.id }}" data-lang="{{ app.request.getLocale() is defined and app.request.defaultLocale != app.request.getLocale() ? '/'~app.request.getLocale() }}">
                             {{ item.title }}
                             <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal"
                                     data-target="#modal">

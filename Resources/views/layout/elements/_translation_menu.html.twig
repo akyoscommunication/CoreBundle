@@ -2,15 +2,15 @@
     {% set params = app.request.get('_route_params') %}
     <div class="aky-translation">
         {% if flags_only is defined and params is not null %}
-            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'fr'})) }}" class="mr-2 aky-translation__item {{ app.request.getLocale() == 'fr' ? (activeClass ? activeClass : 'active') : false }}">
+            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'fr'})) }}" class="mr-2 aky-translation__item {{ app.request.getLocale() == 'fr' ? (activeClass is defined ? activeClass : 'active') : false }}">
                 <img width="30" src="{{ asset('/bundles/akyoscore/images/flags/francais.jpg') }}" alt="">
             </a>
-            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'en'})) }}" class="aky-translation__item {{ app.request.getLocale() == 'en' ? (activeClass ? activeClass : 'active') : false }}">
+            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'en'})) }}" class="aky-translation__item {{ app.request.getLocale() == 'en' ? (activeClass is defined ? activeClass : 'active') : false }}">
                 <img width="30" src="{{ asset('/bundles/akyoscore/images/flags/english.png') }}" alt="">
             </a>
         {% elseif params is not null %}
-            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'fr'})) }}" class="mr-2 aky-translation__item {{ app.request.getLocale() == 'fr' ? (activeClass ? activeClass : 'active') : false }}">Français</a>
-            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'en'})) }}" class="aky-translation__item {{ app.request.getLocale() == 'en' ? (activeClass ? activeClass : 'active') ? ' active' : false }}">English</a>
+            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'fr'})) }}" class="mr-2 aky-translation__item {{ app.request.getLocale() == 'fr' ? (activeClass is defined ? activeClass : 'active') : false }}">Français</a>
+            <a href="{{ path(app.request.get('_route'), params|merge({'_locale' : 'en'})) }}" class="aky-translation__item {{ app.request.getLocale() == 'en' ? (activeClass is defined ? activeClass : 'active') : false }}">English</a>
         {% endif %}
     </div>
 {% endapply %}

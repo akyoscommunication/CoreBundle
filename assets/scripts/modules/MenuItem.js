@@ -30,8 +30,9 @@ class MenuItem {
             e.preventDefault();
             const data = $(this).parents('.aky-menuitem-el').data('id');
             const menu = $(this).parents('.aky-menuitem-el').data('menu');
+            const lang = $(this).parents('.aky-menuitem-el').data('lang');
 
-            fetch('/admin/menu/item/' + data + '/edit/' + menu)
+            fetch(lang + '/admin/menu/item/' + data + '/edit/' + menu)
                 .then(function (res) {
                     return res.text()
                         .then(function (response) {
