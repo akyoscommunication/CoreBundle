@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\MenuArea;
 use App\Kernel;
+use Gedmo\Translatable\Entity\Translation;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -152,7 +153,10 @@ class CoreBundleController extends AbstractController
 	
 	public function renderMenu($menu, $page): string
 	{
-		$menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]);
+		$menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]) ??
+			(!$this->getDoctrine()->getManager()->getMetadataFactory()->isTransient(Translation::class)
+				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $menu, MenuArea::class)
+				: null);
 		return $this->renderView('@AkyosCore/menu/render.html.twig', [
 			'menu' => $menuArea,
 			'currentPage' => $page,

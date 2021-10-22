@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Controller\Back;
 
+use Akyos\CoreBundle\Entity\CustomField;
 use Akyos\CoreBundle\Entity\CustomFieldsGroup;
 use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Form\Type\CustomFields\CustomFieldsGroupType;
@@ -12,6 +13,7 @@ use Akyos\CoreBundle\Repository\CustomFieldsGroupRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Twig\CoreExtension;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Translatable\Entity\Translation;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -193,7 +195,10 @@ class CustomFieldsGroupController extends AbstractController
 	{
 		$em = $this->getDoctrine()->getManager();
 		$newValue = $request->get('data');
-		$customField = $customFieldRepository->findOneBy(['slug' => $slug]);
+		$customField = $customFieldRepository->findOneBy(['slug' => $slug]) ??
+			(!$em->getMetadataFactory()->isTransient(Translation::class)
+				? $em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, CustomField::class)
+				: null);
 		$customFieldValue = $customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $id]);
 
 		if (!$customFieldValue) {

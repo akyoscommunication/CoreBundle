@@ -25,12 +25,14 @@ class Menu
 	
 	/**
 	 * @ORM\Column(type="string", length=255)
+	 * @Gedmo\Translatable
 	 */
 	private $title;
 	
 	/**
 	 * @Gedmo\Slug(fields={"title"})
 	 * @ORM\Column(type="string", length=255)
+	 * @Gedmo\Translatable
 	 */
 	private $slug;
 	

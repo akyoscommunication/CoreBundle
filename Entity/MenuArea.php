@@ -22,12 +22,14 @@ class MenuArea
 	
 	/**
 	 * @ORM\Column(type="string", length=255)
+	 * @Gedmo\Translatable
 	 */
 	private $name;
 	
 	/**
 	 * @Gedmo\Slug(fields={"name"})
 	 * @ORM\Column(type="string", length=255)
+	 * @Gedmo\Translatable
 	 */
 	private $slug;
 	

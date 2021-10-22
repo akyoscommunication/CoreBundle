@@ -11,8 +11,8 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Akyos\CoreBundle\Services\FrontControllerService;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Gedmo\Translatable\Entity\Translation;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -141,7 +141,7 @@ class FrontController extends AbstractController
 		// Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "search"
 		if (method_exists($this->getDoctrine()->getRepository($entityFullName), 'search')) {
 			$elements = $paginator->paginate(
-				$this->getDoctrine()->getRepository($entityFullName)->search($request->query->get('search') ?? null),
+				$this->getDoctrine()->getRepository($entityFullName)->search($request->query->get('search')),
 				$request->query->getInt('page', 1),
 				10
 			);
@@ -254,7 +254,10 @@ class FrontController extends AbstractController
 		}
 
 		// FIND ELEMENTS FROM CATEGORY OBJECT
-		$categoryObject = $this->getDoctrine()->getRepository($categoryFullName)->findOneBy(['slug' => $category]);
+		$categoryObject = $this->getDoctrine()->getRepository($categoryFullName)->findOneBy(['slug' => $category]) ??
+			(!$this->getDoctrine()->getManager()->getMetadataFactory()->isTransient(Translation::class)
+				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $category, $categoryFullName)
+				: null);
 		if (!$categoryObject) {
 			throw $this->createNotFoundException("Cette page n'existe pas! ( Catégorie )");
 		}
@@ -344,7 +347,10 @@ class FrontController extends AbstractController
 		}
 
 		// FIND ELEMENTS FROM TAG OBJECT
-		$tagObject = $this->getDoctrine()->getRepository($tagFullName)->findOneBy(['slug' => $tag]);
+		$tagObject = $this->getDoctrine()->getRepository($tagFullName)->findOneBy(['slug' => $tag]) ??
+			(!$this->getDoctrine()->getManager()->getMetadataFactory()->isTransient(Translation::class)
+				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $tag, $tagFullName)
+				: null);
 		if (!$tagObject) {
 			throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
 		}

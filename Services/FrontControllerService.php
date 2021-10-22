@@ -70,7 +70,10 @@ class FrontControllerService
 		$slug = substr($slug, -1) === "/" ? substr($slug, 0, -1) : $slug;
 		
 		// GET ELEMENT
-		$element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]);
+		$element = $this->em->getRepository($entityFullName)->findOneBy(['slug' => $slug]) ??
+			(!$this->em->getMetadataFactory()->isTransient(Translation::class)
+				? $this->em->getRepository(Translation::class)->findObjectByTranslatedField('slug', $slug, $entityFullName)
+				: null);
 		$now = new \DateTime();
 		
 		if (!$element) {
