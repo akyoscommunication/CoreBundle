@@ -96,7 +96,7 @@ class FrontController extends AbstractController
 	 * @Route("/{slug}",
 	 *     methods={"GET","POST"},
 	 *     requirements={
-	 *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/).+"
+	 *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/|en\/).+"
 	 *     },
 	 *     name="page")
 	 * @param $slug
