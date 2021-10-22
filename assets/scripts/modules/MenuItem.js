@@ -48,7 +48,7 @@ class MenuItem {
 
                                 $.ajax({
                                     method: 'POST',
-                                    url: '/admin/menu/item/' + data + '/edit/' + menu,
+                                    url: lang + '/admin/menu/item/' + data + '/edit/' + menu,
                                     data: $('#modalEditMenuitem > form[name=menu_item]').serialize(),
                                     success: function (res) {
                                         // console.log(res, 'success');
