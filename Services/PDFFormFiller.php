@@ -54,7 +54,7 @@ class PDFFormFiller
 	
 	public function catFiles($files, string $filename, bool $isFlatten = true)
 	{
-		$filename = $filename . '.pdf';
+		$filename .= '.pdf';
 		$pdf = new Pdf($files);
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
 		if (!is_dir($filledPdfDir)) {
@@ -106,5 +106,17 @@ class PDFFormFiller
 		}
 		
 		return chunk_split(base64_encode(file_get_contents($absoluteFlattenDir)));
+	}
+	
+	public function flattenPDF($filepath)
+	{
+		$flattenResult = new Pdf($filepath);
+		$flattenResult->flatten()->saveAs($filepath);
+		
+		if ($flattenResult === false) {
+			return $flattenResult->getError();
+		}
+		
+		return $filepath;
 	}
 }

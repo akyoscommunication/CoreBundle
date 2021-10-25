@@ -28,6 +28,7 @@ class PostTag
 	
 	/**
 	 * @ORM\Column(type="string", length=255)
+	 * @Gedmo\Translatable
 	 */
 	private $title;
 	
