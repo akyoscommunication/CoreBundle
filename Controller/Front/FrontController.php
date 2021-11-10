@@ -11,7 +11,6 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Akyos\CoreBundle\Services\FrontControllerService;
-use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\Entity\Translation;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,9 +23,8 @@ use Twig\Environment;
 
 class FrontController extends AbstractController
 {
-	protected $kernel;
-	/** @var CoreService */
-	private $coreService;
+	protected KernelInterface $kernel;
+	private CoreService $coreService;
 
 	public function __construct(KernelInterface $kernel, CoreService $coreService)
 	{
@@ -133,11 +131,12 @@ class FrontController extends AbstractController
 
 		if (!$entityFullName || !$entity) {
 			throw $this->createNotFoundException("Cette page n'existe pas! ( Archive )");
-		} else if (!$this->coreService->checkIfArchiveEnable($entityFullName)) {
-			throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
 		}
+        if (!$this->coreService->checkIfArchiveEnable($entityFullName)) {
+            throw $this->createNotFoundException('La page archive n\'est pas activée pour cette entité ');
+        }
 
-		// GET ELEMENTS
+        // GET ELEMENTS
 		// Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "search"
 		if (method_exists($this->getDoctrine()->getRepository($entityFullName), 'search')) {
 			$elements = $paginator->paginate(
@@ -266,12 +265,11 @@ class FrontController extends AbstractController
 		// Pour avoir la fonction de recherche, ajouter dans le repository de l'entité visée la méthode "searchByCategory"
 		if (method_exists($this->getDoctrine()->getRepository($entityFullName), 'searchByCategory')) {
 			$elements = $paginator->paginate(
-				$this->getDoctrine()->getRepository($entityFullName)->searchByCategory($categoryObject, $request->query->get('search') ?? null),
+				$this->getDoctrine()->getRepository($entityFullName)->searchByCategory($categoryObject, $request->query->get('search')),
 				$request->query->getInt('page', 1),
 				10
 			);
 		} else {
-			/** @var QueryBuilder $qb */
 			$qb = $this->getDoctrine()->getRepository($entityFullName)->createQueryBuilder('a');
 			$params = [];
 
@@ -355,7 +353,7 @@ class FrontController extends AbstractController
 			throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
 		}
 		if (substr($entity, -1) === "y") {
-			$getter = 'get' . substr(ucfirst($parentEntity), 0, strlen($parentEntity) - 1) . 'ies';
+			$getter = 'get' . ucfirst(substr($parentEntity, 0, strlen($parentEntity) - 1)) . 'ies';
 		} else {
 			$getter = 'get' . ucfirst($parentEntity) . 's';
 		}

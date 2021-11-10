@@ -86,7 +86,7 @@ class CoreBundleController extends AbstractController
 	public function changePositionSub($route, $id, $namespace, Request $request, $parentId = null, $namespaceParent = null, $tab = null): RedirectResponse
 	{
 		$repository = $this->getDoctrine()->getRepository($namespace);
-		$entityOne = $repository->findOneById($id);
+		$entityOne = $repository->find($id);
 		$oldPosition = $entityOne->getPosition();
 		$newPosition = $request->get('position');
 		if ($parentId && $namespaceParent) {
@@ -94,7 +94,7 @@ class CoreBundleController extends AbstractController
 			$array = explode('\\', $namespace);
 			$command = 'get' . array_pop($array) . 's';
 			$repositoryParent = $this->getDoctrine()->getRepository($namespaceParent);
-			$els = $repositoryParent->findOneById($parentId)->$command();
+			$els = $repositoryParent->find($parentId)->$command();
 		} else {
 			$els = $repository->findAll();
 		}
