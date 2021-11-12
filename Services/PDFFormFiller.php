@@ -3,32 +3,33 @@
 namespace Akyos\CoreBundle\Services;
 
 use mikehaertl\pdftk\Pdf;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\Stream;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use RuntimeException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 // Needs composer require mikehaertl/php-pdftk
 class PDFFormFiller
 {
-	
-	private $kernel;
+	private KernelInterface $kernel;
 	
 	public function __construct(KernelInterface $kernel)
 	{
 		$this->kernel = $kernel;
 	}
-	
-	public function fillPDFForm($filepath, string $filename, array $fields)
-	{
-		$filename = $filename . '.pdf';
+
+    /**
+     * @param $filepath
+     * @param string $filename
+     * @param array $fields
+     * @return array
+     */
+	public function fillPDFForm($filepath, string $filename, array $fields): array
+    {
+		$filename .= '.pdf';
 		$pdf = new Pdf($filepath);
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
-		if (!is_dir($filledPdfDir)) {
-			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
-				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
-			}
-		}
+		if (!is_dir($filledPdfDir) && !mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+        }
 		$absoluteDir = $filledPdfDir . '/' . $filename;
 		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
 		$relativeDir = '/filledPdf/' . $filename;
@@ -51,17 +52,21 @@ class PDFFormFiller
 			'b64file' => chunk_split(base64_encode(file_get_contents($absoluteFlattenDir))),
 		];
 	}
-	
-	public function catFiles($files, string $filename, bool $isFlatten = true)
-	{
+
+    /**
+     * @param $files
+     * @param string $filename
+     * @param bool $isFlatten
+     * @return array
+     */
+	public function catFiles($files, string $filename, bool $isFlatten = true): array
+    {
 		$filename .= '.pdf';
 		$pdf = new Pdf($files);
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
-		if (!is_dir($filledPdfDir)) {
-			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
-				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
-			}
-		}
+		if (!is_dir($filledPdfDir) && !mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+        }
 		$absoluteDir = $filledPdfDir . '/' . $filename;
 		$relativeDir = '/filledPdf/' . $filename;
 		$result = $pdf
@@ -84,16 +89,18 @@ class PDFFormFiller
 			'b64file' => chunk_split(base64_encode(file_get_contents(($isFlatten ? $absoluteFlattenDir : $absoluteDir)))),
 		];
 	}
-	
+
+    /**
+     * @param $b64File
+     * @return string
+     */
 	public function flattenb64File($b64File): string
 	{
 		$filename = uniqid('', false) . '.pdf';
 		$filledPdfDir = $this->kernel->getProjectDir() . '/filledPdf';
-		if (!is_dir($filledPdfDir)) {
-			if (!mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
-				throw new \RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
-			}
-		}
+		if (!is_dir($filledPdfDir) && !mkdir($filledPdfDir, 0755, true) && !is_dir($filledPdfDir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
+        }
 		$absoluteFlattenDir = $filledPdfDir . '/flatten'.$filename;
 		$file = file_put_contents($absoluteFlattenDir, base64_decode($b64File));
 		$pdf = new Pdf($absoluteFlattenDir);
@@ -107,7 +114,11 @@ class PDFFormFiller
 		
 		return chunk_split(base64_encode(file_get_contents($absoluteFlattenDir)));
 	}
-	
+
+    /**
+     * @param $filepath
+     * @return mixed
+     */
 	public function flattenPDF($filepath)
 	{
 		$flattenResult = new Pdf($filepath);

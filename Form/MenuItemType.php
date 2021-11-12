@@ -2,23 +2,22 @@
 
 namespace Akyos\CoreBundle\Form;
 
+use Akyos\CoreBundle\Entity\Menu;
 use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Repository\MenuItemRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MenuItemType extends AbstractType
 {
-	protected $menu;
-	
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		$this->menu = $options['menu'];
-		
+	    /** @var Menu $menu */
+	    $menu = $options['data'];
+
 		$builder
 			->add('title', null, [
 				'label' => 'Titre',
@@ -58,19 +57,15 @@ class MenuItemType extends AbstractType
 				'help' => '( Affiche en enfant la liste des categories du type choisi )'
 			])
 			->add('menuItemParent', null, [
-				'query_builder' => function (MenuItemRepository $er) {
+				'query_builder' => function (MenuItemRepository $er) use($menu) {
 					return $er->createQueryBuilder('m')
 						->where('m.menu = :menu')
 						->andWhere('m.menuItemParent IS NULL')
-						->setParameter('menu', $this->menu);
+						->setParameter('menu', $menu);
 				},
 				'label' => 'Element parent',
 				'help' => 'Choisissez un élément parent'
 			])
-//            ->add('position', null, [
-//                'attr' => ['class' => 'menu-position'],
-//                'label' => 'Position de l\'élément',
-//            ])
 		;
 	}
 	

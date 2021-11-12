@@ -2,7 +2,6 @@
 
 namespace Akyos\CoreBundle\Services;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,19 +9,23 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class Puppeteer
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var KernelInterface */
-    private $kernel;
-    private $request;
+    private KernelInterface $kernel;
+    private ?Request $request;
 
-    public function __construct(EntityManagerInterface $em, KernelInterface $kernel, RequestStack $requestStack)
+    public function __construct(KernelInterface $kernel, RequestStack $requestStack)
     {
-        $this->em = $em;
         $this->kernel = $kernel;
         $this->request = $requestStack->getCurrentRequest();
     }
 
+    /**
+     * @param $fileName
+     * @param $path
+     * @param bool $dl
+     * @param false $pathOutput
+     * @param string $margin
+     * @return false|string|Response
+     */
     public function generatePDF($fileName, $path, $dl = true, $pathOutput = false, $margin = '0')
     {
         $linkTo = strtok($path, '?');
@@ -38,10 +41,12 @@ class Puppeteer
             $response->headers->set('Content-Disposition', 'attachment;filename='.$fileName);
             $response->setContent($content);
             return $response;
-        } else if ($pathOutput) {
-            return $output;
-        } else {
-            return $content;
         }
+
+        if ($pathOutput) {
+            return $output;
+        }
+
+        return $content;
     }
 }

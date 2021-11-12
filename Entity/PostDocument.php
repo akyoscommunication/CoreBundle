@@ -15,7 +15,7 @@ class PostDocument
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "documents_article";
+	public const ENTITY_SLUG = "documents_article";
 	
 	/**
 	 * @ORM\Id

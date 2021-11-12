@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/site_option/category", name="option_category_")
@@ -23,7 +22,6 @@ class OptionCategoryController extends AbstractController
 	 * @param OptionCategoryRepository $optionCategoryRepository
 	 * @param PaginatorInterface $paginator
 	 * @param Request $request
-	 *
 	 * @return Response
 	 */
 	public function index(OptionCategoryRepository $optionCategoryRepository, PaginatorInterface $paginator, Request $request): Response
@@ -41,18 +39,17 @@ class OptionCategoryController extends AbstractController
 			'title' => 'Catégorie d\'options',
 			'entity' => 'Option',
 			'route' => 'option_category',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Slug' => 'Slug',
 				'Title' => 'Title',
-			),
+			],
 		]);
 	}
 
 	/**
 	 * @Route("/new", name="new", methods={"GET","POST"})
 	 * @param Request $request
-	 *
 	 * @return Response
 	 */
 	public function new(Request $request): Response
@@ -74,11 +71,11 @@ class OptionCategoryController extends AbstractController
 			'title' => 'Catégorie d\'options',
 			'entity' => 'Option',
 			'route' => 'option_category',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Slug' => 'Slug',
 				'Title' => 'Title',
-			),
+			],
 			'form' => $form->createView(),
 		]);
 	}
@@ -106,10 +103,10 @@ class OptionCategoryController extends AbstractController
 			'title' => 'Catégorie d\'options',
 			'entity' => 'Option',
 			'route' => 'option_category',
-			'fields' => array(
+			'fields' => [
 				'Title' => 'Title',
 				'ID' => 'Id'
-			),
+			],
 			'form' => $form->createView(),
 		]);
 	}

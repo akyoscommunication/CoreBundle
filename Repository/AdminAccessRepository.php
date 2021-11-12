@@ -18,7 +18,11 @@ class AdminAccessRepository extends ServiceEntityRepository
 	{
 		parent::__construct($registry, AdminAccess::class);
 	}
-	
+
+    /**
+     * @param null $keyword
+     * @return int|mixed|string
+     */
 	public function searchByName($keyword = null)
 	{
 		return $this->createQueryBuilder('a')

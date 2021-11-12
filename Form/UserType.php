@@ -15,8 +15,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserType extends AbstractType
 {
-	private $authorizationChecker;
-	private $container;
+	private AuthorizationCheckerInterface $authorizationChecker;
+	private ContainerInterface $container;
 	
 	public function __construct(AuthorizationCheckerInterface $authorizationChecker, ContainerInterface $container)
 	{

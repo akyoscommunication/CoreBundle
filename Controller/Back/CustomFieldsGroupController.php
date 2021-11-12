@@ -11,17 +11,13 @@ use Akyos\CoreBundle\Form\Handler\CrudHandler;
 use Akyos\CoreBundle\Repository\CustomFieldRepository;
 use Akyos\CoreBundle\Repository\CustomFieldsGroupRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
-use Akyos\CoreBundle\Twig\CoreExtension;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Translatable\Entity\Translation;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
 
 /**
  * @Route("/admin/custom-fields-group", name="custom_fields_group_")
@@ -72,11 +68,11 @@ class CustomFieldsGroupController extends AbstractController
 			'entity' => 'CustomFieldsGroup',
 			'route' => 'custom_fields_group',
 			'formModal' => $customFieldsGroupForm->createView(),
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Nom' => 'Title',
 				'Entité' => 'Entity',
-			),
+			],
 		]);
 	}
 
@@ -120,13 +116,13 @@ class CustomFieldsGroupController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
-	 * @param Request $request
-	 * @param CustomFieldsGroup $customFieldsGroup
-	 *
-	 * @return Response
-	 */
+    /**
+     * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param CustomFieldsGroup $customFieldsGroup
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
 	public function edit(Request $request, CustomFieldsGroup $customFieldsGroup, EntityManagerInterface $em): Response
 	{
 		$akyosEntities = [];
@@ -180,18 +176,17 @@ class CustomFieldsGroupController extends AbstractController
 		return $this->redirectToRoute('custom_fields_group_index');
 	}
 
-	/**
-	 * @Route("/change-value/{entity}/{id}/{slug}/{callback}", name="change_value", methods={"POST"})
-	 * @param $entity
-	 * @param $id
-	 * @param $slug
-	 * @param $callback
-	 * @param Request $request
-	 * @param CustomFieldValueRepository $customFieldValueRepository
-	 * @param CustomFieldRepository $customFieldRepository
-	 * @return null
-	 */
-	public function changeValue($entity, $id, $slug, $callback, Request $request, CustomFieldValueRepository $customFieldValueRepository, CustomFieldRepository $customFieldRepository)
+    /**
+     * @Route("/change-value/{entity}/{id}/{slug}/{callback}", name="change_value", methods={"POST"})
+     * @param $id
+     * @param $slug
+     * @param $callback
+     * @param Request $request
+     * @param CustomFieldValueRepository $customFieldValueRepository
+     * @param CustomFieldRepository $customFieldRepository
+     * @return null
+     */
+	public function changeValue($id, $slug, $callback, Request $request, CustomFieldValueRepository $customFieldValueRepository, CustomFieldRepository $customFieldRepository)
 	{
 		$em = $this->getDoctrine()->getManager();
 		$newValue = $request->get('data');

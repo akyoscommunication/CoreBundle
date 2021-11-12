@@ -8,25 +8,23 @@ use Akyos\CoreBundle\Form\MenuItemType;
 use Akyos\CoreBundle\Form\MenuType;
 use Akyos\CoreBundle\Repository\MenuItemRepository;
 use Akyos\CoreBundle\Repository\MenuRepository;
+use JsonException;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/menu")
  * @isGranted("liste-de-menus")
- *
  */
+// TODO => Move non routes functions in a MenuService class
 class MenuController extends AbstractController
 {
-	/** @var MenuItemRepository */
-	private $menuItemRepository;
-	/** @var MenuRepository */
-	private $menuRepository;
+	private MenuItemRepository $menuItemRepository;
+	private MenuRepository $menuRepository;
 
 	public function __construct(MenuItemRepository $menuItemRepository, MenuRepository $menuRepository)
 	{
@@ -56,12 +54,12 @@ class MenuController extends AbstractController
 			'els' => $els,
 			'title' => 'Menu',
 			'route' => 'menu',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Titre' => 'Title',
 				'Slug' => 'Slug',
 				'Zone de menu' => 'MenuArea'
-			),
+			],
 		]);
 	}
 
@@ -106,7 +104,7 @@ class MenuController extends AbstractController
 		$menuItem = new MenuItem();
 		$menuItem->setMenu($menu);
 		$form = $this->createForm(MenuType::class, $menu);
-		$formItem = $this->createForm(MenuItemType::class, $menuItem, array('menu' => $menu));
+		$formItem = $this->createForm(MenuItemType::class, $menuItem, ['menu' => $menu]);
 		$form->handleRequest($request);
 		$formItem->handleRequest($request);
 
@@ -119,9 +117,9 @@ class MenuController extends AbstractController
 		if ($formItem->isSubmitted() && $formItem->isValid()) {
 			$entityManager = $this->getDoctrine()->getManager();
 			if ($formItem->get('menuItemParent')) {
-				$menuItem->setPosition($menuItemRepository->count(array('menu' => $menu, 'menuItemParent' => $formItem->getData()->getMenuItemParent())));
+				$menuItem->setPosition($menuItemRepository->count(['menu' => $menu, 'menuItemParent' => $formItem->getData()->getMenuItemParent()]));
 			} else {
-				$menuItem->setPosition($menuItemRepository->count(array('menu' => $menu, 'menuItemParent' => null)));
+				$menuItem->setPosition($menuItemRepository->count(['menu' => $menu, 'menuItemParent' => null]));
 			}
 			$entityManager->persist($menuItem);
 			$entityManager->flush();
@@ -133,7 +131,7 @@ class MenuController extends AbstractController
 			'el' => $menu,
 			'title' => 'Menu',
 			'route' => 'menu',
-			'menuItems' => $menuItemRepository->findBy(array('menu' => $menu->getId()), array('position' => 'ASC')),
+			'menuItems' => $menuItemRepository->findBy(['menu' => $menu->getId()], ['position' => 'ASC']),
 			'formItem' => $formItem->createView(),
 			'form' => $form->createView(),
 		]);
@@ -161,20 +159,20 @@ class MenuController extends AbstractController
 		return $this->redirectToRoute('menu_index');
 	}
 
-	/**
-	 * @Route("/{id}/item/change-position", name="menu_change_position_menu_item", methods={"POST"}, options={"expose"=true})
-	 * @param Request $request
-	 * @param int $id
-	 *
-	 * @return JsonResponse
-	 */
-	public function changePositionMenuItem(Request $request, int $id): JsonResponse
+    /**
+     * @Route("/{id}/item/change-position", name="menu_change_position_menu_item", methods={"POST"}, options={"expose"=true})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws JsonException
+     */
+	public function changePositionMenuItem(Request $request): JsonResponse
 	{
-		$newPositions = json_decode((string)$request->getContent(), true);
+		$newPositions = json_decode((string)$request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
 		if ($newPositions) {
 			foreach ($newPositions['resultMenuItem'] as $key => $item) {
-				$menuParentItem = $this->menuItemRepository->findOneBy(array('id' => $item['parent']));
+			    /** @var MenuItem $menuParentItem */
+				$menuParentItem = $this->menuItemRepository->findOneBy(['id' => $item['parent']]);
 				$menuParentItem->setPosition($key);
 				$menuParentItem->setMenuItemParent(NULL);
 				$this->getDoctrine()->getManager()->persist($menuParentItem);
@@ -190,9 +188,16 @@ class MenuController extends AbstractController
 		return new JsonResponse('valid');
 	}
 
-	public function subItemChangePosition($key, $item, $parent)
-	{
-		$menuChildItem = $this->menuItemRepository->findOneBy(array('id' => $item));
+    /**
+     * @param $key
+     * @param $item
+     * @param $parent
+     * @return bool
+     */
+	public function subItemChangePosition($key, $item, $parent): bool
+    {
+        /** @var MenuItem $menuChildItem */
+		$menuChildItem = $this->menuItemRepository->findOneBy(['id' => $item]);
 		$menuChildItem->setPosition($key);
 		$menuChildItem->setMenuItemParent($parent);
 		$this->getDoctrine()->getManager()->persist($menuChildItem);
@@ -201,5 +206,6 @@ class MenuController extends AbstractController
 				$this->subItemChangePosition($subKey, $subItem, $menuChildItem);
 			}
 		}
+		return true;
 	}
 }

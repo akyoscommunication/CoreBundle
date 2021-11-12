@@ -5,15 +5,15 @@ namespace Akyos\CoreBundle\DataFixtures;
 use Akyos\CoreBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserAdminFixtures extends Fixture
 {
-	private $passwordEncoder;
+	private UserPasswordHasherInterface $passwordHasher;
 
-	public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+	public function __construct(UserPasswordHasherInterface $passwordHasher)
 	{
-		$this->passwordEncoder = $passwordEncoder;
+		$this->passwordHasher = $passwordHasher;
 	}
 
 	public function load(ObjectManager $manager)
@@ -21,7 +21,7 @@ class UserAdminFixtures extends Fixture
 		$user = new User();
 		$user
 			->setEmail("admin@akyos.fr")
-			->setPassword($this->passwordEncoder->encodePassword(
+			->setPassword($this->passwordHasher->hashPassword(
 				$user,
 				'root'
 			))

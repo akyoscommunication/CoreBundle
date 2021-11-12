@@ -2,8 +2,6 @@
 
 namespace Akyos\CoreBundle\Command;
 
-use Akyos\BuilderBundle\Entity\Component;
-use Akyos\CoreBundle\Entity\CoreOptions;
 use Akyos\CoreBundle\Entity\Seo;
 use Akyos\CoreBundle\Twig\CoreExtension;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,11 +12,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CoreFixNamespacesCommand extends Command
 {
-	protected static $defaultName = 'core:fix-namespaces';
-	/** @var EntityManagerInterface */
-	private $em;
-	/** @var CoreExtension */
-	private $coreExtension;
+	protected static string $defaultName = 'core:fix-namespaces';
+	private EntityManagerInterface $em;
+	private CoreExtension $coreExtension;
 	
 	public function __construct(string $name = null, EntityManagerInterface $em, CoreExtension $coreExtension)
 	{
@@ -29,14 +25,12 @@ class CoreFixNamespacesCommand extends Command
 	
 	protected function configure()
 	{
-		$this
-			->setDescription('Fix les namespaces du core.');
+		$this->setDescription('Fix les namespaces du core.');
 	}
 	
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$io = new SymfonyStyle($input, $output);
-		
 		$seos = $this->em->getRepository(Seo::class)->findAll();
 		
 		foreach ($seos as $seo) {
@@ -50,7 +44,6 @@ class CoreFixNamespacesCommand extends Command
 		}
 		
 		$io->success('Changement terminé.');
-		
 		return 0;
 	}
 }

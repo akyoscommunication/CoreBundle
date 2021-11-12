@@ -9,10 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RgpdOptions
 {
-    const SERVICE_TARTEAUCITRON = 'tarteaucitron';
-    const SERVICE_SIRDATA = 'sirdata';
+    public const SERVICE_TARTEAUCITRON = 'tarteaucitron';
+    public const SERVICE_SIRDATA = 'sirdata';
 
-    const SERVICES = [
+    public const SERVICES = [
         'Tarteaucitron' => self::SERVICE_TARTEAUCITRON,
         'SirData' => self::SERVICE_SIRDATA,
     ];

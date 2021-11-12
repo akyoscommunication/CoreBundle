@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Entity;
 
 use Akyos\CoreBundle\Annotations\SlugRedirect;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,7 @@ class Post implements Translatable
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "articles";
+	public const ENTITY_SLUG = "articles";
 	
 	/**
 	 * @ORM\Id()
@@ -250,8 +251,8 @@ class Post implements Translatable
 		return $this;
 	}
 	
-	public function __toString()
-	{
+	public function __toString(): string
+    {
 		return (string)$this->title;
 	}
 	
@@ -294,12 +295,12 @@ class Post implements Translatable
 		return $this;
 	}
 	
-	public function getPublishedAt(): ?\DateTimeInterface
+	public function getPublishedAt(): ?DateTimeInterface
 	{
 		return $this->publishedAt;
 	}
 	
-	public function setPublishedAt(?\DateTimeInterface $publishedAt): self
+	public function setPublishedAt(?DateTimeInterface $publishedAt): self
 	{
 		$this->publishedAt = $publishedAt;
 		

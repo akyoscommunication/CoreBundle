@@ -5,13 +5,11 @@ namespace Akyos\CoreBundle\Controller\Back;
 use Akyos\CoreBundle\Entity\PostTag;
 use Akyos\CoreBundle\Form\PostTagType;
 use Akyos\CoreBundle\Repository\PostTagRepository;
-use Akyos\CoreBundle\Repository\SeoRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/post/tag", name="post_tag_")
@@ -43,11 +41,11 @@ class PostTagController extends AbstractController
 			'entity' => 'PostTag',
 			'view' => 'tag',
 			'route' => 'post_tag',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Title' => 'Title',
 				'Description' => 'Content',
-			),
+			],
 		]);
 	}
 
@@ -108,14 +106,13 @@ class PostTagController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/delete/{id}", name="delete", methods={"DELETE"})
-	 * @param Request $request
-	 * @param PostTag $postTag
-	 * @param SeoRepository $seoRepository
-	 * @return Response
-	 */
-	public function delete(Request $request, PostTag $postTag, SeoRepository $seoRepository): Response
+    /**
+     * @Route("/delete/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param PostTag $postTag
+     * @return Response
+     */
+	public function delete(Request $request, PostTag $postTag): Response
 	{
 		if ($this->isCsrfTokenValid('delete' . $postTag->getId(), $request->request->get('_token'))) {
 			$entityManager = $this->getDoctrine()->getManager();

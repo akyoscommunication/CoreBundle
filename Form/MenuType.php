@@ -4,12 +4,9 @@ namespace Akyos\CoreBundle\Form;
 
 use Akyos\CoreBundle\Entity\Menu;
 use Akyos\CoreBundle\Entity\MenuArea;
-use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Repository\MenuAreaRepository;
-use Akyos\CoreBundle\Repository\MenuItemRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

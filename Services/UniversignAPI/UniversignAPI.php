@@ -20,12 +20,9 @@ class UniversignAPI
 	/**
 	 * https://{LOGIN}:{PASSWORD}@ws.universign.eu/sign/rpc/
 	 */
-	private $urlTest = 'https://sign.test.cryptolog.com/sign/rpc';
-
-	private $urlProd = 'https://ws.universign.eu/sign/rpc';
-
-	/** @var ParameterBagInterface */
-	private $parameterBag;
+	private string $urlTest = 'https://sign.test.cryptolog.com/sign/rpc';
+	private string $urlProd = 'https://ws.universign.eu/sign/rpc';
+	private ParameterBagInterface $parameterBag;
 
 	public function __construct(ParameterBagInterface $parameterBag)
 	{
@@ -45,8 +42,7 @@ class UniversignAPI
 	 * @param bool $finalDocSent
 	 * @return array
 	 */
-	public function send($to, $docs, $mode = null, $description = null, $language = null, $handwrittenMode = null,
-						 $mustContactFirstSigner = false, $finalDocRequesterSent = true, $finalDocObserverSent = true, $finalDocSent = false): array
+	public function send($to, $docs, $mode = null, $description = null, $language = null, $handwrittenMode = null, $mustContactFirstSigner = false, $finalDocRequesterSent = true, $finalDocObserverSent = true, $finalDocSent = false): array
 	{
 		$request = new TransactionRequest();
 
@@ -89,6 +85,11 @@ class UniversignAPI
         ];
     }
 
+    /**
+     * @param $transactionId
+     * @param null $mode
+     * @return array
+     */
     public function getDocuments($transactionId, $mode = null): array
 	{
         $return = [];
@@ -111,6 +112,10 @@ class UniversignAPI
         return $return;
     }
 
+    /**
+     * @param null $mode
+     * @return Requester
+     */
     public function client($mode = null): Requester
 	{
         $paramMode = $this->parameterBag->get('universign_mode');
@@ -131,6 +136,11 @@ class UniversignAPI
         return new Requester($client);
     }
 
+    /**
+     * @param $transactionId
+     * @param null $mode
+     * @return TransactionInfo
+     */
     public function getTransaction($transactionId, $mode = null): TransactionInfo
 	{
         $requester = $this->client($mode);

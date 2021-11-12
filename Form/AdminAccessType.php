@@ -9,16 +9,13 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AdminAccessType extends AbstractType
 {
-	private $authorizationChecker;
-	private $container;
+	private ContainerInterface $container;
 	
-	public function __construct(AuthorizationCheckerInterface $authorizationChecker, ContainerInterface $container)
+	public function __construct(ContainerInterface $container)
 	{
-		$this->authorizationChecker = $authorizationChecker;
 		$this->container = $container;
 	}
 	

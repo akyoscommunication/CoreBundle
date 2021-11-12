@@ -66,8 +66,9 @@ class CustomFieldValue
 	{
 		return $this->value;
 	}
-	
-	public function setValue(?string $value): self
+
+	// Dont type the $value param, it's string in database but we need to set arrays when formType is a select
+	public function setValue($value): self
 	{
 		$this->value = $value;
 		

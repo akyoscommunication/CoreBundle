@@ -4,13 +4,13 @@ namespace Akyos\CoreBundle\Services;
 
 use Akyos\CoreBundle\Entity\MessageLog;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MessageLogger
 {
-	
-	private $entityManager;
-	private $serializer;
+	private EntityManagerInterface $entityManager;
+	private SerializerInterface $serializer;
 	
 	public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer)
 	{
@@ -25,9 +25,13 @@ class MessageLogger
 		if ($message) {
 			$messageLog->setMessage($this->serializer->serialize($message, 'json'));
 		}
-//		if($error) {
-//			$messageLog->setError($this->serializer->serialize($error, 'json'));
-//		}
+		if($error) {
+            try {
+                $messageLog->setError($this->serializer->serialize($error, 'json'));
+            } catch (Exception $e) {
+//                dd($e);
+            }
+		}
 		if ($type) {
 			$messageLog->setType($type);
 		}
@@ -38,7 +42,7 @@ class MessageLogger
 				$this->entityManager->flush();
 			}
 			return true;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return $e;
 		}
 	}

@@ -82,7 +82,7 @@ class Option implements Translatable
 	
 	public function getValue()
 	{
-		$testJson = json_decode($this->value);
+		$testJson = json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
 		if (json_last_error() === JSON_ERROR_NONE) {
 			return $testJson;
 		}
@@ -93,7 +93,7 @@ class Option implements Translatable
 	public function setValue($value): self
 	{
 		if (is_array($value)) {
-			$value = json_encode($value);
+			$value = json_encode($value, JSON_THROW_ON_ERROR);
 		}
 		$this->value = $value;
 		

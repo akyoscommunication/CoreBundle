@@ -3,8 +3,10 @@
 namespace Akyos\CoreBundle\Services\SMSApi;
 
 use Akyos\CoreBundle\Services\MessageLogger;
+use Exception;
 use Mailjet\Client;
 use Mailjet\Resources;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -13,8 +15,8 @@ class MailjetSMS
 {
 	private $sender;
 	private $smsToken;
-	private $messageLogger;
-	private $flashBag;
+	private MessageLogger $messageLogger;
+	private FlashBagInterface $flashBag;
 	
 	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, FlashBagInterface $flashBag)
 	{
@@ -23,38 +25,48 @@ class MailjetSMS
 		$this->messageLogger = $messageLogger;
 		$this->flashBag = $flashBag;
 	}
-	
+
+    /**
+     * @param string $phoneNumber
+     * @param string $body
+     * @param bool|null $doNotFlush
+     * @return array|bool|Exception|string|string[]
+     */
 	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
-		$phoneNumber = static::transformNum($phoneNumber);
+		$phone = self::transformNum($phoneNumber);
 		// IF ERROR
-		if (is_array($phoneNumber)) {
+		if (is_array($phone)) {
 			$this->flashBag->add('danger', 'Le format du numéro de téléphone est invalide, il doit correspondre au format international E.164 (exemple +33612345678 pour la France)');
-			return $phoneNumber;
+			return $phone;
 		}
 		
 		$mailjet = new Client($this->smsToken, NULL, true, ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]);
 		
 		$sms = [
 			'Text' => $body,
-			'To' => $phoneNumber,
+			'To' => $phone,
 			'From' => $this->sender
 		];
 		
 		try {
 			$response = $mailjet->post(Resources::$SmsSend, ['body' => $sms]);
 			if (!$response->success()) {
-				throw new \Exception(json_encode($response->getBody()));
+				throw new RuntimeException(json_encode($response->getBody(), JSON_THROW_ON_ERROR));
 			}
 			$this->messageLogger->saveLog($sms, null, 'mailjet_sms', $doNotFlush);
 			return true;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->messageLogger->saveLog($sms, $e, 'mailjet_sms', $doNotFlush);
 			return $e;
 		}
 	}
-	
-	public function transformNum($number)
+
+    /**
+     * @param $number
+     * @return array|string|string[]
+     */
+	public static function transformNum($number)
 	{
 		preg_match_all('/^\+[1-9]\d{1,14}$/', $number, $matches);
 		if (count($matches[0]) === 0) {

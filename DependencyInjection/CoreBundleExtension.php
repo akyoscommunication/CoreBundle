@@ -2,6 +2,8 @@
 
 namespace Akyos\CoreBundle\DependencyInjection;
 
+use Exception;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -12,6 +14,7 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
 {
 	public function load(array $configs, ContainerBuilder $container)
 	{
+	    /** @var ConfigurationInterface $configuration */
 		$configuration = $this->getConfiguration($configs, $container);
 		$config = $this->processConfiguration($configuration, $configs);
 		
@@ -19,19 +22,23 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
 			$container,
 			new FileLocator(__DIR__ . '/../Resources/config')
 		);
-		$loader->load('services.yaml');
-		
-		foreach ($config as $key => $value) {
+        try {
+            $loader->load('services.yaml');
+        } catch (Exception $e) {
+//            dd($e);
+        }
+
+        foreach ($config as $key => $value) {
 			$container->setParameter($key, $value);
 		}
 	}
 	
 	public function prepend(ContainerBuilder $container)
 	{
-		$container->loadFromExtension('twig', array(
-			'paths' => array(
+		$container->loadFromExtension('twig', [
+			'paths' => [
 				'lib/CoreBundle/Resources/views/bundles/TwigBundle/' => 'Twig',
-			),
-		));
+			],
+		]);
 	}
 }

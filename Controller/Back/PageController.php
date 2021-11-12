@@ -10,12 +10,13 @@ use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\SeoRepository;
 use Akyos\CoreBundle\Services\CoreService;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/page", name="page_")
@@ -60,13 +61,13 @@ class PageController extends AbstractController
 			'header_route' => 'page',
 			'formModal' => $newPageForm->createView(),
 			'bundle' => 'CoreBundle',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Titre' => 'Title',
 				'Slug' => 'Slug',
 				'Position' => 'Position',
 				'Actif ?' => 'Published',
-			),
+			],
 		]);
 	}
 
@@ -88,14 +89,16 @@ class PageController extends AbstractController
 		return $this->redirectToRoute('page_edit', ['id' => $page->getId()]);
 	}
 
-	/**
-	 * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
-	 * @param Request $request
-	 * @param Page $page
-	 * @param CoreService $coreService
-	 *
-	 * @return Response
-	 */
+    /**
+     * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Page $page
+     * @param CoreService $coreService
+     * @param ContainerInterface $container
+     * @return Response
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
 	public function edit(Request $request, Page $page, CoreService $coreService, ContainerInterface $container): Response
 	{
 		$entity = get_class($page);
@@ -105,26 +108,25 @@ class PageController extends AbstractController
 
 		$classBuilder = 'Akyos\BuilderBundle\AkyosBuilderBundle';
 		$classBuilderOption = 'Akyos\BuilderBundle\Entity\BuilderOptions';
-		if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
-			if (!$form->isSubmitted()) {
-				$container->get('render.builder')->initCloneComponents($entity, $page->getId());
-			}
-		}
+		if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity) && !$form->isSubmitted()) {
+            $container->get('render.builder')->initCloneComponents($entity, $page->getId());
+        }
 
-		if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-			if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
-				$container->get('render.builder')->tempToProd($entity, $page->getId());
-			}
-			$em->flush();
+            if ($coreService->checkIfBundleEnable($classBuilder, $classBuilderOption, $entity)) {
+                $container->get('render.builder')->tempToProd($entity, $page->getId());
+            }
+            $em->flush();
 
-			return $this->redirect($request->getUri());
-		} elseif ($form->isSubmitted() && !($form->isValid())) {
-			throw $this->createNotFoundException("Formulaire invalide.");
-		}
+            return $this->redirect($request->getUri());
+        }
 
+        if ($form->isSubmitted() && !($form->isValid())) {
+            throw $this->createNotFoundException("Formulaire invalide.");
+        }
 
-		return $this->render('@AkyosCore/crud/edit.html.twig', [
+        return $this->render('@AkyosCore/crud/edit.html.twig', [
 			'el' => $page,
 			'title' => '"' . $page->getTitle() . '"',
 			'entity' => $entity,
@@ -146,7 +148,6 @@ class PageController extends AbstractController
 	 * @param SeoRepository $seoRepository
 	 * @param CoreService $coreService
 	 * @param ContainerInterface $container
-	 *
 	 * @return Response
 	 */
 	public function delete(Request $request, Page $page, PageRepository $pageRepository, SeoRepository $seoRepository, CoreService $coreService, ContainerInterface $container): Response
@@ -161,7 +162,7 @@ class PageController extends AbstractController
 				$container->get('render.builder')->onDeleteEntity($entity, $page->getId());
 			}
 
-			$seo = $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $page->getId()));
+			$seo = $seoRepository->findOneBy(['type' => $entity, 'typeId' => $page->getId()]);
 			if ($seo) {
 				$entityManager->remove($seo);
 			}

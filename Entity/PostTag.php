@@ -17,7 +17,7 @@ class PostTag
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "etiquette-article";
+	public const ENTITY_SLUG = "etiquette-article";
 	
 	/**
 	 * @ORM\Id
@@ -55,9 +55,9 @@ class PostTag
 		$this->posts = new ArrayCollection();
 	}
 	
-	public function __toString()
-	{
-		return $this->getTitle();
+	public function __toString(): string
+    {
+		return (string)$this->getTitle();
 	}
 	
 	public function getId(): ?int

@@ -2,15 +2,14 @@
 
 namespace Akyos\CoreBundle\Form\Type\CustomFields;
 
+use Akyos\CoreBundle\Entity\CustomField;
 use Akyos\CoreBundle\Entity\CustomFieldValue;
-use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Repository\PageRepository;
 use Akyos\CoreBundle\Repository\PostRepository;
 use Akyos\FileManagerBundle\Form\Type\FileManagerCollectionType;
 use Akyos\FileManagerBundle\Form\Type\FileManagerType;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,12 +28,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomFieldValueType extends AbstractType
 {
-	private $pages;
-	private $posts;
-	private $em;
-	private $customFieldValueRepository;
+	private array $pages;
+	private array $posts;
+	private EntityManagerInterface $em;
 	
-	public function __construct(PageRepository $pageRepository, PostRepository $postRepository, EntityManagerInterface $em, CustomFieldValueRepository $customFieldValueRepository)
+	public function __construct(PageRepository $pageRepository, PostRepository $postRepository, EntityManagerInterface $em)
 	{
 		$pages = $pageRepository->findAll();
 		foreach ($pages as $page) {
@@ -45,20 +43,19 @@ class CustomFieldValueType extends AbstractType
 			$this->posts[$post->getTitle()] = $post->getId();
 		}
 		$this->em = $em;
-		$this->customFieldValueRepository = $customFieldValueRepository;
 	}
 	
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		
 		$formModifier = function (FormInterface $form, CustomFieldValue $customFieldValue = null) {
-			if ($customFieldValue != null) {
+			if ($customFieldValue !== null) {
+			    /** @var CustomField $field */
 				$field = $customFieldValue->getCustomField();
 				switch ($field->getType()) {
 					case 'textarea_html':
 						$form
 							->add('value', CKEditorType::class, [
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'config' => [
 									'placeholder' => "Texte",
 									'height' => 300,
@@ -87,7 +84,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Numéro",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;
@@ -99,7 +96,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Email",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;
@@ -108,7 +105,7 @@ class CustomFieldValueType extends AbstractType
 						$form
 							->add('value', ChoiceType::class, [
 								'choices' => $this->pages,
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'label' => $field->getTitle(),
 								'help' => $field->getDescription(),
 							]);
@@ -118,7 +115,7 @@ class CustomFieldValueType extends AbstractType
 						$form
 							->add('value', ChoiceType::class, [
 								'choices' => $this->posts,
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'label' => $field->getTitle(),
 								'help' => $field->getDescription(),
 							]);
@@ -132,7 +129,7 @@ class CustomFieldValueType extends AbstractType
 						$form
 							->add('value', ChoiceType::class, [
 								'choices' => $choices,
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'label' => $field->getTitle(),
 								'placeholder' => "Sélectionnez un élément",
 								'help' => $field->getDescription(),
@@ -147,7 +144,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Lien",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;
@@ -180,7 +177,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Valeur",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;
@@ -193,20 +190,18 @@ class CustomFieldValueType extends AbstractType
 							$vs = explode(';', $option);
 							if (count($vs) < 2) {
 								$choices[$vs[0]] = $vs[0];
-							} else {
-								if ($vs[1] === '') {
-									$choices[$vs[0]] = $vs[0];
-								} else {
-									$choices[$vs[0]] = $vs[1];
-								}
-							}
+							} else if ($vs[1] === '') {
+                                $choices[$vs[0]] = $vs[0];
+                            } else {
+                                $choices[$vs[0]] = $vs[1];
+                            }
 						}
 						
 						$form
 							->add('value', ChoiceType::class, [
 								'placeholder' => $values[0],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'choices' => $choices,
 								'help' => $field->getDescription(),
 							]);
@@ -219,7 +214,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Valeur",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'data' => (bool)$customFieldValue->getValue(),
 								'help' => $field->getDescription(),
 							]);
@@ -229,7 +224,7 @@ class CustomFieldValueType extends AbstractType
 						$form
 							->add('value', ColorType::class, [
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;
@@ -241,7 +236,7 @@ class CustomFieldValueType extends AbstractType
 									'placeholder' => "Valeur",
 								],
 								'label' => $field->getTitle(),
-								'required' => $field->getIsRequired() !== null ? $field->getIsRequired() : false,
+								'required' => $field->getIsRequired() ?? false,
 								'help' => $field->getDescription(),
 							]);
 						break;

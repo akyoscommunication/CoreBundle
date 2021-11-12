@@ -16,10 +16,6 @@ class PostCategoryType extends AbstractType
 				'label' => 'Titre de la catégorie',
 				'help' => '( Votre titre )',
 			])
-//            ->add('slug', null, [
-//                'label' => 'Slug de la catégorie',
-//                'help' => 'Votre contenu',
-//            ])
 			->add('content', null, [
 				'label' => 'Description de la catégorie',
 				'help' => '( Votre description )',

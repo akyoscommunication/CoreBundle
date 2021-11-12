@@ -17,8 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OptionType extends AbstractType
 {
-	protected $optionId;
-	protected $pages;
+	protected int $optionId;
+	protected array $pages;
 	
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
@@ -29,59 +29,59 @@ class OptionType extends AbstractType
 			
 			case 'textarea':
 				$builder
-					->add('value', CKEditorType::class, array(
+					->add('value', CKEditorType::class, [
 						'required' => false,
-						'config' => array(
+						'config' => [
 							'placeholder' => "Texte",
 							'height' => 50,
 							'entities' => false,
 							'basicEntities' => false,
 							'entities_greek' => false,
 							'entities_latin' => false,
-						),
-						'label' => false
-					));
+						],
+						'label' => false,
+					]);
 				break;
 			
 			case 'tel':
 				$builder
-					->add('value', TelType::class, array(
-						'attr' => array(
+					->add('value', TelType::class, [
+						'attr' => [
 							'placeholder' => "Numéro",
-						),
+						],
 						'label' => false,
-						'required' => false
-					));
+						'required' => false,
+					]);
 				break;
 			
 			case 'mail':
 				$builder
-					->add('value', EmailType::class, array(
-						'attr' => array(
+					->add('value', EmailType::class, [
+						'attr' => [
 							'placeholder' => "Email",
-						),
+						],
 						'label' => false,
 						'required' => false
-					));
+					]);
 				break;
 			
 			case 'pagelink':
 				$builder
-					->add('value', ChoiceType::class, array(
+					->add('value', ChoiceType::class, [
 						'choices' => $this->pages,
 						'label' => false
-					));
+					]);
 				break;
 			
 			case 'link':
 				$builder
-					->add('value', UrlType::class, array(
-						'attr' => array(
+					->add('value', UrlType::class, [
+						'attr' => [
 							'placeholder' => "Lien",
-						),
+						],
 						'label' => false,
 						'required' => false
-					));
+					]);
 				break;
 			
 			case 'image':
@@ -96,13 +96,13 @@ class OptionType extends AbstractType
 			
 			default:
 				$builder
-					->add('value', TextType::class, array(
-						'attr' => array(
+					->add('value', TextType::class, [
+						'attr' => [
 							'placeholder' => "Valeur",
-						),
+						],
 						'label' => false,
 						'required' => false
-					));
+					]);
 				break;
 		}
 	}
@@ -116,8 +116,8 @@ class OptionType extends AbstractType
 		]);
 	}
 	
-	public function getBlockPrefix()
-	{
+	public function getBlockPrefix(): string
+    {
 		return 'ac_back_option_form' . $this->optionId;
 	}
 }

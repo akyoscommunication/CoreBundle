@@ -9,19 +9,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/admin/profile", name="profile_")2
+ * @Route("/admin/profile", name="profile_")
  * @isGranted("profil")
  */
 class ProfileController extends AbstractController
 {
-	/**
-	 * @Route("/", name="index")
-	 */
-	public function index()
-	{
+    /**
+     * @Route("/", name="index")
+     * @return Response
+     */
+	public function index(): Response
+    {
 		return $this->render('@AkyosCore/profile/index.html.twig', [
 			'title' => 'Votre profil',
 			'user' => $this->getUser(),
@@ -32,7 +32,6 @@ class ProfileController extends AbstractController
 	 * @Route("/{id}/edit", name="edit")
 	 * @param Request $request
 	 * @param User $user
-	 *
 	 * @return RedirectResponse|Response
 	 */
 	public function edit(Request $request, User $user)

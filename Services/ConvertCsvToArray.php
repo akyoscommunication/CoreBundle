@@ -2,12 +2,15 @@
 
 namespace Akyos\CoreBundle\Services;
 
-class ConvertCsvToArray {
-
-    public function __construct()
-    {
-    }
-
+class ConvertCsvToArray
+{
+    /**
+     * @param $filename
+     * @param string $delimiter
+     * @param false $hasHeader
+     * @param false $dropHeader
+     * @return array|false
+     */
     public function convert($filename, $delimiter = ',', $hasHeader = false, $dropHeader = false)
     {
         if(!file_exists($filename) || !is_readable($filename)) {
@@ -17,7 +20,7 @@ class ConvertCsvToArray {
         $header = NULL;
         $data = [];
 
-        if (($handle = fopen($filename, 'r')) !== FALSE) {
+        if (($handle = fopen($filename, 'rb')) !== FALSE) {
             while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
                 if ($hasHeader && !$dropHeader) {
                 	if(!$header) {

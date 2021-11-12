@@ -3,13 +3,8 @@
 namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\Post;
-use Akyos\CoreBundle\Entity\PostCategory;
 use Akyos\CoreBundle\Entity\PostDocument;
-use Akyos\CoreBundle\Form\PostCategoryType;
 use Akyos\CoreBundle\Form\Type\Post\PostDocumentType;
-use Akyos\CoreBundle\Repository\PostDocumentRepository;
-use Akyos\CoreBundle\Repository\SeoRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +34,7 @@ class PostDocumentController extends AbstractController
 			$entityManager->persist($postDocument);
 			$entityManager->flush();
 
-			return $this->redirectToRoute('post_edit', ["id" => $postDocument->getPost()->getId()]);
+			return $this->redirectToRoute('post_edit', ["id" => $post->getId()]);
 		}
 
 		return $this->render('@AkyosCore/post_document/new.html.twig', [
@@ -63,19 +58,18 @@ class PostDocumentController extends AbstractController
 	 */
 	public function edit(Request $request, PostDocument $postDocument): Response
 	{
+        /** @var Post $post */
+        $post = $postDocument->getPost();
 		$form = $this->createForm(PostDocumentType::class, $postDocument);
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
-//            dd($postDocument);
-
 			$this->getDoctrine()->getManager()->flush();
-
-			return $this->redirectToRoute('post_edit', ["id" => $postDocument->getPost()->getId()]);
+			return $this->redirectToRoute('post_edit', ["id" => $post->getId()]);
 		}
 
 		return $this->render('@AkyosCore/post_document/edit.html.twig', [
 			'parameters' => [
-				'id' => $postDocument->getPost()->getId(),
+				'id' => $post->getId(),
 				'tab' => 'postdoc',
 			],
 			'el' => $postDocument,
@@ -91,12 +85,14 @@ class PostDocumentController extends AbstractController
 	 * @Route("/{id}", name="delete", methods={"DELETE"})
 	 * @param Request $request
 	 * @param PostDocument $postDocument
-	 * @param SeoRepository $seoRepository
 	 *
 	 * @return Response
 	 */
-	public function delete(Request $request, PostDocument $postDocument, SeoRepository $seoRepository): Response
+	public function delete(Request $request, PostDocument $postDocument): Response
 	{
+        /** @var Post $post */
+        $post = $postDocument->getPost();
+
 		if ($this->isCsrfTokenValid('delete' . $postDocument->getId(), $request->request->get('_token'))) {
 			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->remove($postDocument);
@@ -104,7 +100,7 @@ class PostDocumentController extends AbstractController
 		}
 
 		return $this->redirectToRoute('post_index', [
-			'id' => $postDocument->getPost()->getId()
+			'id' => $post->getId()
 		]);
 	}
 }

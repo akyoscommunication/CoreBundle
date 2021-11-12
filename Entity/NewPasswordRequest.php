@@ -12,7 +12,7 @@ class NewPasswordRequest
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "password-requests";
+	public const ENTITY_SLUG = "password-requests";
 	
 	/**
 	 * @ORM\Id()

@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Akyos\CoreBundle\Annotations\SlugRedirect;
@@ -15,7 +16,7 @@ class Page implements Translatable
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "pages";
+	public const ENTITY_SLUG = "pages";
 	
 	/**
 	 * @ORM\Id()
@@ -67,14 +68,14 @@ class Page implements Translatable
 	 * @Gedmo\Translatable
 	 */
 	private $thumbnail;
-	
+
 	/**
 	 * @Gedmo\Locale
 	 * Used locale to override Translation listener`s locale
 	 * this is not a mapped field of entity metadata, just a simple property
 	 */
 	private $locale;
-	
+
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
@@ -174,17 +175,17 @@ class Page implements Translatable
 		$this->locale = $locale;
 	}
 	
-	public function __toString()
-	{
+	public function __toString(): string
+    {
 		return (string)$this->title;
 	}
 	
-	public function getPublishedAt(): ?\DateTimeInterface
+	public function getPublishedAt(): ?DateTimeInterface
 	{
 		return $this->publishedAt;
 	}
 	
-	public function setPublishedAt(?\DateTimeInterface $publishedAt): self
+	public function setPublishedAt(?DateTimeInterface $publishedAt): self
 	{
 		$this->publishedAt = $publishedAt;
 		

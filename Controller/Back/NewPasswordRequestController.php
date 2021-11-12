@@ -8,11 +8,12 @@ use Akyos\CoreBundle\Form\NewPasswordRequestType;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Repository\NewPasswordRequestRepository;
 use Akyos\CoreBundle\Services\CoreMailer;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -40,7 +41,7 @@ class NewPasswordRequestController extends AbstractController
 			$coreOptions = $coreOptions[0];
 		}
 
-		$type = explode(';', urldecode($type));
+		$types = explode(';', urldecode($type));
 
 		$newPasswordRequest = new NewPasswordRequest();
 		$newPasswordRequest->setUserRoute($route);
@@ -54,18 +55,16 @@ class NewPasswordRequestController extends AbstractController
 			$entityManager = $this->getDoctrine()->getManager();
 
 			$user = null;
-			foreach ($type as $testedType) {
+			foreach ($types as $testedType) {
 				$testedType = implode('\\', explode('_', $testedType));
 				if (class_exists('Akyos\\CoreBundle\\Entity\\' . $testedType)) {
 					$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
 					$newPasswordRequest->setUserType($testedType);
 				}
-				if (!$user) {
-					if (class_exists('App\\Entity\\' . $testedType)) {
-						$user = $this->getDoctrine()->getRepository('App\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-						$newPasswordRequest->setUserType($testedType);
-					}
-				}
+				if (!$user && class_exists('App\\Entity\\' . $testedType)) {
+                    $user = $this->getDoctrine()->getRepository('App\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+                    $newPasswordRequest->setUserType($testedType);
+                }
 			}
 			if (!$user) {
 				$message = $translator->trans('no_account', [], 'new_password_request');
@@ -73,7 +72,7 @@ class NewPasswordRequestController extends AbstractController
 				$isAlreadyRequested = false;
 				$oldRequest = $newPasswordRequestRepository->findOneBy(['userId' => $user->getId(), 'userType' => $newPasswordRequest->getUserType()], ['createdAt' => 'DESC']);
 				if ($oldRequest) {
-					$now = new \DateTime();
+					$now = new DateTime();
 					$interval = $now->getTimestamp() - $oldRequest->getCreatedAt()->getTimestamp();
 					$isAlreadyRequested = $interval < 1800;
 				}
@@ -116,20 +115,20 @@ class NewPasswordRequestController extends AbstractController
 			'message' => $message
 		]);
 	}
-	
-	/**
-	 * @Route("/reset/{id}/{token}", name="_change", methods={"GET", "POST"})
-	 * @param int $id
-	 * @param string $token
-	 * @param NewPasswordRequestRepository $newPasswordRequestRepository
-	 * @param Request $request
-	 * @param CoreMailer $mailer
-	 * @param CoreOptionsRepository $coreOptionsRepository
-	 * @param UserPasswordEncoderInterface $passwordEncoder
-	 * @param TranslatorInterface $translator
-	 * @return Response
-	 */
-	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator): Response
+
+    /**
+     * @Route("/reset/{id}/{token}", name="_change", methods={"GET", "POST"})
+     * @param int $id
+     * @param string $token
+     * @param NewPasswordRequestRepository $newPasswordRequestRepository
+     * @param Request $request
+     * @param CoreMailer $mailer
+     * @param CoreOptionsRepository $coreOptionsRepository
+     * @param TranslatorInterface $translator
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return Response
+     */
+	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, TranslatorInterface $translator, UserPasswordHasherInterface $passwordHasher): Response
 	{
 		$coreOptions = $coreOptionsRepository->findAll();
 		if ($coreOptions) {
@@ -144,7 +143,7 @@ class NewPasswordRequestController extends AbstractController
 		if (!$newPasswordRequest) {
 			$message = $translator->trans('unauthorized', [], 'new_password_request');
 		} else {
-			$now = new \DateTime();
+			$now = new DateTime();
 			$interval = $now->getTimestamp() - $newPasswordRequest->getCreatedAt()->getTimestamp();
 			$isRequestedInTime = $interval < 1800;
 
@@ -160,14 +159,12 @@ class NewPasswordRequestController extends AbstractController
 			if (class_exists('Akyos\\CoreBundle\\Entity\\' . $newPasswordRequest->getUserType())) {
 				$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
 			}
-			if (!$user) {
-				if (class_exists('App\\Entity\\' . $newPasswordRequest->getUserType())) {
-					$user = $this->getDoctrine()->getRepository('App\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-				}
-			}
+			if (!$user && class_exists('App\\Entity\\' . $newPasswordRequest->getUserType())) {
+                $user = $this->getDoctrine()->getRepository('App\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+            }
 
 			$user->setPassword(
-				$passwordEncoder->encodePassword(
+				$passwordHasher->hashPassword(
 					$user,
 					$form->get('password')->getData()
 				)

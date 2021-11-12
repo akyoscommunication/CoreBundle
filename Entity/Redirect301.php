@@ -12,7 +12,7 @@ class Redirect301
 {
 	use TimestampableEntity;
 	
-	const ENTITY_SLUG = "redirect_301";
+	public const ENTITY_SLUG = "redirect_301";
 	
 	/**
 	 * @ORM\Id()

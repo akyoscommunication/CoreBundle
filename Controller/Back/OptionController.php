@@ -13,7 +13,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/site_option", name="option_")
@@ -37,7 +36,7 @@ class OptionController extends AbstractController
 		$option = new Option();
 		$newOptionForm = $this->createForm(NewOptionType::class, $option);
 
-		if ($request->getMethod('POST')) {
+		if ($request->getMethod() === 'POST') {
 			$newOptionForm->handleRequest($request);
 			if ($newOptionForm->isSubmitted() && $newOptionForm->isValid()) {
 				try {
@@ -50,16 +49,16 @@ class OptionController extends AbstractController
 			}
 		}
 
-		$params = array();
+		$params =[];
 
-		$pageArray = array();
+		$pageArray =[];
 		foreach ($pageRepository->findAll() as $page) {
 			$pageArray[$page->getTitle()] = $request->getUriForPath('/' . $page->getSlug());
 		}
 
 		foreach ($optionRepository->findAll() as $option) {
 			$optionForm = $this->createForm(OptionType::class, $option, ['option' => $option->getId(), 'pages' => $pageArray]);
-			if ($request->getMethod('POST')) {
+			if ($request->getMethod() === 'POST') {
 				$optionForm->handleRequest($request);
 				if ($optionForm->isSubmitted() && $optionForm->isValid()) {
 					try {

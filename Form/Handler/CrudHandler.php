@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormInterface;
 
 class CrudHandler extends AbstractController
 {
-	private $em;
+	private EntityManagerInterface $em;
 
 	public function __construct(EntityManagerInterface $em)
 	{

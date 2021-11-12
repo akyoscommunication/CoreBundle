@@ -9,11 +9,10 @@ use Twilio\Rest\Client;
 // Needs composer require twilio/sdk
 class TwilioSMS
 {
-	
 	private $sender;
 	private $accountSID;
 	private $authToken;
-	private $messageLogger;
+	private MessageLogger $messageLogger;
 	
 	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger)
 	{
@@ -25,15 +24,15 @@ class TwilioSMS
 	
 	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
-		$phoneNumber = static::transformNum($phoneNumber);
-		if (is_array($phoneNumber)) {
-			return $phoneNumber;
+		$phone = self::transformNum($phoneNumber);
+		if (is_array($phone)) {
+			return $phone;
 		}
 		
 		$client = new Client($this->accountSID, $this->authToken);
 		
 		$sms = [
-			$phoneNumber,
+			$phone,
 			[
 				'from' => $this->sender,
 				'body' => $body
@@ -49,25 +48,27 @@ class TwilioSMS
 			return $e;
 		}
 	}
-	
+
+    /**
+     * @param $number
+     * @return array|string|string[]
+     */
 	public static function transformNum($number)
 	{
 		preg_match_all("/^0([0-9].?){9}/", $number, $matches);
 		if (count($matches[0])) {
 			$number = preg_replace('/0/', '+33', $number, 1);
-			$number = str_replace(".", "", $number);
-			$number = str_replace(" ", "", $number);
+            $number = str_replace([".", " "], "", $number);
 		} else {
 			preg_match_all('/^\+33([0-9].?){9}/', $number, $matches);
-			if (count($matches[0]) == 0) {
+			if (count($matches[0]) === 0) {
 				return [
 					"status" => false,
 					"message" => "Format du numéro de téléphone invalide",
 					"errorcode" => "ERRNUMFORMAT"
 				];
 			}
-			$number = str_replace(".", "", $number);
-			$number = str_replace(" ", "", $number);
+            $number = str_replace([".", " "], "", $number);
 		}
 		return $number;
 	}

@@ -16,20 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SeoController extends AbstractController
 {
-	/**
-	 * @Route("/render", name="render", methods={"GET"})
-	 * @param $type
-	 * @param $typeId
-	 * @param $route
-	 * @param SeoRepository $seoRepository
-	 *
-	 * @return Response
-	 */
-	public function index($type, $typeId, $route, SeoRepository $seoRepository): Response
+    /**
+     * @Route("/render", name="render", methods={"GET"})
+     * @param $type
+     * @param $typeId
+     * @param SeoRepository $seoRepository
+     *
+     * @return Response
+     */
+	public function index($type, $typeId, SeoRepository $seoRepository): Response
 	{
 		$type = urldecode($type);
 		$seo = $seoRepository->findOneBy(['type' => $type, 'typeId' => $typeId]);
-//		dump($seo);
 
 		if (!$seo) {
 			$seo = new Seo();
@@ -49,13 +47,12 @@ class SeoController extends AbstractController
 	 * @param $typeId
 	 * @param Request $request
 	 * @param SeoRepository $seoRepository
-	 *
 	 * @return JsonResponse
 	 */
-	public function submit($type, $typeId, Request $request, SeoRepository $seoRepository)
-	{
+	public function submit($type, $typeId, Request $request, SeoRepository $seoRepository): JsonResponse
+    {
 		$type = urldecode($type);
-		$seo = $seoRepository->findOneBy(array('type' => $type, 'typeId' => $typeId));
+		$seo = $seoRepository->findOneBy(['type' => $type, 'typeId' => $typeId]);
 
 		if (!$seo) {
 			$seo = new Seo();

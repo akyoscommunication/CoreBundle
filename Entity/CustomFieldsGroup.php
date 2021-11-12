@@ -88,12 +88,10 @@ class CustomFieldsGroup
 	
 	public function removeCustomField(CustomField $customField): self
 	{
-		if ($this->customFields->removeElement($customField)) {
-			// set the owning side to null (unless already changed)
-			if ($customField->getCustomFieldGroup() === $this) {
-				$customField->setCustomFieldGroup(null);
-			}
-		}
+        // set the owning side to null (unless already changed)
+        if ($this->customFields->removeElement($customField) && $customField->getCustomFieldGroup() === $this) {
+            $customField->setCustomFieldGroup(null);
+        }
 		
 		return $this;
 	}

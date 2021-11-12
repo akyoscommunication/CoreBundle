@@ -68,7 +68,7 @@ class FrontController extends AbstractController
 
 		// RENDER
 		return $this->render($view, [
-			'seo' => $seoRepository->findOneBy(array('type' => $entity, 'typeId' => $homePage->getId())),
+			'seo' => $seoRepository->findOneBy(['type' => $entity, 'typeId' => $homePage->getId()]),
 			'page' => $homePage,
 			'components' => $components,
 			'content' => $homePage->getContent(),
@@ -76,55 +76,43 @@ class FrontController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/page_preview/{slug}", name="page_preview", methods={"GET","POST"})
-	 * @param $slug
-	 * @param FrontControllerService $frontControllerService
-	 *
-	 * @return Response
-	 */
-	public function pagePreview(
-		$slug,
-		FrontControllerService $frontControllerService): Response
+    /**
+     * @Route("/page_preview/{slug}", name="page_preview", methods={"GET","POST"})
+     * @param string $slug
+     * @param FrontControllerService $frontControllerService
+     * @return Response
+     */
+	public function pagePreview(string $slug, FrontControllerService $frontControllerService): Response
 	{
 		return new Response($frontControllerService->pageAndPreview($slug, 'page_preview'));
 	}
 
-	/**
-	 * @Route("/{slug}",
-	 *     methods={"GET","POST"},
-	 *     requirements={
-	 *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/|en\/).+"
-	 *     },
-	 *     name="page")
-	 * @param $slug
-	 * @param FrontControllerService $frontControllerService
-	 *
-	 * @return Response
-	 */
-	public function page(
-		$slug,
-		FrontControllerService $frontControllerService): Response
+    /**
+     * @Route("/{slug}",
+     *     methods={"GET","POST"},
+     *     requirements={
+     *          "slug"="^(?!admin\/|app\/|recaptcha\/|page_preview\/|archive\/|details\/|details_preview\/|categorie\/|tag\/|file-manager\/|secured_files\/|en\/).+"
+     *     },
+     *     name="page")
+     * @param string $slug
+     * @param FrontControllerService $frontControllerService
+     * @return Response
+     */
+	public function page(string $slug, FrontControllerService $frontControllerService): Response
 	{
 		return new Response($frontControllerService->pageAndPreview($slug, 'page'));
 	}
 
-	/**
-	 * @Route("/archive/{entitySlug}", name="archive", methods={"GET","POST"})
-	 * @param Filesystem $filesystem
-	 * @param $entitySlug
-	 * @param CoreService $coreService
-	 *
-	 * @param Request $request
-	 * @param PaginatorInterface $paginator
-	 * @return Response
-	 */
-	public function archive(
-		Filesystem $filesystem,
-		$entitySlug,
-		CoreService $coreService,
-		Request $request,
-		PaginatorInterface $paginator): Response
+    /**
+     * @Route("/archive/{entitySlug}", name="archive", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param string $entitySlug
+     * @param CoreService $coreService
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return Response
+     */
+	public function archive(Filesystem $filesystem, string $entitySlug, CoreService $coreService, Request $request, PaginatorInterface $paginator): Response
 	{
 		// GET ENTITY NAME AND FULLNAME FROM SLUG
 		[$entityFullName, $entity] = $coreService->getEntityAndFullString($entitySlug);
@@ -179,58 +167,41 @@ class FrontController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
-	 * @param string $entitySlug
-	 * @param $slug
-	 *
-	 * @param FrontControllerService $frontControllerService
-	 *
-	 * @return Response
-	 */
-	public function singlePreview(
-		string $entitySlug,
-		$slug,
-		FrontControllerService $frontControllerService): Response
+    /**
+     * @Route("/details_preview/{entitySlug}/{slug}", name="single_preview", methods={"GET","POST"})
+     * @param string $entitySlug
+     * @param string $slug
+     * @param FrontControllerService $frontControllerService
+     * @return Response
+     */
+	public function singlePreview(string $entitySlug, string $slug, FrontControllerService $frontControllerService): Response
 	{
 		return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single_preview'));
 	}
 
-	/**
-	 * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
-	 * @param $entitySlug
-	 * @param $slug
-	 *
-	 * @param FrontControllerService $frontControllerService
-	 *
-	 * @return Response
-	 */
-	public function single(
-		$entitySlug,
-		$slug,
-		FrontControllerService $frontControllerService): Response
+    /**
+     * @Route("/details/{entitySlug}/{slug}", name="single", methods={"GET","POST"})
+     * @param string $entitySlug
+     * @param string $slug
+     * @param FrontControllerService $frontControllerService
+     * @return Response
+     */
+	public function single(string $entitySlug, string $slug, FrontControllerService $frontControllerService): Response
 	{
 		return new Response($frontControllerService->singleAndPreview($entitySlug, $slug, 'single'));
 	}
 
-	/**
-	 * @Route("/categorie/{entitySlug}/{category}", name="taxonomy", methods={"GET","POST"})
-	 * @param Filesystem $filesystem
-	 * @param $entitySlug
-	 * @param $category
-	 * @param CoreService $coreService
-	 *
-	 * @param Request $request
-	 * @param PaginatorInterface $paginator
-	 * @return Response
-	 */
-	public function category(
-		Filesystem $filesystem,
-		$entitySlug,
-		$category,
-		CoreService $coreService,
-		Request $request,
-		PaginatorInterface $paginator): Response
+    /**
+     * @Route("/categorie/{entitySlug}/{category}", name="taxonomy", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param string $entitySlug
+     * @param string $category
+     * @param CoreService $coreService
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return Response
+     */
+	public function category(Filesystem $filesystem, string $entitySlug, string $category, CoreService $coreService, Request $request, PaginatorInterface $paginator): Response
 	{
 		// GET ENTITY NAME AND FULLNAME FROM SLUG
 		$meta = $this->getDoctrine()->getManager()->getMetadataFactory()->getAllMetadata();
@@ -307,20 +278,15 @@ class FrontController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/tag/{entitySlug}/{tag}", name="tag", methods={"GET","POST"})
-	 * @param Filesystem $filesystem
-	 * @param $entitySlug
-	 * @param $tag
-	 * @param CoreService $coreService
-	 *
-	 * @return Response
-	 */
-	public function tag(
-		Filesystem $filesystem,
-		$entitySlug,
-		$tag,
-		CoreService $coreService): Response
+    /**
+     * @Route("/tag/{entitySlug}/{tag}", name="tag", methods={"GET","POST"})
+     * @param Filesystem $filesystem
+     * @param string $entitySlug
+     * @param string $tag
+     * @param CoreService $coreService
+     * @return Response
+     */
+	public function tag(Filesystem $filesystem, string$entitySlug, string $tag, CoreService $coreService): Response
 	{
 		// GET ENTITY NAME AND FULLNAME FROM SLUG
 		$meta = $this->getDoctrine()->getManager()->getMetadataFactory()->getAllMetadata();
@@ -353,7 +319,7 @@ class FrontController extends AbstractController
 			throw $this->createNotFoundException("Cette page n'existe pas! ( Étiquette )");
 		}
 		if (substr($entity, -1) === "y") {
-			$getter = 'get' . ucfirst(substr($parentEntity, 0, strlen($parentEntity) - 1)) . 'ies';
+			$getter = 'get' . ucfirst(substr($parentEntity,0,-1)) . 'ies';
 		} else {
 			$getter = 'get' . ucfirst($parentEntity) . 's';
 		}

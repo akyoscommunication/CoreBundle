@@ -10,12 +10,11 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+// TODO => A revoir il y a trop de trucs qui ne fonctionnent plus.
 class bddImport extends Command
 {
-	
-	protected static $defaultName = 'app:bdd-import';
-	
-	private $connection;
+	protected static string $defaultName = 'app:bdd-import';
+	private Connection $connection;
 	
 	public function __construct(Connection $connection)
 	{

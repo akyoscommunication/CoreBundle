@@ -125,20 +125,16 @@ class Menu
 	
 	public function setMenuArea(?MenuArea $menuArea): self
 	{
-		if ($menuArea === null) {
-			if ($this->getMenuArea()->getMenu() == $this) {
-				$this->getMenuArea()->setMenu(null);
-			}
-		}
+		if (($menuArea === null) && $this->getMenuArea()->getMenu() === $this) {
+            $this->getMenuArea()->setMenu(null);
+        }
 		$this->menuArea = $menuArea;
 		
 		// set (or unset) the owning side of the relation if necessary
 		$newMenu = null === $menuArea ? null : $this;
-		if ($menuArea !== null) {
-			if ($menuArea->getMenu() !== $newMenu) {
-				$menuArea->setMenu($newMenu);
-			}
-		}
+		if (($menuArea !== null) && $menuArea->getMenu() !== $newMenu) {
+            $menuArea->setMenu($newMenu);
+        }
 		
 		return $this;
 	}

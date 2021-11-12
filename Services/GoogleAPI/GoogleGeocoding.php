@@ -2,18 +2,23 @@
 
 namespace Akyos\CoreBundle\Services\GoogleAPI;
 
+use Exception;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GoogleGeocoding
 {
-	
 	private $googleApiKey;
 	
 	public function __construct(ParameterBagInterface $params)
 	{
 		$this->googleApiKey = $params->get('google_apiKey');
 	}
-	
+
+    /**
+     * @param $address
+     * @return array|Exception
+     */
 	public function geocodeAddress($address)
 	{
 		$address = urlencode($address);
@@ -21,7 +26,7 @@ class GoogleGeocoding
 		
 		try {
 			$JSONResponse = file_get_contents($url);
-			$response = json_decode($JSONResponse, true);
+			$response = json_decode($JSONResponse, true, 512, JSON_THROW_ON_ERROR);
 			
 			if ($response['status'] === 'OK') {
 				
@@ -37,13 +42,12 @@ class GoogleGeocoding
 						'formatted_address' => $formatted_address,
 					];
 					
-				} else {
-					throw new \Exception('Google API didn\'t return entire datas, please verify Google API configuration');
 				}
-			} else {
-				throw new \Exception('Google API return errored status code: ' . $response['status']);
-			}
-		} catch (\Exception $e) {
+
+                throw new RuntimeException('Google API didn\'t return entire datas, please verify Google API configuration');
+            }
+            throw new RuntimeException('Google API return errored status code: ' . $response['status']);
+        } catch (Exception $e) {
 			return $e;
 		}
 	}

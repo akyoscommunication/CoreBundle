@@ -10,19 +10,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+// TODO => A revoir il y a trop de trucs qui ne fonctionnent plus.
 class bddDump extends Command
 {
-	
-	protected static $defaultName = 'app:bdd-dump';
-	
-	private $connection;
+	protected static string $defaultName = 'app:bdd-dump';
+	private Connection $connection;
 	
 	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 		parent::__construct();
 	}
-	
+
 	protected function configure()
 	{
 		$this->setDescription('')
@@ -31,8 +30,8 @@ class bddDump extends Command
 		$this->addArgument('name', InputArgument::OPTIONAL, 'Name of User');
 	}
 	
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+	protected function execute(InputInterface $input, OutputInterface $output): int
+    {
 		$date = new \DateTime('now');
 		$date = $date->format('dmYHi');
 		

@@ -4,22 +4,25 @@ namespace Akyos\CoreBundle\Services;
 
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
 use Akyos\CoreBundle\Services\MailApi\MailjetEmail;
+use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class CoreMailer
 {
-	
-	private $mailer;
-	private $twig;
-	private $coreOptionsRepository;
-	private $messageLogger;
-	private $mailjetEmail;
-	private $parameterBag;
+	private MailerInterface $mailer;
+	private Environment $twig;
+	private CoreOptionsRepository $coreOptionsRepository;
+	private MessageLogger $messageLogger;
+	private MailjetEmail $mailjetEmail;
+	private ParameterBagInterface $parameterBag;
 	
 	public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, CoreOptionsRepository $coreOptionsRepository, MailjetEmail $mailjetEmail, MessageLogger $messageLogger)
 	{
@@ -30,8 +33,25 @@ class CoreMailer
 		$this->mailjetEmail = $mailjetEmail;
 		$this->parameterBag = $parameterBag;
 	}
-	
-	
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param $title
+     * @param null $template
+     * @param null $from
+     * @param null $bcc
+     * @param null $replyTo
+     * @param null $attachment
+     * @param array|null $options
+     * @param bool|null $doNotFlush
+     * @param null $backupSendMail
+     * @return bool|Exception|TransportExceptionInterface
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
 	public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null, $backupSendMail = null)
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();
@@ -53,10 +73,8 @@ class CoreMailer
 		}
 		$body = $this->twig->render($template ?: '@AkyosCore/email/default.html.twig', $bodyParams);
 
-		if (!$backupSendMail) {
-            if ($coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
-                return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
-            }
+		if (!$backupSendMail && $coreOptions->getEmailTransport() === "Mailjet API" && $this->parameterBag->get('kernel.environment') === "prod") {
+            return $this->mailjetEmail->sendEmail($to, $subject, $body, $from, $bcc, $attachment, $options, $doNotFlush);
         }
 		
 		if (is_array($from) && count($from)) {
@@ -110,22 +128,22 @@ class CoreMailer
 			$email->attach($attachment);
 		}
 		if (isset($options['attachments']) && !empty($options['attachments']) && !is_null($options['attachments'])) {
-			foreach ($options['attachments'] as $attachment) {
-				if (is_array($attachment)) {
-					$email->attachFromPath($attachment['path'], $attachment['name']);
+			foreach ($options['attachments'] as $attached) {
+				if (is_array($attached)) {
+					$email->attachFromPath($attached['path'], $attached['name']);
 				} else {
-					$email->attachFromPath($attachment);
+					$email->attachFromPath($attached);
 				}
 			}
 		}
 		
 		try {
 			$this->mailer->send($email);
-			$this->messageLogger->saveLog($email, null, 'core_email', null);
+			$this->messageLogger->saveLog($email, null, 'core_email');
 			return true;
 		} catch (TransportExceptionInterface $e) {
 //			dd($e);
-			$this->messageLogger->saveLog($email, $e, 'core_email', null);
+			$this->messageLogger->saveLog($email, $e, 'core_email');
 			return $e;
 		}
 	}

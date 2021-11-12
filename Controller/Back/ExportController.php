@@ -12,12 +12,12 @@ use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/export", name="export_")
  * @isGranted("exports")
  */
+// TODO => Remove useless LeagueCSV dependency and replace with native PHP fputcsv function
 class ExportController extends AbstractController
 {
 	/**
@@ -25,14 +25,12 @@ class ExportController extends AbstractController
 	 * @param EntityManagerInterface $em
 	 * @return Response
 	 */
-	public function index(EntityManagerInterface $em)
-	{
-		$entities = array();
+	public function index(EntityManagerInterface $em): Response
+    {
+		$entities = [];
 		$meta = $em->getMetadataFactory()->getAllMetadata();
 		foreach ($meta as $m) {
-			//if (preg_match('#^App\\\Entity#', $m->getName()) === 1) {
 			$entities[] = $m->getName();
-			//}
 		}
 
 		return $this->render('@AkyosCore/export/index.html.twig', [
@@ -44,12 +42,10 @@ class ExportController extends AbstractController
 	/**
 	 * @Route("/entity/params", name="entity_params")
 	 * @param Request $request
-	 *
 	 * @return JsonResponse
 	 */
 	public function getEntityParameter(Request $request): JsonResponse
 	{
-
 		$phpDocExtractor = new PhpDocExtractor();
 
 		$reflectionExtractor = new ReflectionExtractor();
@@ -61,7 +57,6 @@ class ExportController extends AbstractController
 		$returnedTab = [];
 		$allreadyCheck = [];
 
-		$class = explode('\\', $request->get('entity'));
 		$properties = $propertyInfo->getProperties($request->get('entity'));
 		$returnedTab = $this->pushProperties($request->get('entity'), $properties, $propertyInfo, $returnedTab, $allreadyCheck, "");
 		return new JsonResponse($returnedTab);
@@ -70,17 +65,16 @@ class ExportController extends AbstractController
 	/**
 	 * @Route("/dl", name="entity_dl")
 	 * @param Request $request
-	 *
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function download(Request $request, EntityManagerInterface $entityManager)
-	{
+	public function download(Request $request, EntityManagerInterface $entityManager): Response
+    {
 		$els = $entityManager->getRepository($request->get('entity'))->findAll();
 		$rows = $request->get('rows');
 
 		$filename = 'export.csv';
-		$csv = Writer::createFromString('');
+		$csv = Writer::createFromString();
 
 		$records = [
 			$rows
@@ -112,8 +106,12 @@ class ExportController extends AbstractController
 		return $response;
 	}
 
-	public function valueToString($value)
-	{
+    /**
+     * @param $value
+     * @return string
+     */
+	public function valueToString($value): string
+    {
 		if (is_array($value)) {
 			$value = implode('|', $value);
 		}
@@ -132,23 +130,30 @@ class ExportController extends AbstractController
 		return $value;
 	}
 
+    /**
+     * @param $entity
+     * @param $properties
+     * @param $propertyInfo
+     * @param $returnedTab
+     * @param $allreadyCheck
+     * @param $currentDepth
+     * @return mixed
+     */
 	public function pushProperties($entity, $properties, $propertyInfo, $returnedTab, $allreadyCheck, $currentDepth)
 	{
 		$allreadyCheck[] = $entity;
 		foreach ($properties as $key => $p) {
 			$propertyName = $properties[$key];
 			$propertyType = $propertyInfo->getTypes($entity, $p);
-			if ($propertyType && count(explode('\\', $propertyType[0]->getClassName())) > 1 && !in_array($propertyType[0]->getClassName(), $allreadyCheck, true)) {
+			if ($propertyType && !in_array($propertyType[0]->getClassName(), $allreadyCheck, true) && count(explode('\\', $propertyType[0]->getClassName())) > 1) {
 				$returnedTab = $this->pushProperties($propertyType[0]->getClassName(), $propertyInfo->getProperties($propertyType[0]->getClassName()), $propertyInfo, $returnedTab, $allreadyCheck, ($currentDepth ?? '') . $propertyName . '.');
-			} else {
-				if ($propertyType) {
-					if (!$propertyType[0]->getCollectionValueType()) {
-						$returnedTab[] = ['name' => $currentDepth . $propertyName, 'class' => $propertyType[0]->getClassName()];
-					}
-				} else {
-					$returnedTab[] = ['name' => $currentDepth . $propertyName, 'class' => $entity];
-				}
-			}
+			} else if ($propertyType) {
+                if (!$propertyType[0]->getCollectionValueType()) {
+                    $returnedTab[] = ['name' => $currentDepth . $propertyName, 'class' => $propertyType[0]->getClassName()];
+                }
+            } else {
+                $returnedTab[] = ['name' => $currentDepth . $propertyName, 'class' => $entity];
+            }
 		}
 		return $returnedTab;
 	}

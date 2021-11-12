@@ -39,14 +39,14 @@ class PageType extends AbstractType
 			])
 			->add('content', CKEditorType::class, [
 				'required' => false,
-				'config' => array(
+				'config' => [
 					'placeholder' => "Texte",
 					'height' => 50,
 					'entities' => false,
 					'basicEntities' => false,
 					'entities_greek' => false,
 					'entities_latin' => false,
-				),
+				],
 				'label' => 'Contenu de la page'
 			])
 			->add('thumbnail', FileManagerType::class, [

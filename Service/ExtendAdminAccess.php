@@ -9,10 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExtendAdminAccess
 {
-    /** @var AdminAccessRepository  */
-	private $adminAccessRepository;
-	/** @var EntityManagerInterface  */
-	private $entityManager;
+	private AdminAccessRepository $adminAccessRepository;
+	private EntityManagerInterface $entityManager;
 	
 	public function __construct(AdminAccessRepository $adminAccessRepository, EntityManagerInterface $entityManager)
 	{
@@ -20,9 +18,9 @@ class ExtendAdminAccess
 		$this->entityManager = $entityManager;
 	}
 	
-	public function setDefaults()
-	{
-		if (!$this->adminAccessRepository->findOneByName("Pages")) {
+	public function setDefaults(): Response
+    {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Pages"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName('Pages')
@@ -31,7 +29,7 @@ class ExtendAdminAccess
 			$this->entityManager->persist($adminAccess);
 			$this->entityManager->flush();
 		}
-		if (!$this->adminAccessRepository->findOneByName("Liste des articles")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Liste des articles"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName('Liste des articles')
@@ -41,7 +39,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Catégories d'articles")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Catégories d'articles"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Catégories d'articles")
@@ -51,7 +49,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Etiquette d'articles")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Etiquette d'articles"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Etiquette d'articles")
@@ -61,7 +59,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Liste de menus")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Liste de menus"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Liste de menus")
@@ -71,7 +69,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Zones de menus")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Zones de menus"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Zones de menus")
@@ -81,7 +79,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Eléments du menu")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Eléments du menu"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Eléments du menu")
@@ -91,7 +89,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Accueil")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Accueil"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Accueil")
@@ -101,7 +99,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Utilisateurs")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Utilisateurs"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Utilisateurs")
@@ -111,7 +109,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Exports")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Exports"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Exports")
@@ -121,7 +119,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Options du site")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Options du site"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Options du site")
@@ -131,7 +129,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Catégorie d'options du site")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Catégorie d'options du site"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Catégorie d'options du site")
@@ -141,7 +139,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Paramètres")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Paramètres"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Paramètres")
@@ -151,7 +149,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Rgpd")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Rgpd"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Rgpd")
@@ -161,7 +159,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Champs personnalisés")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Champs personnalisés"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Champs personnalisés")
@@ -172,7 +170,7 @@ class ExtendAdminAccess
 		}
 		
 		
-		if (!$this->adminAccessRepository->findOneByName("Profil")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Profil"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Profil")
@@ -181,7 +179,7 @@ class ExtendAdminAccess
 			$this->entityManager->persist($adminAccess);
 			$this->entityManager->flush();
 		}
-		if (!$this->adminAccessRepository->findOneByName("Gestion des droits")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Gestion des droits"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Gestion des droits")
@@ -191,7 +189,7 @@ class ExtendAdminAccess
 			$this->entityManager->flush();
 		}
 		
-		if (!$this->adminAccessRepository->findOneByName("Options du Core")) {
+		if (!$this->adminAccessRepository->findOneBy(['name' => "Options du Core"])) {
 			$adminAccess = new AdminAccess();
 			$adminAccess
 				->setName("Options du Core")

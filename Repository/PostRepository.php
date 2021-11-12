@@ -19,7 +19,11 @@ class PostRepository extends ServiceEntityRepository
 	{
 		parent::__construct($registry, Post::class);
 	}
-	
+
+    /**
+     * @param null $keyword
+     * @return int|mixed|string
+     */
 	public function searchByTitle($keyword = null)
 	{
 		return $this->createQueryBuilder('m')
@@ -29,7 +33,12 @@ class PostRepository extends ServiceEntityRepository
 			->getQuery()
 			->getResult();
 	}
-	
+
+    /**
+     * @param $categoryObject
+     * @param null $keyword
+     * @return int|mixed|string
+     */
 	public function searchByCategory($categoryObject, $keyword = null)
 	{
 		return $this->createQueryBuilder('p')
@@ -41,6 +50,28 @@ class PostRepository extends ServiceEntityRepository
 			->getQuery()
 			->getResult();
 	}
+
+    /**
+     * @param $cat
+     * @return Query
+     */
+    public function findByCategory($cat): Query
+    {
+        $query = $this->createQueryBuilder('p')
+            ->where('p.published = true');
+
+        if ($cat) {
+            $query = $query
+                ->innerJoin('p.postCategories', 'pc')
+                ->andWhere('pc.slug LIKE :cat')
+                ->setParameter('cat', $cat);
+        }
+
+        return $query
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery();
+    }
+
 	// /**
 	//  * @return Post[] Returns an array of Post objects
 	//  */
@@ -69,25 +100,4 @@ class PostRepository extends ServiceEntityRepository
 		;
 	}
 	*/
-	
-	/**
-	 * @param $cat
-	 * @return Query
-	 */
-	public function findByCategory($cat): Query
-	{
-		$query = $this->createQueryBuilder('p')
-			->where('p.published = true');
-		
-		if ($cat) {
-			$query = $query
-				->innerJoin('p.postCategories', 'pc')
-				->andWhere('pc.slug LIKE :cat')
-				->setParameter('cat', $cat);
-		}
-		
-		return $query
-			->orderBy('p.createdAt', 'DESC')
-			->getQuery();
-	}
 }

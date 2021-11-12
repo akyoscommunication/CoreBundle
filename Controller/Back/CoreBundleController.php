@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\MenuArea;
 use App\Kernel;
+use Exception;
 use Gedmo\Translatable\Entity\Translation;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -50,12 +51,12 @@ class CoreBundleController extends AbstractController
 		
 		if ($entityOne->getPosition() < $request->get('position')) {
 			for ($i = $entityOne->getPosition() + 1; $i <= $request->get('position'); $i++) {
-				$entityTwo = $repository->findOneBy(array('position' => $i));
+				$entityTwo = $repository->findOneBy(['position' => $i]);
 				$entityTwo->setPosition($i - 1);
 			}
 		} elseif ($entityOne->getPosition() > $request->get('position')) {
 			for ($i = $request->get('position'); $i < $entityOne->getPosition(); $i++) {
-				$entityTwo = $repository->findOneBy(array('position' => $i));
+				$entityTwo = $repository->findOneBy(['position' => $i]);
 				$entityTwo->setPosition($i + 1);
 			}
 		}
@@ -119,10 +120,10 @@ class CoreBundleController extends AbstractController
 				'id' => $parentId,
 				'tab' => $tab
 			]);
-		} else {
-			return $this->redirectToRoute($route . '_index');
 		}
-	}
+
+        return $this->redirectToRoute($route . '_index');
+    }
 	
 	/**
 	 * @Route("/change-status/{redirect}/{entity}/{id}", name="change_status", methods={"POST"})
@@ -155,8 +156,7 @@ class CoreBundleController extends AbstractController
 	{
 		$menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]) ??
 			(!$this->getDoctrine()->getManager()->getMetadataFactory()->isTransient(Translation::class)
-				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $menu, MenuArea::class)
-				: null);
+				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $menu, MenuArea::class) : null);
 		return $this->renderView('@AkyosCore/menu/render.html.twig', [
 			'menu' => $menuArea,
 			'currentPage' => $page,
@@ -168,7 +168,7 @@ class CoreBundleController extends AbstractController
 	 * @param string $env
 	 * @param bool $debug
 	 * @return RedirectResponse
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function clearCache($env = 'prod', $debug = false): RedirectResponse
 	{
@@ -190,7 +190,7 @@ class CoreBundleController extends AbstractController
 	 * @param string $env
 	 * @param bool $debug
 	 * @return RedirectResponse
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function restartMessenger($env = 'prod', $debug = false): RedirectResponse
 	{

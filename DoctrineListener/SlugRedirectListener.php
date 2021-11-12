@@ -5,12 +5,10 @@ namespace Akyos\CoreBundle\DoctrineListener;
 use Akyos\CoreBundle\Annotations\SlugRedirect;
 use Akyos\CoreBundle\Entity\Redirect301;
 use Doctrine\Common\Annotations\Annotation;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\UnitOfWork;
+use ReflectionObject;
 
 class SlugRedirectListener
 {
@@ -19,30 +17,26 @@ class SlugRedirectListener
 	// Find is there already is a Redirect301 object with with same oldSlug and if so change the new slug.
 	// This way we'll never have duplicate oldSlug on same entity over the time.
 	
-	public function postUpdate(LifecycleEventArgs $args)
-	{
+	public function postUpdate(LifecycleEventArgs $args): bool
+    {
 		// Update object
 		$entity = $args->getEntity();
 		// Update reflexionObject (= class with all metadatas)
-		$reflectionObject = new \ReflectionObject($args->getObject());
+		$reflectionObject = new ReflectionObject($args->getObject());
 		// Deprecated but currently needed...
 		AnnotationRegistry::registerUniqueLoader('class_exists');
-		/** @var AnnotationReader $reader */
-		$reader = new AnnotationReader;
+        $reader = new AnnotationReader;
 		
 		if ($reflectionObject->hasProperty('slug')) {
-			
-			/** @var \ReflectionProperty $reflectionProperty */
-			$reflectionProperty = $reflectionObject->getProperty('slug');
+
+            $reflectionProperty = $reflectionObject->getProperty('slug');
 			/** @var Annotation $annotation */
 			$annotation = $reader->getPropertyAnnotation($reflectionProperty, SlugRedirect::class);
 			
 			if (null !== $annotation) {
-				
-				/** @var EntityManager $em */
-				$em = $args->getEntityManager();
-				/** @var UnitOfWork $uow */
-				$uow = $em->getUnitOfWork();
+
+                $em = $args->getEntityManager();
+                $uow = $em->getUnitOfWork();
 				/** @var array $changeSet */
 				$changeSet = $uow->getEntityChangeSet($entity);
 				
@@ -55,8 +49,7 @@ class SlugRedirectListener
 					
 					// 1 - No element has the new slug as oldSlug, new slug has not been changed in 3 => need to create a new Redirect301.
 					if (!$sameNewSlugRedirect && !$sameOldSlugRedirect) {
-						/** @var Redirect301 $redirect */
-						$redirect = new Redirect301();
+                        $redirect = new Redirect301();
 						$redirect->setObjectId($entity->getId());
 						$redirect->setObjectType($reflectionObject->getName());
 						$redirect->setOldSlug($changeSet['slug'][0]);
@@ -87,8 +80,7 @@ class SlugRedirectListener
 						
 						// 3.1 - If it's the first "postUpdate loop" iteration then there is no Redirect301 to update, but no one has been created in 1, so we have to create it here. Then, in the next iterations, his newSlug will be change in 2.
 						if (!($sameNewSlugRedirect)) {
-							/** @var Redirect301 $redirect */
-							$redirect = new Redirect301();
+                            $redirect = new Redirect301();
 							$redirect->setObjectId($entity->getId());
 							$redirect->setObjectType($reflectionObject->getName());
 							$redirect->setOldSlug($changeSet['slug'][0]);

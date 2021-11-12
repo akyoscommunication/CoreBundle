@@ -5,13 +5,11 @@ namespace Akyos\CoreBundle\Controller\Back;
 use Akyos\CoreBundle\Entity\PostCategory;
 use Akyos\CoreBundle\Form\PostCategoryType;
 use Akyos\CoreBundle\Repository\PostCategoryRepository;
-use Akyos\CoreBundle\Repository\SeoRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/post/category", name="post_category_")
@@ -43,11 +41,11 @@ class PostCategoryController extends AbstractController
 			'entity' => 'PostCategory',
 			'view' => 'taxonomy',
 			'route' => 'post_category',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Title' => 'Title',
 				'Description' => 'Content',
-			),
+			],
 		]);
 	}
 
@@ -108,14 +106,13 @@ class PostCategoryController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/delete/{id}", name="delete", methods={"DELETE"})
-	 * @param Request $request
-	 * @param PostCategory $postCategory
-	 * @param SeoRepository $seoRepository
-	 * @return Response
-	 */
-	public function delete(Request $request, PostCategory $postCategory, SeoRepository $seoRepository): Response
+    /**
+     * @Route("/delete/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param PostCategory $postCategory
+     * @return Response
+     */
+	public function delete(Request $request, PostCategory $postCategory): Response
 	{
 		if ($this->isCsrfTokenValid('delete' . $postCategory->getId(), $request->request->get('_token'))) {
 			$entityManager = $this->getDoctrine()->getManager();

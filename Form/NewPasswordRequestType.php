@@ -13,7 +13,8 @@ class NewPasswordRequestType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
-			->add('userEmail', EmailType::class);
+			->add('userEmail', EmailType::class)
+        ;
 	}
 	
 	public function configureOptions(OptionsResolver $resolver)

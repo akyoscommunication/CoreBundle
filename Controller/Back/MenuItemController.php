@@ -5,13 +5,11 @@ namespace Akyos\CoreBundle\Controller\Back;
 
 use Akyos\CoreBundle\Entity\MenuItem;
 use Akyos\CoreBundle\Form\MenuItemType;
-use Akyos\CoreBundle\Repository\MenuItemRepository;
 use Akyos\CoreBundle\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("admin/menu/item", name="menu_item_")
@@ -31,7 +29,7 @@ class MenuItemController extends AbstractController
 	public function edit(Request $request, MenuItem $menuItem, $menu, MenuRepository $menuRepository): Response
 	{
 		$menu = $menuRepository->find($menu);
-		$form = $this->createForm(MenuItemType::class, $menuItem, array('menu' => $menu));
+		$form = $this->createForm(MenuItemType::class, $menuItem, ['menu' => $menu]);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {

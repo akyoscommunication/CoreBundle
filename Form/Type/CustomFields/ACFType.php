@@ -3,7 +3,6 @@
 namespace Akyos\CoreBundle\Form\Type\CustomFields;
 
 use Akyos\CoreBundle\Entity\CustomField;
-use Akyos\CoreBundle\Entity\CustomFieldsGroup;
 use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Repository\CustomFieldsGroupRepository;
 use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
@@ -14,9 +13,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ACFType extends AbstractType
 {
-	private $customFieldValueRepository;
-	private $customFieldsGroupRepository;
-	private $entityManager;
+	private CustomFieldValueRepository $customFieldValueRepository;
+	private CustomFieldsGroupRepository $customFieldsGroupRepository;
+	private EntityManagerInterface $entityManager;
 	
 	public function __construct(CustomFieldValueRepository $customFieldValueRepository, CustomFieldsGroupRepository $customFieldsGroupRepository, EntityManagerInterface $entityManager)
 	{
@@ -41,8 +40,7 @@ class ACFType extends AbstractType
 	{
 		$customFieldsGroups = $this->customFieldsGroupRepository->findBy(['entity' => $options['entity']]);
 		foreach ($customFieldsGroups as $customFieldsGroup) {
-			/** @var CustomFieldsGroup $customFieldsGroup */
-			foreach ($customFieldsGroup->getCustomFields() as $customField) {
+            foreach ($customFieldsGroup->getCustomFields() as $customField) {
 				/** @var CustomField $customField */
 				$customFieldValue = $this->customFieldValueRepository->findOneBy(['customField' => $customField, 'objectId' => $options['object_id']]);
 				if (!$customFieldValue) {
@@ -60,8 +58,8 @@ class ACFType extends AbstractType
 		}
 	}
 	
-	public function getBlockPrefix()
-	{
+	public function getBlockPrefix(): string
+    {
 		return 'akyos_custom_field';
 	}
 }

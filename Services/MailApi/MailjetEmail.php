@@ -3,17 +3,18 @@
 namespace Akyos\CoreBundle\Services\MailApi;
 
 use Akyos\CoreBundle\Services\MessageLogger;
+use Exception;
 use Mailjet\Client;
 use Mailjet\Resources;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 // Needs composer require mailjet/mailjet-apiv3-php
 class MailjetEmail
 {
-	
 	private $apiKey;
 	private $secretKey;
-	private $messageLogger;
+	private MessageLogger $messageLogger;
 	
 	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger)
 	{
@@ -21,17 +22,28 @@ class MailjetEmail
 		$this->secretKey = $params->get('mailjet_secretKey');
 		$this->messageLogger = $messageLogger;
 	}
-	
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param $from
+     * @param null $bcc
+     * @param null $attachment
+     * @param array|null $options
+     * @param bool|null $doNotFlush
+     * @return bool|Exception
+     */
 	public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, array $options = null, bool $doNotFlush = null)
 	{
 		if (is_array($from) && count($from)) {
 			if (array_values($from) !== $from) {
-				$from = ['Email' => array_keys($from)[0], 'Name' => $from[array_keys($from)[0]] ? $from[array_keys($from)[0]] : array_keys($from)[0]];
+				$from = ['Email' => array_keys($from)[0], 'Name' => $from[array_keys($from)[0]] ?: array_keys($from)[0]];
 			} else {
 				$from = ['Email' => $from[0], 'Name' => $from[0]];
 			}
 		} else {
-			$from = explode('<', $from)[count(explode('<', $from)) - 1];
+			$from = explode('<', (string)$from)[count(explode('<', (string)$from)) - 1];
 			$from = explode('>', $from)[0];
 			$from = ['Email' => $from, 'Name' => $from];
 		}
@@ -77,18 +89,18 @@ class MailjetEmail
 			];
 		}
 		if (isset($options['attachments']) && !empty($options['attachments']) && !is_null($options['attachments'])) {
-			foreach ($options['attachments'] as $attachment) {
-				if (is_array($attachment)) {
+			foreach ($options['attachments'] as $attached) {
+				if (is_array($attached)) {
 					$attachmentsArray[] = [
-						'ContentType' => mime_content_type($attachment['path']),
-						'Filename' => $attachment['name'],
-						'Base64Content' => base64_encode($attachment['path'])
+						'ContentType' => mime_content_type($attached['path']),
+						'Filename' => $attached['name'],
+						'Base64Content' => base64_encode($attached['path'])
 					];
 				} else {
 					$attachmentsArray[] = [
-						'ContentType' => mime_content_type($attachment),
-						'Filename' => explode('/', $attachment)[count(explode('/', $attachment)) - 1],
-						'Base64Content' => base64_encode($attachment)
+						'ContentType' => mime_content_type($attached),
+						'Filename' => explode('/', $attached)[count(explode('/', $attached)) - 1],
+						'Base64Content' => base64_encode($attached)
 					];
 				}
 			}
@@ -113,11 +125,11 @@ class MailjetEmail
 		try {
 			$response = $mailjet->post(Resources::$Email, ['body' => $email]);
 			if (!$response->success()) {
-				throw new \Exception(json_encode($response->getData()));
+				throw new RuntimeException(json_encode($response->getData(), JSON_THROW_ON_ERROR));
 			}
 			$this->messageLogger->saveLog($email, null, 'mailjet_email', $doNotFlush);
 			return true;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->messageLogger->saveLog($email, $e, 'mailjet_email', $doNotFlush);
 			return $e;
 		}

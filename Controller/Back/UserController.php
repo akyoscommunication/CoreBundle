@@ -8,28 +8,28 @@ use Akyos\CoreBundle\Form\UserEditType;
 use Akyos\CoreBundle\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/user", name="user_")
  */
 class UserController extends AbstractController
 {
-	/**
-	 * @Route("/", name="index", methods={"GET"})
-	 * @param UserRepository $userRepository
-	 * @param PaginatorInterface $paginator
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
+    /**
+     * @Route("/", name="index", methods={"GET"})
+     * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param ParameterBagInterface $parameterBag
+     * @return Response
+     */
+	public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request, ParameterBagInterface $parameterBag): Response
 	{
-		$roles = $this->container->get('parameter_bag')->get('user_roles');
+		$roles = $parameterBag->get('user_roles');
 		$flippedRoles = array_flip($roles);
 
 		$query = $userRepository->createQueryBuilder('a');
@@ -57,22 +57,21 @@ class UserController extends AbstractController
 			'title' => 'Utilisateurs',
 			'entity' => 'User',
 			'route' => 'user',
-			'fields' => array(
+			'fields' => [
 				'ID' => 'Id',
 				'Email' => 'Email',
 				'Rôles' => 'RolesDisplay'
-			),
+			],
 		]);
 	}
 
-	/**
-	 * @Route("/new", name="new", methods={"GET","POST"})
-	 * @param Request $request
-	 * @param RoleHierarchyInterface $roleHierarchy
-	 * @param UserPasswordEncoderInterface $passwordEncoder
-	 * @return Response
-	 */
-	public function new(Request $request, RoleHierarchyInterface $roleHierarchy, UserPasswordEncoderInterface $passwordEncoder): Response
+    /**
+     * @Route("/new", name="new", methods={"GET","POST"})
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return Response
+     */
+	public function new(Request $request, UserPasswordHasherInterface $passwordHasher): Response
 	{
 		$user = new User();
 		$form = $this->createForm(UserType::class, $user);
@@ -80,7 +79,7 @@ class UserController extends AbstractController
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$user->setPassword(
-				$passwordEncoder->encodePassword(
+                $passwordHasher->hashPassword(
 					$user,
 					$form->get('password')->getData()
 				)
@@ -108,8 +107,7 @@ class UserController extends AbstractController
 	 * @param User $user
 	 * @return Response
 	 */
-	public function edit(Request $request,
-						 User $user): Response
+	public function edit(Request $request, User $user): Response
 	{
 		$form = $this->createForm(UserEditType::class, $user);
 		$form->handleRequest($request);

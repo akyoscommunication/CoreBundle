@@ -9,15 +9,18 @@ use Twig\Extension\GlobalsInterface;
 
 class GlobalsExtension extends AbstractExtension implements GlobalsInterface
 {
-	protected $coreOptionsRepository;
-	protected $rgpdOptionsRepository;
+	protected CoreOptionsRepository $coreOptionsRepository;
+	protected RgpdOptionsRepository $rgpdOptionsRepository;
 	
 	public function __construct(CoreOptionsRepository $coreOptionsRepository, RgpdOptionsRepository $rgpdOptionsRepository)
 	{
 		$this->coreOptionsRepository = $coreOptionsRepository;
 		$this->rgpdOptionsRepository = $rgpdOptionsRepository;
 	}
-	
+
+    /**
+     * @return array
+     */
 	public function getGlobals(): array
 	{
 		$coreOptions = $this->coreOptionsRepository->findAll();

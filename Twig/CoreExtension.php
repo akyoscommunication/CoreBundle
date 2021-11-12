@@ -3,36 +3,33 @@
 namespace Akyos\CoreBundle\Twig;
 
 use Akyos\CoreBundle\Controller\Back\CoreBundleController;
-use Akyos\CoreBundle\Entity\CustomFieldValue;
 use Akyos\CoreBundle\Entity\Option;
 use Akyos\CoreBundle\Entity\OptionCategory;
 use Akyos\CoreBundle\Entity\Post;
 use Akyos\CoreBundle\Repository\CoreOptionsRepository;
-use Akyos\CoreBundle\Repository\CustomFieldRepository;
-use Akyos\CoreBundle\Repository\CustomFieldValueRepository;
 use Akyos\CoreBundle\Services\CoreMailer;
 use Akyos\CoreBundle\Services\CoreService;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Integer;
+use Exception;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class CoreExtension extends AbstractExtension
 {
-	private $corebundleController;
-	private $em;
-	private $router;
-	private $coreOptionsRepository;
-	private $coreService;
-	/** @var ContainerInterface */
-	private $container;
-	private $mailer;
-	private $twig;
+	private CoreBundleController $corebundleController;
+	private EntityManagerInterface $em;
+	private UrlGeneratorInterface $router;
+	private CoreOptionsRepository $coreOptionsRepository;
+	private CoreService $coreService;
+	private ContainerInterface $container;
+	private CoreMailer $mailer;
 	
 	
 	public function __construct(
@@ -42,8 +39,7 @@ class CoreExtension extends AbstractExtension
 		CoreOptionsRepository $coreOptionsRepository,
 		CoreService $coreService,
 		ContainerInterface $container,
-		CoreMailer $mailer,
-		Environment $twig
+		CoreMailer $mailer
 	)
 	{
 		$this->corebundleController = $coreBundleController;
@@ -53,10 +49,12 @@ class CoreExtension extends AbstractExtension
 		$this->coreService = $coreService;
 		$this->container = $container;
 		$this->mailer = $mailer;
-		$this->twig = $twig;
 		
 	}
-	
+
+    /**
+     * @return TwigFilter[]
+     */
 	public function getFilters(): array
 	{
 		return [
@@ -69,17 +67,30 @@ class CoreExtension extends AbstractExtension
 		
 		];
 	}
-	
-	public function truncate($value, int $length, string $after)
-	{
+
+    /**
+     * @param $value
+     * @param int $length
+     * @param string $after
+     * @return string
+     */
+	public function truncate($value, int $length, string $after): string
+    {
 		return mb_substr($value, 0, $length, 'UTF-8') . $after;
 	}
-	
-	public function lcfirst($value)
-	{
+
+    /**
+     * @param $value
+     * @return string
+     */
+	public function lcfirst($value): string
+    {
 		return lcfirst($value);
 	}
-	
+
+    /**
+     * @return TwigFunction[]
+     */
 	public function getFunctions(): array
 	{
 		return [
@@ -113,9 +124,14 @@ class CoreExtension extends AbstractExtension
 			new TwigFunction('countElements', [$this, 'countElements']),
 		];
 	}
-	
-	public function dynamicVariable($el, $field)
-	{
+
+    /**
+     * @param $el
+     * @param $field
+     * @return string
+     */
+	public function dynamicVariable($el, $field): string
+    {
 		$getter = 'get' . $field;
 		if (count(explode(';', $field)) > 1) {
 			$getter1 = 'get' . explode(';', $field)[0];
@@ -128,7 +144,7 @@ class CoreExtension extends AbstractExtension
 			$arrayValue = "";
 			foreach ($value as $key => $item) {
 				$arrayValue .= $item;
-				if ($key != (count($value) - 1)) {
+				if ($key !== (count($value) - 1)) {
 					$arrayValue .= ", ";
 				}
 			}
@@ -136,27 +152,39 @@ class CoreExtension extends AbstractExtension
 		}
 		return $value;
 	}
-	
+
+    /**
+     * @param $entity
+     * @return bool
+     */
 	public function hasSeo($entity): bool
 	{
 		return $this->coreService->checkIfSeoEnable($entity) ?: false;
 	}
-	
-	public function getEntitySlug($entity)
-	{
+
+    /**
+     * @param $entity
+     * @return false
+     */
+	public function getEntitySlug($entity): bool
+    {
 		if (!class_exists($entity)) {
 			$entity = $this->getEntityNameSpace($entity);
 		}
 		return defined($entity . '::ENTITY_SLUG') ? $entity::ENTITY_SLUG : false;
 	}
-	
-	public function getEntityNameSpace($entity)
-	{
+
+    /**
+     * @param $entity
+     * @return string
+     */
+	public function getEntityNameSpace($entity): string
+    {
 		$entityFullName = null;
 		$meta = $this->em->getMetadataFactory()->getAllMetadata();
 		foreach ($meta as $m) {
 			$entityName = explode('\\', $m->getName());
-			$entityName = $entityName[sizeof($entityName) - 1];
+			$entityName = $entityName[count($entityName) - 1];
 			if (preg_match('/^' . $entity . '$/i', $entityName)) {
 				$entityFullName = $m->getName();
 			}
@@ -166,31 +194,53 @@ class CoreExtension extends AbstractExtension
 		}
 		return $entityFullName;
 	}
-	
-	public function matchSameEntity($str, $entity)
-	{
+
+    /**
+     * @param $str
+     * @param $entity
+     * @return bool
+     */
+	public function matchSameEntity($str, $entity): bool
+    {
 		if (!is_object($entity)) {
 			return false;
 		}
-		return ($str == get_class($entity) ? true : false);
+		return $str === get_class($entity);
 	}
-	
-	public function isArchive($entity, $page)
-	{
-		if (!is_array($page)) {
-			return false;
-		} elseif (!empty($page) && !is_object($page[0])) {
-			return false;
-		}
-		return (!empty($page) ? ($entity == get_class($page[0]) ? true : false) : false);
+
+    /**
+     * @param $entity
+     * @param $page
+     * @return bool
+     */
+	public function isArchive($entity, $page): bool
+    {
+        if (!is_array($page)) {
+            return false;
+        }
+
+        if (!empty($page) && !is_object($page[0])) {
+            return false;
+        }
+        return (!empty($page) ? ($entity === get_class($page[0])) : false);
 	}
-	
-	public function getMenu($menuSlug, $page)
-	{
-		$menu = $this->corebundleController->renderMenu($menuSlug, $page);
-		return $menu;
+
+    /**
+     * @param $menuSlug
+     * @param $page
+     * @return string
+     */
+	public function getMenu($menuSlug, $page): string
+    {
+        return $this->corebundleController->renderMenu($menuSlug, $page);
 	}
-	
+
+    /**
+     * @param $object
+     * @param null $class
+     * @return bool|string
+     * @throws ReflectionException
+     */
 	public function isInstanceOf($object, $class = null)
 	{
 		if(!$class) {
@@ -202,22 +252,37 @@ class CoreExtension extends AbstractExtension
 		$reflectionClass = new \ReflectionClass($class);
 		return $reflectionClass->isInstance($object);
 	}
-	
+
+    /**
+     * @param \Closure $closure
+     * @param $params
+     * @return mixed
+     */
 	public function useClosure(\Closure $closure, $params)
 	{
 		return $closure($params);
 	}
-	
-	public function getOption($optionSlug)
-	{
-		$option = $this->em->getRepository(Option::class)->findOneBy(array('slug' => $optionSlug));
-		return $option;
+
+    /**
+     * @param $optionSlug
+     * @return object|null
+     */
+	public function getOption($optionSlug): ?object
+    {
+        return $this->em->getRepository(Option::class)->findOneBy(['slug' => $optionSlug]);
 	}
-	
-	public function getOptions($optionsSlug)
-	{
+
+    /**
+     * @param $optionsSlug
+     * @return array
+     * @throws JsonException
+     */
+	public function getOptions($optionsSlug): array
+    {
 		$result = null;
-		$options = $this->em->getRepository(OptionCategory::class)->findOneBy(array('slug' => $optionsSlug));
+		/** @var OptionCategory $options */
+		$options = $this->em->getRepository(OptionCategory::class)->findOneBy(['slug' => $optionsSlug]);
+		/** @var Option $option */
 		foreach ($options->getOptions() as $option) {
 			if ($option instanceof Option) {
 				$result[$option->getSlug()] = $option->getValue();
@@ -226,10 +291,15 @@ class CoreExtension extends AbstractExtension
 		
 		return $result;
 	}
-	
-	public function getElementSlug($type, $typeId)
-	{
-		if (preg_match('/Category/i', $type)) {
+
+    /**
+     * @param $type
+     * @param $typeId
+     * @return false
+     */
+	public function getElementSlug($type, $typeId): bool
+    {
+		if (false !== stripos($type, "Category")) {
 			$entity = str_replace('Category', '', $type);
 		}
 		
@@ -237,7 +307,7 @@ class CoreExtension extends AbstractExtension
 		$meta = $this->em->getMetadataFactory()->getAllMetadata();
 		foreach ($meta as $m) {
 			$entityName = explode('\\', $m->getName());
-			$entityName = $entityName[sizeof($entityName) - 1];
+			$entityName = $entityName[count($entityName) - 1];
 			if (preg_match('/^' . $type . '$/i', $entityName)) {
 				$entityFullName = $m->getName();
 			}
@@ -247,28 +317,31 @@ class CoreExtension extends AbstractExtension
 		
 		if (!$el) {
 			return false;
-		} else {
-			$slug = $el->getSlug();
-			
-			return $slug;
 		}
-	}
-	
+
+        return $el->getSlug();
+    }
+
+    /**
+     * @param $type
+     * @param $typeId
+     * @return false|object|string
+     */
 	public function getElement($type, $typeId)
 	{
-		if ($typeId == null) {
+		if (!$typeId) {
 			return false;
 		}
 		
-		if (preg_match('/Category/i', $type)) {
-			$entity = str_replace('Category', '', $type);
+		if (false !== stripos($type, "Category")) {
+			str_replace('Category', '', $type);
 		}
 		
 		$entityFullName = null;
 		$meta = $this->em->getMetadataFactory()->getAllMetadata();
 		foreach ($meta as $m) {
 			$entityName = explode('\\', $m->getName());
-			$entityName = $entityName[sizeof($entityName) - 1];
+			$entityName = $entityName[count($entityName) - 1];
 			if (preg_match('/^' . $type . '$/i', $entityName)) {
 				$entityFullName = $m->getName();
 			}
@@ -282,15 +355,19 @@ class CoreExtension extends AbstractExtension
 		
 		return $slug;
 	}
-	
+
+    /**
+     * @param $type
+     * @return false|object[]|null
+     */
 	public function getElementsList($type)
 	{
-		if ($type == null) {
+		if (!$type) {
 			return false;
 		}
 		
-		if (preg_match('/Category/i', $type)) {
-			$entity = str_replace('Category', '', $type);
+		if (false !== stripos($type, "Category")) {
+			str_replace('Category', '', $type);
 		}
 		
 		$entityFullName = null;
@@ -315,16 +392,20 @@ class CoreExtension extends AbstractExtension
 		
 		return ($elements ?? null);
 	}
-	
+
+    /**
+     * @param $type
+     * @return false|object[]|null
+     */
 	public function getCategoryList($type)
 	{
-		if ($type == null) {
+		if (!$type) {
 			return false;
-		} else {
-			$type = $type . 'Category';
 		}
-		
-		$entityFullName = null;
+
+        $type .= 'Category';
+
+        $entityFullName = null;
 		$entityFields = null;
 		$meta = $this->em->getMetadataFactory()->getAllMetadata();
 		foreach ($meta as $m) {
@@ -346,38 +427,44 @@ class CoreExtension extends AbstractExtension
 		
 		return ($elements ?? null);
 	}
-	
-	public function getPermalinkById($type, $id)
-	{
+
+    /**
+     * @param $type
+     * @param $id
+     * @return string|null
+     */
+	public function getPermalinkById($type, $id): ?string
+    {
 		$link = '';
-		if ($type == 'Page' && $id) {
+		if ($type === 'Page' && $id) {
 			$coreOptions = $this->coreOptionsRepository->findAll();
 			$homepage = $coreOptions[0]->getHomepage();
 			$isHome = false;
-			if ($homepage) {
-				if ($homepage->getId() === $id) {
-					$isHome = true;
-				}
-			}
+			if ($homepage && $homepage->getId() === $id) {
+                $isHome = true;
+            }
 			if ($isHome) {
 				$link = $this->router->generate('home');
 			} else {
 				$link = $this->router->generate('page', ['slug' => $this->getElementSlug($type, $id)]);
 			}
-		} elseif (($type != 'Page') && $id) {
+		} elseif (($type !== 'Page') && $id) {
 			$link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($type), 'slug' => $this->getElementSlug($type, $id)]);
-		} elseif (($type != 'Page') && !$id) {
+		} elseif (($type !== 'Page') && !$id) {
 			$link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($type)]);
 		} else {
 			$link = null;
 		}
-		
-		
+
 		return $link;
 	}
-	
-	public function getPermalink($item)
-	{
+
+    /**
+     * @param $item
+     * @return string|null
+     */
+	public function getPermalink($item): ?string
+    {
 		$urlPaterne = "/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:_\/?#[\]@!\$&'\(\)\*\+,;=.]+$/";
 		$link = '';
 		if ($item->getUrl()) {
@@ -387,26 +474,24 @@ class CoreExtension extends AbstractExtension
 				$link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER["HTTP_HOST"] . $item->getUrl());
 			}
 		} elseif ($item->getType()) {
-			if (($item->getType() == 'Page') && $item->getIdType()) {
+			if (($item->getType() === 'Page') && $item->getIdType()) {
 				$coreOptions = $this->coreOptionsRepository->findAll();
 				$homepage = $coreOptions[0]->getHomepage();
 				$isHome = false;
-				if ($homepage) {
-					if ($homepage->getId() === $item->getIdType()) {
-						$isHome = true;
-					}
-				}
+				if ($homepage && $homepage->getId() === $item->getIdType()) {
+                    $isHome = true;
+                }
 				if ($isHome) {
 					$link = $this->router->generate('home');
 				} else {
 					$link = $this->router->generate('page', ['slug' => $this->getElementSlug($item->getType(), $item->getIdType())]);
 				}
-			} elseif (($item->getType() != 'Page') && $item->getIdType()) {
+			} elseif (($item->getType() !== 'Page') && $item->getIdType()) {
 				$slug = $this->getElementSlug($item->getType(), $item->getIdType());
 				if ($slug) {
 					$link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($item->getType()), 'slug' => $slug]);
 				}
-			} elseif (($item->getType() != 'Page') && !$item->getIdType()) {
+			} elseif (($item->getType() !== 'Page') && !$item->getIdType()) {
 				$link = $this->router->generate('archive', ['entitySlug' => $this->getEntitySlug($item->getType())]);
 			} else {
 				$link = null;
@@ -415,45 +500,61 @@ class CoreExtension extends AbstractExtension
 		
 		return $link;
 	}
-	
-	public function checkChildActive($item, $current)
-	{
+
+    /**
+     * @param $item
+     * @param $current
+     * @return bool
+     */
+	public function checkChildActive($item, $current): bool
+    {
 		foreach ($item->getMenuItemsChilds() as $child) {
-			if ($child) {
-				if ($current == $this->getElement($child->getType(), $child->getIdType())) {
-					return true;
-				}
-			}
+			if ($child && $current === $this->getElement($child->getType(), $child->getIdType())) {
+                return true;
+            }
 		}
 		return false;
 	}
-	
-	public function getBundleTab($objectType)
-	{
+
+    /**
+     * @param $objectType
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+	public function getBundleTab($objectType): string
+    {
 		$html = '';
 		$class = 'Akyos\BuilderBundle\Service\Builder';
-		if (class_exists($class)) {
-			if ($this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
-				$html .= $this->container->get('render.builder')->getTab();
-			}
-		}
+		if (class_exists($class) && $this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
+            $html .= $this->container->get('render.builder')->getTab();
+        }
 		
 		return $html;
 	}
-	
-	public function getBundleTabContent($objectType, $objectId)
-	{
+
+    /**
+     * @param $objectType
+     * @param $objectId
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+	public function getBundleTabContent($objectType, $objectId): string
+    {
 		$html = '';
 		$class = 'Akyos\BuilderBundle\Service\Builder';
-		if (class_exists($class)) {
-			if ($this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
-				$html .= $this->container->get('render.builder')->getTabContent($objectType, $objectId);
-			}
-		}
+		if (class_exists($class) && $this->coreService->checkIfBundleEnable('Akyos\BuilderBundle\AkyosBuilderBundle', 'Akyos\BuilderBundle\Entity\BuilderOptions', $objectType)) {
+            $html .= $this->container->get('render.builder')->getTabContent($objectType, $objectId);
+        }
 		
 		return $html;
 	}
-	
+
+    /**
+     * @param $exceptionMessage
+     * @return bool|Exception
+     */
 	public function sendExceptionMail($exceptionMessage)
 	{
 		try {
@@ -472,12 +573,16 @@ class CoreExtension extends AbstractExtension
                 'SMTP'
 			);
 			return true;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return $e;
 		}
 	}
-	
-	
+
+    /**
+     * @param string $slug
+     * @param Post $post
+     * @return bool
+     */
 	public function hasCategory(string $slug, Post $post): bool
 	{
 		$hasCategory = false;
@@ -488,7 +593,11 @@ class CoreExtension extends AbstractExtension
 		}
 		return $hasCategory;
 	}
-	
+
+    /**
+     * @param string $entity
+     * @return int
+     */
 	public function countElements(string $entity): int
 	{
 		return $this->em->getRepository($entity)->count([]);

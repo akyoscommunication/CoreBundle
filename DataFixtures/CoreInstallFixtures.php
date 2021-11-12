@@ -12,7 +12,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class CoreInstallFixtures extends Fixture
 {
-
 	public function load(ObjectManager $manager)
 	{
 		$homepage = new Page();
@@ -55,7 +54,7 @@ class CoreInstallFixtures extends Fixture
 			->setBackMainColor('#000000')
 			->setHasPosts(0)
 			->setHasPostDocuments(0)
-			->setHasSeoEntities(['Akyos\CoreBundle\Entity\Page'])
+			->setHasSeoEntities([Page::class])
 			->setAgencyLink('https://akyos.com')
 			->setAgencyName('Akyos Communication');
 		$manager->persist($coreOptions);

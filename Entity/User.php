@@ -9,8 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
-	
-	const ROLES = [
+	public const ROLES = [
 		'Visiteur' => 'ROLE_USER',
 		'Community Manager' => 'ROLE_CM',
 		'Administrateur' => 'ROLE_ADMIN',
