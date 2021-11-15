@@ -12955,15 +12955,15 @@ body h4 {
 }
 
 .aky-toast-info {
-  background-color: var(--info);
+  background-color: #17a2b8;
 }
 
 .aky-toast-error {
-  background-color: var(--danger);
+  background-color: #9c1a1a;
 }
 
 .aky-toast-success {
-  background-color: var(--success);
+  background-color: #1b870b;
 }
 
 @-webkit-keyframes slidein {
@@ -13785,12 +13785,6 @@ body h4 {
   -webkit-animation-timing-function: ease;
        -o-animation-timing-function: ease;
           animation-timing-function: ease;
-}
-
-.required:after {
-  content: '*';
-  color: red;
-  margin-left: 4px;
 }
 
 @-webkit-keyframes loaderRotate {
