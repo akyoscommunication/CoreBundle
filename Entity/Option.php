@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\Translatable\Translatable;
+use JsonException;
 
 /**
  * @ORM\Entity(repositoryClass="Akyos\CoreBundle\Repository\OptionRepository")
@@ -82,8 +83,12 @@ class Option implements Translatable
 	
 	public function getValue()
 	{
-		$testJson = json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
-		if (json_last_error() === JSON_ERROR_NONE) {
+        try {
+            $testJson = json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return $this->value;
+        }
+        if (json_last_error() === JSON_ERROR_NONE) {
 			return $testJson;
 		}
 		
