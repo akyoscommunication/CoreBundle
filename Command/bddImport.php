@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
 // TODO => A revoir il y a trop de trucs qui ne fonctionnent plus.
 class bddImport extends Command
 {
-	protected static string $defaultName = 'app:bdd-import';
+	protected static $defaultName = 'app:bdd-import';
 	private Connection $connection;
 	
 	public function __construct(Connection $connection)

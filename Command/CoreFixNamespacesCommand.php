@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CoreFixNamespacesCommand extends Command
 {
-	protected static string $defaultName = 'core:fix-namespaces';
+	protected static $defaultName = 'core:fix-namespaces';
 	private EntityManagerInterface $em;
 	private CoreExtension $coreExtension;
 	
