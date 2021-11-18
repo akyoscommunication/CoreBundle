@@ -26,7 +26,7 @@ class ConvertCsvToArray {
                         $data[] = array_combine($header, $row);
                     }
                 } else {
-					$data[] = str_getcsv($row);
+					$data[] = $row;
                 }
             }
             fclose($handle);
