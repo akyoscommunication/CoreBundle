@@ -74,10 +74,13 @@ class CoreExtension extends AbstractExtension
      * @param string $after
      * @return string
      */
-	public function truncate($value, int $length, string $after): string
+    public function truncate($value, int $length, string $after)
     {
-		return mb_substr($value, 0, $length, 'UTF-8') . $after;
-	}
+        if(strlen($value) < $length) {
+            return mb_substr($value, 0, $length, 'UTF-8') . $after;
+        }
+        return $value;
+    }
 
     /**
      * @param $value
