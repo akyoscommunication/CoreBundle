@@ -1,1 +1,411 @@
-:root{--color-primary:#093eab;--color-second:#041d53;--color-grey:#f3f3f3;--color-darkgrey:#252525;--color-back-main-color:#154797;--color-black:#0a0a0a;--color-white:#fff}body #tarteaucitron{background-color:var(--color-primary);color:var(--color-white)}body #tarteaucitron *{border:1px solid red}body #tarteaucitron a{text-decoration:underline;font-size:inherit;font-weight:inherit}body #tarteaucitron #tarteaucitronClosePanel{z-index:1!important}body #tarteaucitron #tarteaucitronClosePanel>i{color:inherit;font-size:inherit;font-family:icomoon,sans-serif!important}body #tarteaucitron #tarteaucitronServices{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-pack:initial;-ms-flex-pack:initial;justify-content:normal;-webkit-box-align:initial;-ms-flex-align:initial;align-items:normal;margin-top:0!important;overflow-y:hidden}body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset{background-color:transparent!important;border:none!important;padding:60px;z-index:0}@media only screen and (max-width:429px){body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset{padding-left:30px;padding-right:30px;padding-top:100px}}body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #tarteaucitronScrollbarAdjust,body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset .tarteaucitronName{display:none}body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #dialogTitle{text-transform:uppercase;font-weight:800;font-size:24px;line-height:42px;margin-top:0;margin-bottom:12px}body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #tarteaucitronInfo{background-color:transparent!important;border:none!important;font-weight:400;line-height:26px;margin-bottom:0!important;max-width:100%!important}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder{overflow-y:hidden;-webkit-box-flex:1;-ms-flex:1;flex:1;border:none;background-color:var(--color-primary);padding-left:60px;padding-right:60px;padding-bottom:60px}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronSelfLink{display:none}@media only screen and (max-width:429px){body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder{padding-left:30px;padding-right:30px}}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder #tarteaucitronServicesTitle_mandatory .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow{background-color:var(--color-primary);color:var(--color-white)}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul{height:100%;overflow-y:scroll;padding:0 30px;background-color:#fff;scrollbar-width:6px;scrollbar-track-color:var(--color-secondary)}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul::-webkit-scrollbar{width:6px;background-color:var(--color-white)}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul::-webkit-scrollbar-thumb{background-color:var(--color-secondary)}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul li#tarteaucitronServicesTitle_mandatory,body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul li>.tarteaucitronTitle{display:none}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start;-webkit-box-align:center;-ms-flex-align:center;align-items:center;background-color:var(--color-white);color:var(--color-text-color);padding:30px 0;border-left:none;border-bottom:1px solid rgba(0,0,0,.1)}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName{margin-left:0}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronH3,body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronInfoBox,body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronListCookies{font-size:16px;line-height:26px;font-weight:400;margin:0 0 15px}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronH3{font-weight:800;color:var(--color-primary);line-height:20px;text-transform:uppercase}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronListCookies{display:block}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .TarteaucitronTitleBlock .tarteaucitronInfoBox{display:block;position:relative;background-color:transparent;color:inherit;padding:0}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-flex:1;-ms-flex:1;flex:1}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow,body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk .tarteaucitronDeny{background-color:var(--color-white);color:var(--color-primary);border-color:var(--color-white);-webkit-box-shadow:none;box-shadow:none;opacity:1!important;padding:18px 28px}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine.tarteaucitronIsAllowed .tarteaucitronAsk .tarteaucitronAllow,body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine.tarteaucitronIsDenied .tarteaucitronAsk .tarteaucitronDeny{background-color:var(--color-primary);color:var(--color-white)}body #tarteaucitronRoot #tarteaucitronIcon{display:none!important}body #tarteaucitronRoot div#tarteaucitronAlertBig{display:-webkit-box;display:-ms-flexbox;display:flex;border-radius:0!important;background-color:var(--color-primary)!important;padding:60px!important;max-width:857px!important;width:100%}body #tarteaucitronRoot div#tarteaucitronAlertBig:before{text-transform:uppercase;font-weight:800;font-size:24px;line-height:42px;margin-top:0;margin-bottom:12px}body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronDisclaimerAlert{font-size:16px;line-height:26px}body #tarteaucitronRoot div#tarteaucitronAlertBig button{background-color:var(--color-white);color:var(--color-primary);border-color:var(--color-white)}body #tarteaucitronRoot div#tarteaucitronAlertBig button:hover{background-color:transparent;color:var(--color-white)}body #tarteaucitronRoot div#tarteaucitronAlertBig button:hover>i{color:var(--color-white)}body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronPersonalize,body #tarteaucitronRoot div#tarteaucitronAlertBig .tarteaucitronDeny{display:-webkit-inline-box!important;display:-ms-inline-flexbox!important;display:inline-flex!important;margin-bottom:24px}body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronCloseAlert{margin-left:auto;margin-right:auto;background-color:transparent;border-color:transparent;color:var(--color-white);-webkit-box-shadow:none;box-shadow:none}#akyCookiesGestion{cursor:pointer;position:fixed;bottom:-10rem;left:1rem;z-index:1;background:#fff;border-radius:100%;-webkit-box-shadow:0 14px 28px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.1);box-shadow:0 14px 28px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.1);height:50px;width:50px;padding:1rem;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-transition:.3s ease;-o-transition:ease .3s;transition:.3s ease}#akyCookiesGestion img{width:25px}#akyCookiesGestion.active{bottom:1rem}#akyCookiesGestion.hidden{display:none}@media only screen and (max-width:700px){body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine{-ms-flex-wrap:wrap;flex-wrap:wrap}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName{-webkit-box-flex:1;-ms-flex:1 0 100%;flex:1 0 100%;margin-bottom:15px}}@media only screen and (max-width:429px){body #tarteaucitron #tarteaucitronServices{display:block;height:100%!important;overflow-y:scroll}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder{overflow-y:visible}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder>ul{height:auto}body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk{-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}}
+/** Import Bootstrap functions */
+
+:root {
+  --color-primary: #093EAB;
+  --color-second: #041D53;
+  --color-grey: #F3F3F3;
+  --color-darkgrey: #252525;
+  --color-back-main-color: #154797;
+  --color-black: #0a0a0a;
+  --color-white: white;
+}
+
+/** Import Bootstrap functions */
+
+:root {
+  --color-primary: #093EAB;
+  --color-second: #041D53;
+  --color-grey: #F3F3F3;
+  --color-darkgrey: #252525;
+  --color-back-main-color: #154797;
+  --color-black: #0a0a0a;
+  --color-white: white;
+}
+
+/** Import Bootstrap functions */
+
+:root {
+  --color-primary: #093EAB;
+  --color-second: #041D53;
+  --color-grey: #F3F3F3;
+  --color-darkgrey: #252525;
+  --color-back-main-color: #154797;
+  --color-black: #0a0a0a;
+  --color-white: white;
+}
+
+/*******************************************************************************************/
+
+body #tarteaucitron {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+body #tarteaucitron * {
+  border: 1px solid red;
+}
+
+body #tarteaucitron a {
+  text-decoration: underline;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+body #tarteaucitron #tarteaucitronClosePanel {
+  z-index: 1 !important;
+}
+
+body #tarteaucitron #tarteaucitronClosePanel > i {
+  color: inherit;
+  font-size: inherit;
+  font-family: "icomoon", sans-serif !important;
+}
+
+body #tarteaucitron #tarteaucitronServices {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: initial;
+      -ms-flex-pack: initial;
+          justify-content: initial;
+  -webkit-box-align: initial;
+      -ms-flex-align: initial;
+          align-items: initial;
+  margin-top: 0 !important;
+  overflow-y: hidden;
+}
+
+body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 60px;
+  z-index: 0;
+}
+
+@media only screen and (max-width: 429px) {
+  body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 100px;
+  }
+}
+
+body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #tarteaucitronScrollbarAdjust,
+body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset .tarteaucitronName {
+  display: none;
+}
+
+body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #dialogTitle {
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 42px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+body #tarteaucitron #tarteaucitronServices #tarteaucitronMainLineOffset #tarteaucitronInfo {
+  background-color: transparent !important;
+  border: none !important;
+  font-weight: 400;
+  line-height: 26px;
+  margin-bottom: 0 !important;
+  max-width: 100% !important;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder {
+  overflow-y: hidden;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  border: none;
+  background-color: var(--color-primary);
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 60px;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronSelfLink {
+  display: none;
+}
+
+@media only screen and (max-width: 429px) {
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder #tarteaucitronServicesTitle_mandatory .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul {
+  height: 100%;
+  overflow-y: scroll;
+  padding: 0 30px;
+  background-color: white;
+  scrollbar-width: 6px;
+  /* Firefox */
+  scrollbar-track-color: var(--color-secondary);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul::-webkit-scrollbar {
+  width: 6px;
+  background-color: var(--color-white);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul li#tarteaucitronServicesTitle_mandatory {
+  display: none;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul li > .tarteaucitronTitle {
+  display: none;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: var(--color-white);
+  color: var(--color-text-color);
+  padding: 30px 0;
+  border-left: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName {
+  margin-left: 0;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronListCookies,
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronInfoBox,
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronH3 {
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  margin: 0 0 15px;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronH3 {
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 20px;
+  text-transform: uppercase;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .tarteaucitronListCookies {
+  display: block;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName .TarteaucitronTitleBlock .tarteaucitronInfoBox {
+  display: block;
+  position: relative;
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk .tarteaucitronDeny,
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  border-color: var(--color-white);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  opacity: 1 !important;
+  padding: 18px 28px;
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine.tarteaucitronIsAllowed .tarteaucitronAsk .tarteaucitronAllow {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine.tarteaucitronIsDenied .tarteaucitronAsk .tarteaucitronDeny {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+body #tarteaucitronRoot #tarteaucitronIcon {
+  display: none !important;
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 0 !important;
+  background-color: var(--color-primary) !important;
+  padding: 60px !important;
+  max-width: 857px !important;
+  width: 100%;
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig::before {
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 42px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronDisclaimerAlert {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig button {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  border-color: var(--color-white);
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig button:hover {
+  background-color: transparent;
+  color: var(--color-white);
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig button:hover > i {
+  color: var(--color-white);
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig .tarteaucitronDeny,
+body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronPersonalize {
+  display: -webkit-inline-box !important;
+  display: -ms-inline-flexbox !important;
+  display: inline-flex !important;
+  margin-bottom: 24px;
+}
+
+body #tarteaucitronRoot div#tarteaucitronAlertBig #tarteaucitronCloseAlert {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--color-white);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+#akyCookiesGestion {
+  cursor: pointer;
+  position: fixed;
+  bottom: -10rem;
+  left: 1rem;
+  z-index: 1;
+  background: white;
+  border-radius: 100%;
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+  height: 50px;
+  width: 50px;
+  padding: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-transition: ease .3s;
+  -o-transition: ease .3s;
+  transition: ease .3s;
+}
+
+#akyCookiesGestion img {
+  width: 25px;
+}
+
+#akyCookiesGestion.active {
+  bottom: 1rem;
+}
+
+#akyCookiesGestion.hidden {
+  display: none;
+}
+
+@media only screen and (max-width: 700px) {
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronName {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 0 100%;
+            flex: 1 0 100%;
+    margin-bottom: 15px;
+  }
+}
+
+@media only screen and (max-width: 429px) {
+  body #tarteaucitron #tarteaucitronServices {
+    display: block;
+    height: 100% !important;
+    overflow-y: scroll;
+  }
+
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder {
+    overflow-y: visible;
+  }
+
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder > ul {
+    height: auto;
+  }
+
+  body #tarteaucitron #tarteaucitronServices .tarteaucitronBorder .tarteaucitronLine .tarteaucitronAsk {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+}
