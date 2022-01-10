@@ -4,11 +4,11 @@ tarteaucitron.lang = {
     "adblock": "Benvenuto! Questo sito ti permette di attivare i servizi di terzi di tua scelta.",
     "adblock_call": "Disabilita il tuo adblocker per iniziare la navigazione.",
     "reload": "Aggiorna la pagina",
-
+    
     "alertBigScroll": "Continuando a scorrere,",
     "alertBigClick": "Continuando a navigare nel sito,",
     "alertBig": "autorizzi l’utilizzo dei cookies inviati da domini di terze parti",
-
+    
     "alertBigPrivacy": "Questo sito fa uso di cookies e ti consente di decidere se accettarli o rifiutarli",
     "alertSmall": "Gestione dei servizi",
     "acceptAll": "Ok, accetta tutto",
@@ -16,9 +16,9 @@ tarteaucitron.lang = {
     "close": "Chiudi",
 
     "privacyUrl": "Politica sulla riservatezza",
-
+    
     "all": "Preferenze per tutti i servizi",
-
+    
     "info": "Tutela della privacy",
     "disclaimer": "Abilitando l'uso dei servizi di terze parti, accetti la ricezione dei cookies e l'uso delle tecnologie analitici necessarie al loro funzionamento.",
     "allow": "Consenti",
@@ -35,12 +35,17 @@ tarteaucitron.lang = {
     "title": "Cookies management panel",
     "cookieDetail": "Cookie detail for",
     "ourSite": "on our site",
-    "newWindow": "(new window)",
-    "allowAll": "Allow all cookies",
-    "denyAll": "Deny all cookies",
+    "modalWindow": "(finestra modale)",
+    "newWindow": "(nuova finestra)",
+    "allowAll": "Consenti tutti i cookie",
+    "denyAll": "Rifiuta tutti i cookie",
 
+    "icon": "Cookies",
+    
     "fallback": "è disattivato",
-
+    "allowed": "permesso",
+    "disallowed": "non consentito",
+    
     "ads": {
         "title": "Regie pubblicitarie",
         "details": "Le regie pubblicitarie producono redditi gestendo la commercializzazione degli spazi del sito dedicati alle campagne pubblicitarie"
@@ -72,5 +77,8 @@ tarteaucitron.lang = {
     "other": {
         "title": "Altro",
         "details": "Servizi per visualizzare contenuti web."
-    }
+    },
+    
+    "mandatoryTitle": "Mandatory cookies",
+    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
 };

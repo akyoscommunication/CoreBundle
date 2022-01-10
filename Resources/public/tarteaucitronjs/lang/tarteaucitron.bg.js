@@ -4,11 +4,11 @@ tarteaucitron.lang = {
     "adblock": "Здравей! Този сайт позволяа включването на бисквитки по избор.",
     "adblock_call": "Моля изключете вашият adblocker и изберете бисквитките които искате, или спрете всички.",
     "reload": "Презареди",
-
+    
     "alertBigScroll": "Ако продължавате да скролвате,",
     "alertBigClick": "Ако продължавате да използвате този сайт,",
     "alertBig": "вив се съгласявате с всички бисквитки от трети лица.",
-
+    
     "alertBigPrivacy": "Този сайт използва бисквитки и Ви дава право да изберете записването на определени или всички.",
     "alertSmall": "Управление на услуги",
     "personalize": "Ще избирам",
@@ -16,7 +16,7 @@ tarteaucitron.lang = {
     "close": "Затвори",
 
     "privacyUrl": "Политика за поверителност",
-
+    
     "all": "Услуги които записват бисквитки на този сайт",
 
     "info": "Зашитава вашата сигурност",
@@ -35,11 +35,16 @@ tarteaucitron.lang = {
     "title": "Управление на бисквитките",
     "cookieDetail": "Информация за",
     "ourSite": "в нашият сайт",
+    "modalWindow": "(модален прозорец)",
     "newWindow": "(нов прозорец)",
     "allowAll": "Разреши всички",
     "denyAll": "Забрани всички",
 
+    "icon": "Cookies",
+    
     "fallback": "е изключен.",
+    "allowed": "Позволен",
+    "disallowed": "Забранено",
 
     "ads": {
         "title": "Рекламодатели",
@@ -72,5 +77,8 @@ tarteaucitron.lang = {
     "other": {
         "title": "Други",
         "details": "Services to display web content."
-    }
+    },
+    
+    "mandatoryTitle": "Mandatory cookies",
+    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
 };

@@ -1,221 +1,272 @@
-#tarteaucitronRoot {
-    position: fixed;
-    z-index: 999999999;
+@import "../common/variables";
+@import "../common/mixins";
 
+$breakpoint-sm: 429px;
+$breakpoint-md-sm: 700px;
+$breakpoint-md: 1050px;
+
+body {
     #tarteaucitron {
-        //top: 0 !important;
-        background-color: rgba(0, 0, 0, .85);
-        position: fixed;
-        z-index: 9;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        display: none;
+        background-color: var(--color-primary);
+        color: var(--color-white);
 
-        .tarteaucitronSelfLink {
-            //display: none;
+        * {
+            border: 1px solid red;
         }
 
-        &ClosePanel {
-            position: absolute;
-            right: 1rem;
-            top: 1rem;
-            background: none;
-            border: none;
+        a {
             text-decoration: underline;
-            color: $white;
+            font-size: inherit;
+            font-weight: inherit;
+        }
+
+        #tarteaucitronClosePanel {
+            z-index: 1 !important;
+
+            > i {
+                color: inherit;
+                font-size: inherit;
+                font-family: "icomoon", sans-serif !important;
+            }
         }
 
         #tarteaucitronServices {
-            padding: 4rem 5rem;
-            margin: 5rem auto 0;
-            background-color: $white;
-            width: 50%;
-            max-height: 85vh !important;
-            overflow-y: scroll;
-            position: relative;
+            @include flex(column, nowrap, initial, initial);
 
-            > .tarteaucitron {
-                &Line {
-                    border-bottom: 1px solid $grey;
-                    padding-bottom: 2rem;
+            margin-top: 0 !important;
+            overflow-y: hidden;
 
-                    .tarteaucitronH1 {
-                        font-size: 2rem;
-                        font-weight: bolder;
-                        letter-spacing: 0;
-                        display: block;
-                        margin-bottom: 2rem;
-                        color: $black;
-                    }
+            #tarteaucitronMainLineOffset {
+                background-color: transparent !important;
+                border: none !important;
+                padding: 60px;
+                z-index: 0;
 
-                    .tarteaucitronH2 {
-                        font-size: 1.3rem;
-                        font-weight: 600;
-                        letter-spacing: 1px;
-                        display: block;
-                        margin-bottom: 1rem;
-                        color: $black;
+                @media only screen and (max-width: $breakpoint-sm) {
+                    padding-left: 30px;
+                    padding-right: 30px;
+                    padding-top: 100px;
+                }
+
+                #tarteaucitronScrollbarAdjust,
+                .tarteaucitronName {
+                    display: none;
+                }
+
+                #dialogTitle {
+                    text-transform: uppercase;
+                    font-weight: 800;
+                    font-size: 24px;
+                    line-height: 42px;
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
+
+                #tarteaucitronInfo {
+                    background-color: transparent !important;
+                    border: none !important;
+                    font-weight: 400;
+                    line-height: 26px;
+                    margin-bottom: 0 !important;
+                    max-width: 100% !important;
+                }
+            }
+
+            .tarteaucitronBorder {
+                overflow-y: hidden;
+                flex: 1;
+                border: none;
+                background-color: var(--color-primary);
+                padding-left: 60px;
+                padding-right: 60px;
+                padding-bottom: 60px;
+
+                .tarteaucitronSelfLink {
+                    display: none;
+                }
+
+                @media only screen and (max-width: $breakpoint-sm) {
+                    padding-left: 30px;
+                    padding-right: 30px;
+                }
+
+                #tarteaucitronServicesTitle_mandatory {
+                    .tarteaucitronLine {
+                        .tarteaucitronAsk {
+                            .tarteaucitronAllow {
+                                background-color: var(--color-primary);
+                                color: var(--color-white);
+                            }
+                        }
                     }
                 }
 
-                &Border {
-                    padding-top: 2rem;
+                > ul {
+                    height: 100%;
+                    overflow-y: scroll;
+                    padding: 0 30px;
+                    background-color: white;
+                    scrollbar-width: 6px;  /* Firefox */
+                    scrollbar-track-color: var(--color-secondary);
 
-                    .tarteaucitron {
-                        &Hidden {
+                    &::-webkit-scrollbar {
+                        width: 6px;
+                        background-color: var(--color-white);
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background-color: var(--color-secondary);
+                    }
+
+                    li {
+                        &#tarteaucitronServicesTitle_mandatory {
                             display: none;
                         }
 
-                        &Title {
+                        > .tarteaucitronTitle {
+                            display: none;
+                        }
+                    }
+                }
 
+                .tarteaucitronLine {
+                    @include flex(row, nowrap, flex-start, center);
+
+                    background-color: var(--color-white);
+                    color: var(--color-text-color);
+                    padding: 30px 0;
+                    border-left: none;
+                    border-bottom: 1px solid rgba(#000, 0.1);
+
+                    .tarteaucitronName {
+                        margin-left: 0;
+
+                        .tarteaucitronListCookies,
+                        .tarteaucitronInfoBox,
+                        .tarteaucitronH3 {
+                            font-size: 16px;
+                            line-height: 26px;
+                            font-weight: 400;
+                            margin: 0 0 15px;
                         }
 
-                        &InfoBox {
-                            display: none;
-                            position: absolute;
-                            background-color: $grey;
-                            color: $white;
-                            left: 0;
-                            max-width: 50%;
-                            border-radius: 20px;
-                            padding: 1rem 2rem;
-                            font-size: .8rem;
-                            line-height: 1.2;
-                            z-index: 9;
+                        .tarteaucitronH3 {
+                            font-weight: 800;
+                            color: var(--color-primary);
+                            line-height: 20px;
+                            text-transform: uppercase;
+                        }
+
+                        .tarteaucitronListCookies {
+                            display: block;
+                        }
+
+                        .TarteaucitronTitleBlock {
+                            .tarteaucitronInfoBox {
+                                display: block;
+                                position: relative;
+                                background-color: transparent;
+                                color: inherit;
+                                padding: 0;
+                            }
                         }
                     }
 
-                    > ul {
-                        position: relative;
-                        padding: 0;
+                    .tarteaucitronAsk {
+                        @include flex(row, nowrap, flex-end, center);
 
-                        > li {
-                            > ul {
-                                > li {
-                                    list-style-type: none;
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                    position: relative;
-                                    padding: 1rem 0 1rem 1rem;
+                        flex: 1;
 
-                                    &:after {
-                                        content: '';
-                                        height: 2px;
-                                        position: absolute;
-                                        width: 100%;
-                                        left: 0;
-                                        bottom: 0;
-                                        transform-origin: left center;
-                                        transform: scaleX(0);
-                                        transition: ease .3s;
-                                        background-color: $grey;
-                                    }
+                        .tarteaucitronDeny,
+                        .tarteaucitronAllow {
+                            background-color: var(--color-white);
+                            color: var(--color-primary);
+                            border-color: var(--color-white);
+                            box-shadow: none;
+                            opacity: 1 !important;
+                            padding: 18px 28px;
+                        }
+                    }
 
-                                    &:hover {
-                                        &:after {
-                                            transform: scaleX(1);
-                                        }
-                                    }
+                    &.tarteaucitronIsAllowed {
+                        .tarteaucitronAsk {
+                            .tarteaucitronAllow {
+                                background-color: var(--color-primary);
+                                color: var(--color-white);
+                            }
+                        }
+                    }
 
-                                    .tarteaucitronAsk {
-                                        display: flex;
-                                        flex-direction: column;
-                                    }
-                                }
+                    &.tarteaucitronIsDenied {
+                        .tarteaucitronAsk {
+                            .tarteaucitronDeny {
+                                background-color: var(--color-primary);
+                                color: var(--color-white);
                             }
                         }
                     }
                 }
             }
         }
-    }
 
-    .tarteaucitronAlertBigTop {
-        background-color: $white !important;
-        position: fixed !important;
-        bottom: 1rem !important;
-        border-radius: 20px !important;
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1) !important;
-        left: 1rem !important;
-        color: $grey !important;
-        padding: 3rem !important;
-        transform: none !important;
-        top: auto !important;
-        width: auto !important;
+        &Root {
+            div {
+                &#tarteaucitron {
+                    &AlertBig {
+                        &::before {
+                            text-transform: uppercase;
+                            font-weight: 800;
+                            font-size: 24px;
+                            line-height: 42px;
+                            margin-top: 0;
+                            margin-bottom: 12px;
+                        }
 
-        &:before {
-            display: none;
-        }
-    }
+                        display: flex;
+                        border-radius: 0 !important;
+                        background-color: var(--color-primary) !important;
+                        padding: 60px !important;
+                        max-width: 857px !important;
+                        width: 100%;
 
-    #tarteaucitron {
-        &Personalize,
-        &CloseAlert,
-        &PrivacyUrl,
-        &AllAllowed,
-        &AllDenied,
-        &Allow,
-        &Deny,
-        button {
-            border-radius: 6px;
-            margin: 0 10px 10px 0;
-            padding: .3rem 1rem;
-            border: 1px solid grey;
-        }
+                        #tarteaucitronDisclaimerAlert {
+                            font-size: 16px;
+                            line-height: 26px;
+                        }
 
-        &AllAllowed, &Allow {
-            background-color: $green;
-        }
+                        button {
+                            background-color: var(--color-white);
+                            color: var(--color-primary);
+                            border-color: var(--color-white);
 
-        &AllDenied, &Deny {
-            background-color: $red;
-        }
+                            &:hover {
+                                background-color: transparent;
+                                color: var(--color-white);
 
-        &DisclaimerAlert {
-            display: block;
-            margin: 0 0 1rem !important;
-            color: $darkgrey;
-            padding: 0;
-            font-size: 1rem !important;
-        }
+                                > i {
+                                    color: var(--color-white);
+                                }
+                            }
+                        }
 
-        &Personalize {
-            background-color: #000;
-            color: $white;
-        }
+                        .tarteaucitronDeny,
+                        #tarteaucitronPersonalize {
+                            display: inline-flex !important;
+                            margin-bottom: 24px;
+                        }
 
-        &CloseAlert {
-
-        }
-
-        &PrivacyUrl {
-            background: none;
-            text-decoration: underline;
-        }
-
-        .tarteaucitronIsAllowed {
-            .tarteaucitronAllow {
-                background-color: $green;
-            }
-
-            .tarteaucitronDeny {
-                background-color: transparent;
+                        #tarteaucitronCloseAlert {
+                            margin-left: auto;
+                            margin-right: auto;
+                            background-color: transparent;
+                            border-color: transparent;
+                            color: var(--color-white);
+                            box-shadow: none;
+                        }
+                    }
+                }
             }
         }
-
-        .tarteaucitronIsDenied {
-            .tarteaucitronAllow {
-                background-color: transparent;
-            }
-
-            .tarteaucitronDeny {
-                background-color: $red;
-            }
-        }
-
     }
 }
 
@@ -249,54 +300,48 @@
     }
 }
 
-@media screen and (max-width: 1024px) {
-    #tarteaucitronRoot {
+@media only screen and (max-width: $breakpoint-md-sm) {
+    body {
         #tarteaucitron {
             #tarteaucitronServices {
-                width: 80%;
-            }
-        }
-    }
-}
+                .tarteaucitronBorder {
+                    .tarteaucitronLine {
+                        flex-wrap: wrap;
 
-@media screen and (max-width: 768px) {
-    #tarteaucitronRoot {
-        #tarteaucitron {
-            #tarteaucitronServices {
-                width: 100%;
-                padding: 4rem 2rem;
-
-                > .tarteaucitron {
-                    &Border {
-                        .tarteaucitron {
-                            &InfoBox {
-                                max-width: 100%;
-                            }
-                        }
-
-                        > ul {
-                            > li {
-                                > ul {
-                                    padding: 0;
-
-                                    > li {
-                                        padding: 1rem;
-                                        flex-direction: column;
-
-                                        .tarteaucitronAsk {
-                                            flex-direction: row;
-                                        }
-                                    }
-                                }
-                            }
+                        .tarteaucitronName {
+                            flex: 1 0 100%;
+                            margin-bottom: 15px;
                         }
                     }
                 }
             }
         }
+    }
+}
 
-        .tarteaucitronAlertBigTop {
-            right: 1rem;
+@media only screen and (max-width: $breakpoint-sm) {
+    body {
+        #tarteaucitron {
+            #tarteaucitronServices {
+                display: block;
+                height: 100% !important;
+                overflow-y: scroll;
+
+                .tarteaucitronBorder {
+                    overflow-y: visible;
+
+                    > ul {
+                        height: auto;
+                    }
+
+                    .tarteaucitronLine {
+                        .tarteaucitronAsk {
+                            flex-wrap: wrap;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
         }
     }
 }
