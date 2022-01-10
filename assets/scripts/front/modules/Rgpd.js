@@ -4,7 +4,7 @@ class Rgpd {
         if (akyCookiesgestion) {
             akyCookiesgestion.removeClass('hidden');
             $(window).on('scroll', function () {
-                if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+                if ($(window).scrollTop() + $(window).height() > ($(document).height() - 100)) {
                     akyCookiesgestion.addClass('active');
                 } else {
                     akyCookiesgestion.removeClass('active');
