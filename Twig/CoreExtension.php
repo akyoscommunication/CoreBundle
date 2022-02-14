@@ -298,9 +298,9 @@ class CoreExtension extends AbstractExtension
     /**
      * @param $type
      * @param $typeId
-     * @return false
+     * @return false|string
      */
-	public function getElementSlug($type, $typeId): bool
+	public function getElementSlug($type, $typeId)
     {
 		if (false !== stripos($type, "Category")) {
 			$entity = str_replace('Category', '', $type);
@@ -315,9 +315,8 @@ class CoreExtension extends AbstractExtension
 				$entityFullName = $m->getName();
 			}
 		}
-		
 		$el = $this->em->getRepository($entityFullName)->find($typeId);
-		
+
 		if (!$el) {
 			return false;
 		}
