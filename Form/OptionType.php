@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OptionType extends AbstractType
 {
-	protected int $optionId;
+	protected ?int $optionId = null;
 	protected array $pages;
 	
 	public function buildForm(FormBuilderInterface $builder, array $options)
