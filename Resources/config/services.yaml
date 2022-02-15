@@ -20,12 +20,6 @@ services:
         alias: 'Akyos\CoreBundle\Twig\GlobalsExtension'
         public: true
 
-    Akyos\CoreBundle\DoctrineListener\SlugRedirectListener:
-        arguments: [ ]
-        tags:
-            - { name: 'doctrine.event_listener', event: 'postUpdate' }
-        public: true
-
     gedmo.listener.sluggable:
         class: Gedmo\Sluggable\SluggableListener
         tags:

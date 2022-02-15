@@ -21,16 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class CoreBundleController extends AbstractController
 {
 	/**
-	 * @Route("/", name="index")
-	 */
-	public function index(): Response
-	{
-		return $this->render('@AkyosCore/core_bundle/index.html.twig', [
-			'title' => 'Tableau de Bord',
-		]);
-	}
-	
-	/**
 	 * @Route("/change-position/{route}/{el}/{id}/{bundle}", name="change_position", methods={"POST"})
 	 * @param $route
 	 * @param $el
@@ -143,24 +133,6 @@ class CoreBundleController extends AbstractController
 		$entityManager->flush();
 		
 		return $this->redirect(urldecode($redirect));
-	}
-	
-	public function sidebar($route): Response
-	{
-		return $this->render('@AkyosCore/layout/sidebar.html.twig', [
-			'route' => $route
-		]);
-	}
-	
-	public function renderMenu($menu, $page): string
-	{
-		$menuArea = $this->getDoctrine()->getRepository(MenuArea::class)->findOneBy(['slug' => $menu]) ??
-			(!$this->getDoctrine()->getManager()->getMetadataFactory()->isTransient(Translation::class)
-				? $this->getDoctrine()->getRepository(Translation::class)->findObjectByTranslatedField('slug', $menu, MenuArea::class) : null);
-		return $this->renderView('@AkyosCore/menu/render.html.twig', [
-			'menu' => $menuArea,
-			'currentPage' => $page,
-		]);
 	}
 	
 	/**
