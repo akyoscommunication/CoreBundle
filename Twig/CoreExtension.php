@@ -358,14 +358,14 @@ class CoreExtension extends AbstractExtension
 			$homepage = $coreOptions[0]->getHomepage();
 			$isHome = false;
 			if ($homepage) {
-				if ($homepage->getId() === $id) {
+                if ($homepage->getId() === $id) {
 					$isHome = true;
 				}
 			}
 			if ($isHome) {
 				$link = $this->router->generate('home');
-			} else {
-				$link = $this->router->generate('page', ['slug' => $this->getElementSlug($type, $id)]);
+			} else if ($slug = $this->getElementSlug($type, $id)) {
+				$link = $this->router->generate('page', ['slug' => $slug]);
 			}
 		} elseif (($type != 'Page') && $id) {
 			$link = $this->router->generate('single', ['entitySlug' => $this->getEntitySlug($type), 'slug' => $this->getElementSlug($type, $id)]);
