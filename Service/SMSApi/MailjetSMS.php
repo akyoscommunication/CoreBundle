@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Service\SMSApi;
 
+use Akyos\CoreBundle\Service\ErrorCatcher;
 use Akyos\CoreBundle\Service\MessageLogger;
 use Exception;
 use Mailjet\Client;
@@ -17,20 +18,22 @@ class MailjetSMS
 	private $smsToken;
 	private MessageLogger $messageLogger;
 	private FlashBagInterface $flashBag;
-	
-	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, FlashBagInterface $flashBag)
+    private ErrorCatcher $catcher;
+
+    public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, FlashBagInterface $flashBag, ErrorCatcher $catcher)
 	{
 		$this->smsToken = $params->get('mailjet_smsToken');
 		$this->sender = $params->get('mailjet_sender');
 		$this->messageLogger = $messageLogger;
 		$this->flashBag = $flashBag;
-	}
+        $this->catcher = $catcher;
+    }
 
     /**
      * @param string $phoneNumber
      * @param string $body
      * @param bool|null $doNotFlush
-     * @return array|bool|Exception|string|string[]
+     * @return array|bool|string[]
      */
 	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
@@ -58,7 +61,7 @@ class MailjetSMS
 			return true;
 		} catch (Exception $e) {
 			$this->messageLogger->saveLog($sms, $e, 'mailjet_sms', $doNotFlush);
-			return $e;
+            return $this->catcher->catch($e);
 		}
 	}
 
@@ -76,8 +79,6 @@ class MailjetSMS
 				"errorcode" => "ERRNUMFORMAT"
 			];
 		}
-		$number = str_replace([".", " "], "", $number);
-		
-		return $number;
+        return str_replace([".", " "], "", $number);
 	}
 }

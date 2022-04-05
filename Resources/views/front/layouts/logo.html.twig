@@ -1,8 +1,0 @@
-<a href="{{ app.request.getSchemeAndHttpHost }}" class="brand">
-    {% if cms_options and cms_options.siteLogo %}
-        <img id="mainLogo" src="{{ asset(getImagePathById(cms_options.siteLogo)) }}"
-             alt="{{ getImageAltById(cms_options.siteLogo) }}">
-    {% else %}
-        <img id="mainLogo" src="{{ asset('/bundles/akyoscore/images/akyos.png') }}" alt="Akyos">
-    {% endif %}
-</a>

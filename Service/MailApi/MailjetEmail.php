@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Service\MailApi;
 
+use Akyos\CoreBundle\Service\ErrorCatcher;
 use Akyos\CoreBundle\Service\MessageLogger;
 use Exception;
 use Mailjet\Client;
@@ -15,13 +16,15 @@ class MailjetEmail
 	private $apiKey;
 	private $secretKey;
 	private MessageLogger $messageLogger;
-	
-	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger)
+    private ErrorCatcher $catcher;
+
+    public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, ErrorCatcher $catcher)
 	{
 		$this->apiKey = $params->get('mailjet_apiKey');
 		$this->secretKey = $params->get('mailjet_secretKey');
 		$this->messageLogger = $messageLogger;
-	}
+        $this->catcher = $catcher;
+    }
 
     /**
      * @param $to
@@ -32,10 +35,10 @@ class MailjetEmail
      * @param null $attachment
      * @param array|null $options
      * @param bool|null $doNotFlush
-     * @return bool|Exception
+     * @return bool
      */
-	public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, array $options = null, bool $doNotFlush = null)
-	{
+	public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, array $options = null, bool $doNotFlush = null): bool
+    {
 		if (is_array($from) && count($from)) {
 			if (array_values($from) !== $from) {
 				$from = ['Email' => array_keys($from)[0], 'Name' => $from[array_keys($from)[0]] ?: array_keys($from)[0]];
@@ -131,7 +134,7 @@ class MailjetEmail
 			return true;
 		} catch (Exception $e) {
 			$this->messageLogger->saveLog($email, $e, 'mailjet_email', $doNotFlush);
-			return $e;
+            return $this->catcher->catch($e);
 		}
 	}
 }

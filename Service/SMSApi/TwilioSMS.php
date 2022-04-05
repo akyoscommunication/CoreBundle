@@ -2,6 +2,7 @@
 
 namespace Akyos\CoreBundle\Service\SMSApi;
 
+use Akyos\CoreBundle\Service\ErrorCatcher;
 use Akyos\CoreBundle\Service\MessageLogger;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twilio\Rest\Client;
@@ -13,14 +14,16 @@ class TwilioSMS
 	private $accountSID;
 	private $authToken;
 	private MessageLogger $messageLogger;
-	
-	public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger)
+    private ErrorCatcher $catcher;
+
+    public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, ErrorCatcher $catcher)
 	{
 		$this->accountSID = $params->get('twilio_accountSID');
 		$this->authToken = $params->get('twilio_authToken');
 		$this->sender = $params->get('twilio_sender');
 		$this->messageLogger = $messageLogger;
-	}
+        $this->catcher = $catcher;
+    }
 	
 	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
@@ -45,7 +48,7 @@ class TwilioSMS
 			return true;
 		} catch (\Exception $e) {
 			$this->messageLogger->saveLog($sms, $e, 'twilio_sms', $doNotFlush);
-			return $e;
+            return $this->catcher->catch($e);
 		}
 	}
 

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>{{ platform_options.platformTitle is defined ? platform_options.platformTitle : 'noreply' }}
+    <title>{{ getParameter('site_name') }}
         - {{ subject }}</title>
     <meta name="viewport" content="width=device-width"/>
     <style type="text/css">
@@ -16,19 +16,14 @@
 </head>
 <body style="margin: 0; padding: 0;" yahoo="fix">
 
-<table align="center" border="0" cellpadding="0" cellspacing="0"
-       style="border-collapse: collapse; width: 100%; max-width: 600px;" class="content">
+<table align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;" class="content">
     <tr>
-        <td align="center"
-            style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
-            <img src="{{ absolute_url(asset(getImagePathById( platform_options.platformLogo is defined ? platform_options.platformLogo : ''))) }}"
-                 alt="{{ platform_options.platformTitle is defined ? platform_options.platformTitle : 'noreply' }}"
-                 width="auto" height="80" style="display:block;"/>
+        <td align="center" style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
+            <img src="{{ absolute_url(asset(getImagePathById( platform_options.platformLogo is defined ? platform_options.platformLogo : ''))) }}" alt="{{ getParameter('site_name') }}" width="auto" height="80" style="display:block;"/>
         </td>
     </tr>
     <tr>
-        <td align="center"
-            style="padding: 25px 20px 20px 20px; color: #323232; font-family: Arial, sans-serif; font-size: 26px;">
+        <td align="center" style="padding: 25px 20px 20px 20px; color: #323232; font-family: Arial, sans-serif; font-size: 26px;">
             {{ title }}
         </td>
     </tr>
@@ -38,17 +33,13 @@
         </td>
     </tr>
     <tr>
-        <td align="center"
-            style="padding: 12px 10px 12px 10px; color: #808080; font-family: Arial, sans-serif; font-size: 12px; line-height: 18px;">
-            {{ "now"|date('Y') }} &copy; <a href="{{ absolute_url(path('home')) }}" target="_blank"
-                                            style="color: #808080; text-decoration: none;"><b>{{ platform_options.platformTitle is defined ? platform_options.platformTitle : 'noreply' }}</b></a>
+        <td align="center" style="padding: 12px 10px 12px 10px; color: #808080; font-family: Arial, sans-serif; font-size: 12px; line-height: 18px;">
+            {{ "now"|date('Y') }} &copy; <a href="{{ absolute_url(path('home')) }}" target="_blank" style="color: #808080; text-decoration: none;"><b>{{ getParameter('site_name') }}</b></a>
         </td>
     </tr>
     <tr>
         <td style="padding: 20px 0 0 0; color: #808080; font-family: Arial, sans-serif; font-size: 10px;">
-            <p>Cet e-mail à été envoyé automatiquement depuis le
-                site {{ platform_options.platformTitle is defined ? platform_options.platformTitle : 'noreply' }}, merci
-                de ne pas y répondre.</p>
+            <p>Cet e-mail à été envoyé automatiquement depuis le site {{ getParameter('site_name') }}, merci de ne pas y répondre.</p>
         </td>
     </tr>
 </table>

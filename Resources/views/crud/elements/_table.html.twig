@@ -15,88 +15,99 @@
     {% for el in els %}
         <tr>
             {% for name, field in fields %}
-                {% set dynamicVariable = dynamicVariable(el, field) %}
-                {% if field == 'Published' %}
+                {% if instanceOf(field, 'Closure') %}
                     <td>
-                        <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}"
-                              class="custom-switch-form" method="post">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input custom-switch-published"
-                                       id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="switch_{{ el.id }}"></label>
-                            </div>
-                        </form>
-                    </td>
-                {% elseif field == 'Position' %}
-                    <td>
-                        <form action="{{ path('core_change_position_sub', {
-                            'route' : route,
-                            'id' : el.id,
-                            'namespace': get_class(el), }) }}" class="not-submit" method="post">
-                            <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0"
-                                   max="{{ countElements(get_class(el)) }}">
-                        </form>
-                    </td>
-                {% elseif dynamicVariable.timezone is defined %}
-                    <td>
-                        {{ dynamicVariable|date('d/m/Y') }}
-                    </td>
-                {% elseif instanceOf(dynamicVariable, 'Doctrine\\ORM\\PersistentCollection') %}
-                    <td>
-                        {% for key, element in dynamicVariable %}
-                            {{ element }} {{ key != dynamicVariable|length - 1 ? ',' : '' }}
-                        {% endfor %}
-                    </td>
-                {% elseif field == 'File' %}
-                    <td>
-                        {{ getImageAltById(dynamicVariable) ? getImageAltById(dynamicVariable) :  getImageNameById(dynamicVariable) }}
+                        {{ useClosure(field, el)|raw }}
                     </td>
                 {% else %}
-
-                    <td>{{ dynamicVariable }}</td>
-                {% endif %}
-            {% endfor %}
-            <td>
-                {% set details = '' %}
-                {% if view is defined %}
-                    {% if view == 'page' %}
-                        {% set details = path(view, {'slug': el.slug}) %}
-                    {% elseif view == 'single' %}
-                        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'slug': el.slug}) %}
-                    {% elseif view == 'taxonomy' %}
-                        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'category': el.slug}) %}
-                    {% elseif view == 'tag' %}
-                        {% set details = path(view, {'entitySlug': getEntitySlug(entity), 'tag': el.slug}) %}
+                    {% if field|slice(-4) == "|raw" %}
+                        {% set dynamicVariable = dynamicVariable(el, field|slice(0, -4)) %}
                     {% else %}
-                        {% set details = null %}
+                        {% set dynamicVariable = dynamicVariable(el, field) %}
+                    {% endif %}
+                    {% if field == 'Published' %}
+                        <td>
+                            <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}"
+                                  class="custom-switch-form" method="post">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input custom-switch-published"
+                                           id="switch_{{ el.id }}" {{ el.published ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="switch_{{ el.id }}"></label>
+                                </div>
+                            </form>
+                        </td>
+                    {% elseif field == 'Position' %}
+                        <td>
+                            <form action="{{ path('core_change_position_sub', {
+                                'route' : route,
+                                'id' : el.id,
+                                'namespace': get_class(el), }) }}" class="not-submit" method="post">
+                                <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0"
+                                       max="{{ countElements(get_class(el)) }}">
+                            </form>
+                        </td>
+                    {% elseif dynamicVariable.timezone is defined %}
+                        <td>
+                            {{ dynamicVariable|date('d/m/Y') }}
+                        </td>
+                    {% elseif dynamicVariable is iterable %}
+                        <td>
+                            {% for key, element in dynamicVariable %}
+                                {{ element }} {{ key != dynamicVariable|length - 1 ? ',' : '' }}
+                            {% endfor %}
+                        </td>
+                    {% elseif instanceOf(dynamicVariable, 'Doctrine\\ORM\\PersistentCollection') %}
+                        <td>
+                            {% for key, element in dynamicVariable %}
+                                {{ element }} {{ key != dynamicVariable|length - 1 ? ',' : '' }}
+                            {% endfor %}
+                        </td>
+                    {% elseif field == 'File' %}
+                        <td>
+                            {% if dynamicVariable %}
+                                {{ getImageAltById(dynamicVariable) ? getImageAltById(dynamicVariable) :  getImageNameById(dynamicVariable) }}
+                            {% else %}
+                                Aucun fichier sélectionné
+                            {% endif %}
+                        </td>
+                    {% else %}
+                        {% if field|slice(-4) == "|raw" %}
+                            <td>{{ dynamicVariable|raw }}</td>
+                        {% else %}
+                            <td>{{ dynamicVariable }}</td>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
-                {% if details != '' %}
-                    <a class="btn btn-second btn-sm" href="{{ details }}" data-toggle="tooltip" title="Voir"><i
-                                class="fas fa-eye"></i></a>
-                {% endif %}
-                {% if show is defined and show %}
-                    <a class="btn btn-success btn-sm" href="{{ path(route~'_show', {'id': el.id}) }}"
-                       data-toggle="tooltip" title="Voir le détail"><i class="fas fa-eye"></i></a>
-                {% endif %}
-                {% if (button_edit is defined and button_edit) or button_edit is not defined %}
-                    <a class="btn btn-primary btn-sm" href="{{ path(route~'_edit', {'id': el.id}) }}"
-                       data-toggle="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
-                {% endif %}
-                {% if (button_delete is defined and button_delete) or button_delete is not defined %}
-                    <form method="post" class="not-submit index-delete"
-                          action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle="tooltip" title="Supprimer"
-                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
-                        <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
-                    </form>
-                {% endif %}
-            </td>
+            {% endfor %}
+            {% if not ((button_edit is defined and not button_edit) and (button_delete is defined and not button_delete) and (details is defined and not details) ) %}
+                <td class="d-flex">
+                    {% if details is defined and details %}
+                        {% set params = {} %}
+                        {% for k, p in details.params %}
+                            {% set params = params|merge({ (''~k~'') : (instanceOf(p, 'Closure') ? useClosure(p, el)|raw : dynamicVariable(el, p)) }) %}
+                        {% endfor %}
+                        {% if details.button is defined and instanceOf(details.button, 'Closure') %}
+                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}" href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ useClosure(details.button, el)|raw }}</a>
+                        {% else %}
+                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}" href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ details.button is defined and details.button ? details.button|raw : '<i class="fas fa-eye"></i>' }}</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if ((button_edit is defined and button_edit) or button_edit is not defined) and ((el.canBeEdited is defined and el.canBeEdited) or el.canBeEdited is not defined) %}
+                        <a class="btn btn-primary btn-sm mr-1" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
+                    {% endif %}
+                    {% if ((button_delete is defined and button_delete) or button_delete is not defined) and ((el.canBeDeleted is defined and el.canBeDeleted) or el.canBeDeleted is not defined) %}
+                        <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
+                        </form>
+                    {% endif %}
+                </td>
+            {% endif %}
         </tr>
     {% else %}
         <tr>
-            <td colspan="{{ fields|length + 1 }}">Il n'y a pas de résultats trouvés.</td>
+            <td colspan="{{ fields|length + 1 }}">Il n'y a pas de résultats.</td>
         </tr>
     {% endfor %}
     </tbody>

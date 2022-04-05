@@ -4,7 +4,7 @@
      <div class="wrapper"
           style="{{ cms_options and cms_options.backMaincolor ? "--color-back-main-color:"~cms_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(cms_options.backMaincolor)~";" : "" }}">
          <!-- Sidebar  -->
-         {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\CoreBundleController::sidebar', {'route': app.request.attributes.get('_route')})) }}
+         {% include "@AkyosCms/layout/sidebar.html.twig" with {'route': app.request.attributes.get('_route')} %}
 
          <!-- Page Content  -->
          <div id="main">

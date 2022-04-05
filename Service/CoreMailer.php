@@ -21,15 +21,17 @@ class CoreMailer
 	private MessageLogger $messageLogger;
 	private MailjetEmail $mailjetEmail;
 	private ParameterBagInterface $parameterBag;
-	
-	public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, MailjetEmail $mailjetEmail, MessageLogger $messageLogger)
+    private ErrorCatcher $catcher;
+
+    public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, MailjetEmail $mailjetEmail, MessageLogger $messageLogger, ErrorCatcher $catcher)
 	{
 		$this->mailer = $mailer;
 		$this->twig = $twig;
 		$this->messageLogger = $messageLogger;
 		$this->mailjetEmail = $mailjetEmail;
 		$this->parameterBag = $parameterBag;
-	}
+        $this->catcher = $catcher;
+    }
 
     /**
      * @param $to
@@ -44,7 +46,7 @@ class CoreMailer
      * @param array|null $options
      * @param bool|null $doNotFlush
      * @param null $backupSendMail
-     * @return bool|Exception|TransportExceptionInterface
+     * @return bool
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
@@ -134,9 +136,8 @@ class CoreMailer
 			$this->messageLogger->saveLog($email, null, 'core_email');
 			return true;
 		} catch (TransportExceptionInterface $e) {
-//			dd($e);
 			$this->messageLogger->saveLog($email, $e, 'core_email');
-			return $e;
+            return $this->catcher->catch($e);
 		}
 	}
 }

@@ -11,13 +11,22 @@ class MessageLogger
 {
 	private EntityManagerInterface $entityManager;
 	private SerializerInterface $serializer;
-	
-	public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer)
+    private ErrorCatcher $catcher;
+
+    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer, ErrorCatcher $catcher)
 	{
 		$this->entityManager = $entityManager;
 		$this->serializer = $serializer;
-	}
-	
+        $this->catcher = $catcher;
+    }
+
+    /**
+     * @param $message
+     * @param $error
+     * @param string|null $type
+     * @param bool|null $doNotFlush
+     * @return bool
+     */
 	public function saveLog($message = null, $error = null, string $type = null, bool $doNotFlush = null)
 	{
 		$messageLog = new MessageLog();
@@ -29,7 +38,7 @@ class MessageLogger
             try {
                 $messageLog->setError($this->serializer->serialize($error, 'json'));
             } catch (Exception $e) {
-//                dd($e);
+                return $this->catcher->catch($e);
             }
 		}
 		if ($type) {
@@ -43,7 +52,7 @@ class MessageLogger
 			}
 			return true;
 		} catch (Exception $e) {
-			return $e;
+            return $this->catcher->catch($e);
 		}
 	}
 }

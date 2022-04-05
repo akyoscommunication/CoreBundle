@@ -2,22 +2,24 @@
 
 namespace Akyos\CoreBundle\Service\GoogleAPI;
 
-use Exception;
+use Akyos\CoreBundle\Service\ErrorCatcher;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GoogleGeocoding
 {
 	private $googleApiKey;
-	
-	public function __construct(ParameterBagInterface $params)
+    private ErrorCatcher $catcher;
+
+    public function __construct(ParameterBagInterface $params, ErrorCatcher $catcher)
 	{
 		$this->googleApiKey = $params->get('google_apiKey');
-	}
+        $this->catcher = $catcher;
+    }
 
     /**
      * @param $address
-     * @return array|Exception
+     * @return array|bool
      */
 	public function geocodeAddress($address)
 	{
@@ -47,8 +49,8 @@ class GoogleGeocoding
                 throw new RuntimeException('Google API didn\'t return entire datas, please verify Google API configuration');
             }
             throw new RuntimeException('Google API return errored status code: ' . $response['status']);
-        } catch (Exception $e) {
-			return $e;
+        } catch (\Exception $e) {
+            return $this->catcher->catch($e);
 		}
 	}
 }

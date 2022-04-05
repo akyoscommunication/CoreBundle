@@ -6,6 +6,7 @@ use Akyos\CoreBundle\Service\CoreMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use ReflectionException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -14,17 +15,14 @@ class CoreExtension extends AbstractExtension
 {
 	private EntityManagerInterface $em;
 	private CoreMailer $mailer;
-	
-	
-	public function __construct(
-		EntityManagerInterface $entityManager,
-		CoreMailer $mailer
-	)
+    private ParameterBagInterface $parameterBag;
+
+    public function __construct(EntityManagerInterface $entityManager, CoreMailer $mailer, ParameterBagInterface $parameterBag)
 	{
 		$this->em = $entityManager;
 		$this->mailer = $mailer;
-		
-	}
+        $this->parameterBag = $parameterBag;
+    }
 
     /**
      * @return TwigFilter[]
@@ -77,6 +75,7 @@ class CoreExtension extends AbstractExtension
 			new TwigFunction('get_class', 'get_class'),
 			new TwigFunction('class_exists', 'class_exists'),
 			new TwigFunction('countElements', [$this, 'countElements']),
+			new TwigFunction('getParameter', [$this, 'getParameter']),
 		];
 	}
 
@@ -146,4 +145,13 @@ class CoreExtension extends AbstractExtension
 	{
 		return $this->em->getRepository($entity)->count([]);
 	}
+
+    /**
+     * @param string $parameterName
+     * @return array|bool|float|int|string|null
+     */
+    public function getParameter(string $parameterName)
+    {
+        return $this->parameterBag->get($parameterName);
+    }
 }

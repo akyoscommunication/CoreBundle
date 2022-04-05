@@ -17,23 +17,6 @@
                            id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general"
                            aria-selected="true">Général</a>
                     </li>
-                    {% if entity is defined and entity is same as ('Akyos\\BlogBundle\\Entity\\Post') and cms_options.hasPostDocuments %}
-                        <li class="nav-item">
-                            <a class="nav-link {{ app.request.get('tab') == 'postdoc' ? 'active' : '' }}"
-                               id="postdoc-tab" data-toggle="tab" href="#postdoc" role="tab" aria-controls="postdoc"
-                               aria-selected="true">Documents</a>
-                        </li>
-                    {% endif %}
-
-                    {# BUNDLES #}
-                    {{ getBundleTab(get_class(el))|raw }}
-                    {# SEO #}
-                    {% if hasSeo(get_class(el)) %}
-                        <li class="nav-item">
-                            <a class="nav-link" id="seo-tab" data-toggle="tab" href="#seo" role="tab"
-                               aria-controls="seo" aria-selected="true">Référencement</a>
-                        </li>
-                    {% endif %}
                     {# OPTIONS #}
                     <li class="nav-item">
                         <a class="nav-link" id="options-tab" data-toggle="tab" href="#options" role="tab"
@@ -49,80 +32,6 @@
                         {{ form_widget(form) }}
                         {{ form_end(form) }}
                     </div>
-                    {# POSTDOCUMENT #}
-                    {% if entity is defined and entity is same as ('Akyos\\BlogBundle\\Entity\\Post')    and cms_options.hasPostDocuments %}
-                        <div class="tab-pane fade {{ app.request.get('tab') == 'postdoc' ? 'show active' : '' }}"
-                             id="postdoc" role="tabpanel" aria-labelledby="postdoc-tab">
-                            <div class="aky-header-page">
-                                {% include '@AkyosCore/crud/elements/_header.html.twig' with {'title': 'Documents', 'parameters': {'id': el.id}, 'button_add': true, 'header_route' : 'post_document' } %}
-                            </div>
-                            <table class="table aky-table">
-                                <thead class="aky-table-head">
-                                <tr>
-                                    <th>Titre</th>
-                                    <th>Position</th>
-                                    <th>Privé/public</th>
-                                    <th style="width: 15%">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody class="aky-table-body">
-                                {% for doc in el.postDocuments|sort((a,b)=>a.position > b.position) %}
-                                    <tr>
-                                        <td>
-                                            {{ doc.title }}
-                                        </td>
-                                        <td>
-                                            <form action="{{ path('core_change_position_sub', {
-                                                'route' : 'post',
-                                                'id' : doc.id,
-                                                'namespace': get_class(doc),
-                                                'parentId': el.id,
-                                                'namespaceParent': get_class(el),
-                                                'tab': 'postdoc'
-                                            }) }}" method="post">
-                                                <input class="form-control" type="number" name="position"
-                                                       value="{{ doc.position }}" min="0"
-                                                       max="{{ el.postDocuments|length - 1 }}">
-                                            </form>
-                                        </td>
-                                        <td>
-                                            {{ doc.private ? '<i class="fas fa-lock"></i>':  '<i class="fas fa-lock-open"></i>' }}
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-primary btn-sm"
-                                               href="{{ path('post_document_edit', {'id': doc.id}) }}"><i
-                                                        class="fas fa-pencil-alt"></i></a>
-                                            <form method="post" class="not-submit index-delete"
-                                                  action="{{ path('post_document_delete', {'id': doc.id}) }}"
-                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token"
-                                                       value="{{ csrf_token('delete' ~ doc.id) }}">
-                                                <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="5">Il n'y a pas de résultats trouvés.</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endif %}
-                    {# BUNDLES #}
-                    {{ getBundleTabContent(get_class(el), el.id)|raw }}
-                    {# SEO #}
-                    {% if hasSeo(get_class(el)) %}
-                        <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="seo-tab">
-                            {{ render(controller(
-                                'Akyos\\CoreBundle\\Controller\\Back\\SeoController::index',
-                                { 'type': entity|url_encode, 'typeId': el.id, 'route' : route }
-                            )) }}
-                        </div>
-                    {% endif %}
                     {# OPTIONS #}
                     <div class="tab-pane fade" id="options" role="tabpanel" aria-labelledby="options-tab">
                         {{ include('@AkyosCore/crud/_delete_form.html.twig') }}
