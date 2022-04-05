@@ -16,7 +16,13 @@ class CrudHandler extends AbstractController
 		$this->em = $em;
 	}
 
-	public function new(FormInterface $form, Request $request, $success = "L'élément à bien été créé."): bool
+    /**
+     * @param FormInterface $form
+     * @param Request $request
+     * @param string $success
+     * @return bool
+     */
+	public function new(FormInterface $form, Request $request, string $success = "L'élément à bien été créé."): bool
 	{
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -33,7 +39,13 @@ class CrudHandler extends AbstractController
 		return false;
 	}
 
-	public function edit(FormInterface $form, Request $request, $success = "L'élément à bien été modifié."): bool
+    /**
+     * @param FormInterface $form
+     * @param Request $request
+     * @param string $success
+     * @return bool
+     */
+	public function edit(FormInterface $form, Request $request, string $success = "L'élément à bien été modifié."): bool
 	{
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -47,7 +59,13 @@ class CrudHandler extends AbstractController
 		return false;
 	}
 
-	public function delete($entity, Request $request, $success = "L'élément à bien été supprimé."): bool
+    /**
+     * @param $entity
+     * @param Request $request
+     * @param string $success
+     * @return bool
+     */
+	public function delete($entity, Request $request, string $success = "L'élément à bien été supprimé."): bool
 	{
 		if ($this->isCsrfTokenValid('delete' . $entity->getId(), $request->request->get('_token'))) {
 			$this->em->remove($entity);

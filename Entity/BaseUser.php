@@ -42,42 +42,45 @@ class BaseUser implements UserInterface
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $image;
-	
+
+    /**
+     * @return string|null
+     */
 	public function getEmail(): ?string
 	{
 		return $this->email;
 	}
-	
+
+    /**
+     * @param string $email
+     * @return $this
+     */
 	public function setEmail(string $email): self
 	{
 		$this->email = $email;
 		
 		return $this;
 	}
-	
-	/**
-	 * A visual identifier that represents this user.
-	 *
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return string
+     */
 	public function getUsername(): string
 	{
 		return (string)$this->email;
 	}
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * @return string
      */
     public function getUserIdentifier(): string
     {
         return (string)$this->email;
     }
-	
-	/**
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return array|string[]
+     */
 	public function getRoles(): array
 	{
 		$roles = $this->roles;
@@ -86,61 +89,76 @@ class BaseUser implements UserInterface
 		
 		return array_unique($roles);
 	}
-	
-	/**
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return array
+     */
 	public function getRolesDisplay(): array
 	{
 		$roles = $this->roles;
 		
 		return array_unique($roles);
 	}
-	
+
+    /**
+     * @param array $roles
+     * @return $this
+     */
 	public function setRoles(array $roles): self
 	{
 		$this->roles = $roles;
 		
 		return $this;
 	}
-	
-	/**
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return string
+     */
 	public function getPassword(): string
 	{
 		return (string)$this->password;
 	}
-	
+
+    /**
+     * @param $password
+     * @return $this
+     */
 	public function setPassword($password): self
 	{
 		$this->password = $password;
 		
 		return $this;
 	}
-	
-	/**
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return string|void|null
+     */
 	public function getSalt()
 	{
 		// not needed when using the "bcrypt" algorithm in security.yaml
 	}
-	
-	/**
-	 * @see UserInterface
-	 */
+
+    /**
+     * @return void
+     */
 	public function eraseCredentials()
 	{
 		// If you store any temporary, sensitive data on the user, clear it here
 		// $this->plainPassword = null;
 	}
-	
+
+    /**
+     * @return string|null
+     */
 	public function getImage(): ?string
 	{
 		return $this->image;
 	}
-	
+
+    /**
+     * @param string|null $image
+     * @return $this
+     */
 	public function setImage(?string $image): self
 	{
 		$this->image = $image;

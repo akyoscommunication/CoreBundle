@@ -4,7 +4,7 @@
 //
 //namespace App\Services\Mailers;
 //
-//use Akyos\CoreBundle\Services\CoreMailer;
+//use Akyos\CoreBundle\Service\CoreMailer;
 //use App\Repository\Platform\PlatformOptionsRepository;
 //use Symfony\Component\HttpFoundation\RequestStack;
 //

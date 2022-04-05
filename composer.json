@@ -1,6 +1,6 @@
 {
 	"name": "akyos/core-bundle",
-	"description": "AkyosCMS for Symfony - Core",
+	"description": "Akyos for Symfony - Core",
 	"type": "symfony-bundle",
 	"require": {
 		"php": "^7.4",

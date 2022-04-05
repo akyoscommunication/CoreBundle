@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller\Back;
+namespace Akyos\CoreBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Writer;
@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/export", name="export_")
- * @isGranted("exports")
+ * @IsGranted("exports")
  */
 // TODO => Remove useless LeagueCSV dependency and replace with native PHP fputcsv function
 class ExportController extends AbstractController

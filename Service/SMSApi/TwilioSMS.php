@@ -1,8 +1,8 @@
 <?php
 
-namespace Akyos\CoreBundle\Services\SMSApi;
+namespace Akyos\CoreBundle\Service\SMSApi;
 
-use Akyos\CoreBundle\Services\MessageLogger;
+use Akyos\CoreBundle\Service\MessageLogger;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twilio\Rest\Client;
 

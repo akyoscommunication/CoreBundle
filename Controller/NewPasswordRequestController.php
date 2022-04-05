@@ -1,13 +1,12 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller\Back;
+namespace Akyos\CoreBundle\Controller;
 
 use Akyos\CoreBundle\Entity\NewPasswordRequest;
-use Akyos\CoreBundle\Form\ChangePasswordType;
-use Akyos\CoreBundle\Form\NewPasswordRequestType;
-use Akyos\CoreBundle\Repository\CoreOptionsRepository;
+use Akyos\CoreBundle\Form\Type\ChangePasswordType;
+use Akyos\CoreBundle\Form\Type\NewPasswordRequestType;
 use Akyos\CoreBundle\Repository\NewPasswordRequestRepository;
-use Akyos\CoreBundle\Services\CoreMailer;
+use Akyos\CoreBundle\Service\CoreMailer;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +15,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/app/new_password_request", name="new_password")
@@ -31,17 +29,11 @@ class NewPasswordRequestController extends AbstractController
 	 * @param Request $request
 	 * @param TokenGeneratorInterface $tokenGenerator
 	 * @param CoreMailer $mailer
-	 * @param CoreOptionsRepository $coreOptionsRepository
 	 * @param TranslatorInterface $translator
 	 * @return Response
 	 */
-	public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, TranslatorInterface $translator): Response
+	public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, CoreMailer $mailer, TranslatorInterface $translator): Response
 	{
-		$coreOptions = $coreOptionsRepository->findAll();
-		if ($coreOptions) {
-			$coreOptions = $coreOptions[0];
-		}
-
 		$types = explode(';', urldecode($type));
 
 		$newPasswordRequest = new NewPasswordRequest();
@@ -58,8 +50,8 @@ class NewPasswordRequestController extends AbstractController
 			$user = null;
 			foreach ($types as $testedType) {
 				$testedType = implode('\\', explode('_', $testedType));
-				if (class_exists('Akyos\\CoreBundle\\Entity\\' . $testedType)) {
-					$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+				if (class_exists('Akyos\\CmsBundle\\Entity\\' . $testedType)) {
+					$user = $this->getDoctrine()->getRepository('Akyos\\CmsBundle\\Entity\\' . $testedType)->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
 					$newPasswordRequest->setUserType($testedType);
 				}
 				if (!$user && class_exists('App\\Entity\\' . $testedType)) {
@@ -89,9 +81,9 @@ class NewPasswordRequestController extends AbstractController
 
 					$mailer->sendMail(
 						$newPasswordRequest->getUserEmail(),
-						$coreOptions->getSiteTitle() . ' - Réinitialisation du mot de passe',
+						$this->getParameter('site_name') . ' - Réinitialisation du mot de passe',
 						'',
-						$coreOptions->getSiteTitle() . ' - Réinitialisation du mot de passe',
+						$this->getParameter('site_name') . ' - Réinitialisation du mot de passe',
 						'@AkyosCore/new_password_request/reset_password_email.html.twig',
 						null,
 						null,
@@ -124,17 +116,12 @@ class NewPasswordRequestController extends AbstractController
      * @param NewPasswordRequestRepository $newPasswordRequestRepository
      * @param Request $request
      * @param CoreMailer $mailer
-     * @param CoreOptionsRepository $coreOptionsRepository
      * @param TranslatorInterface $translator
      * @param UserPasswordHasherInterface $passwordHasher
      * @return Response
      */
-	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, CoreOptionsRepository $coreOptionsRepository, TranslatorInterface $translator, UserPasswordHasherInterface $passwordHasher): Response
+	public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, TranslatorInterface $translator, UserPasswordHasherInterface $passwordHasher): Response
 	{
-		$coreOptions = $coreOptionsRepository->findAll();
-		if ($coreOptions) {
-			$coreOptions = $coreOptions[0];
-		}
 		$newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
 		$message = '';
 
@@ -157,8 +144,8 @@ class NewPasswordRequestController extends AbstractController
 			$entityManager = $this->getDoctrine()->getManager();
 
 			$user = null;
-			if (class_exists('Akyos\\CoreBundle\\Entity\\' . $newPasswordRequest->getUserType())) {
-				$user = $this->getDoctrine()->getRepository('Akyos\\CoreBundle\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+			if (class_exists('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())) {
+				$user = $this->getDoctrine()->getRepository('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
 			}
 			if (!$user && class_exists('App\\Entity\\' . $newPasswordRequest->getUserType())) {
                 $user = $this->getDoctrine()->getRepository('App\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
@@ -178,9 +165,9 @@ class NewPasswordRequestController extends AbstractController
 
 			$mailer->sendMail(
 				$newPasswordRequest->getUserEmail(),
-				$coreOptions->getSiteTitle() . ' - Mot de passe réinitialisé',
+				$this->getParameter('site_name') . ' - Mot de passe réinitialisé',
 				'',
-				$coreOptions->getSiteTitle() . ' - Mot de passe réinitialisé',
+				$this->getParameter('site_name') . ' - Mot de passe réinitialisé',
 				'@AkyosCore/new_password_request/changed_password_email.html.twig',
 				null,
 				null,

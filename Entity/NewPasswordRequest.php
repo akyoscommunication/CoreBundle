@@ -60,101 +60,160 @@ class NewPasswordRequest
 	 * @ORM\Column(type="string", length=255)
 	 */
 	private $userEmail;
-	
+
+    /**
+     * @return int|null
+     */
 	public function getId(): ?int
 	{
 		return $this->id;
 	}
-	
+
+    /**
+     * @return int|null
+     */
 	public function getUserId(): ?int
 	{
 		return $this->userId;
 	}
-	
+
+    /**
+     * @param int $userId
+     * @return $this
+     */
 	public function setUserId(int $userId): self
 	{
 		$this->userId = $userId;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return string|null
+     */
 	public function getUserType(): ?string
 	{
 		return $this->userType;
 	}
-	
+
+    /**
+     * @param string $userType
+     * @return $this
+     */
 	public function setUserType(string $userType): self
 	{
 		$this->userType = $userType;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return string|null
+     */
 	public function getToken(): ?string
 	{
 		return $this->token;
 	}
-	
+
+    /**
+     * @param string $token
+     * @return $this
+     */
 	public function setToken(string $token): self
 	{
 		$this->token = $token;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return string|null
+     */
 	public function getUserRoute(): ?string
 	{
 		return $this->userRoute;
 	}
-	
+
+    /**
+     * @param string $userRoute
+     * @return $this
+     */
 	public function setUserRoute(string $userRoute): self
 	{
 		$this->userRoute = $userRoute;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return bool|null
+     */
 	public function getIsMailSent(): ?bool
 	{
 		return $this->isMailSent;
 	}
-	
+
+    /**
+     * @param bool|null $isMailSent
+     * @return $this
+     */
 	public function setIsMailSent(?bool $isMailSent): self
 	{
 		$this->isMailSent = $isMailSent;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return bool|null
+     */
 	public function getIsPasswordChanged(): ?bool
 	{
 		return $this->isPasswordChanged;
 	}
-	
+
+    /**
+     * @param bool|null $isPasswordChanged
+     * @return $this
+     */
 	public function setIsPasswordChanged(?bool $isPasswordChanged): self
 	{
 		$this->isPasswordChanged = $isPasswordChanged;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return bool|null
+     */
 	public function getIsConfirmationSent(): ?bool
 	{
 		return $this->isConfirmationSent;
 	}
-	
+
+    /**
+     * @param bool|null $isConfirmationSent
+     * @return $this
+     */
 	public function setIsConfirmationSent(?bool $isConfirmationSent): self
 	{
 		$this->isConfirmationSent = $isConfirmationSent;
 		
 		return $this;
 	}
-	
+
+    /**
+     * @return string|null
+     */
 	public function getUserEmail(): ?string
 	{
 		return $this->userEmail;
 	}
-	
+
+    /**
+     * @param string $userEmail
+     * @return $this
+     */
 	public function setUserEmail(string $userEmail): self
 	{
 		$this->userEmail = $userEmail;

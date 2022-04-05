@@ -53,7 +53,6 @@ class Toast {
         $html += '</div>';
         $html += '</div>';
 
-
         $('body').find('.aky-toast-container').append($html);
         this.deleteToast();
         setTimeout(function () {

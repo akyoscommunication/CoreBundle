@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    {% if core_options and core_options.favicon %}
-        <link rel="icon" href="{{ getImagePathById(core_options.favicon) }}"/>
+    {% if cms_options and cms_options.favicon %}
+        <link rel="icon" href="{{ getImagePathById(cms_options.favicon) }}"/>
     {% endif %}
     {% block rgpd_header %}
         {% include '@AkyosCore/front/layouts/rgpd_header.html.twig' %}

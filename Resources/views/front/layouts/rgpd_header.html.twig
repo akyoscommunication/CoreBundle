@@ -1,5 +1,5 @@
-{% set tarteaucitron = constant('Akyos\\CoreBundle\\Entity\\RgpdOptions::SERVICE_TARTEAUCITRON')%}
-{% set sirdata = constant('Akyos\\CoreBundle\\Entity\\RgpdOptions::SERVICE_SIRDATA') %}
+{% set tarteaucitron = constant('Akyos\\CmsBundle\\Entity\\RgpdOptions::SERVICE_TARTEAUCITRON')%}
+{% set sirdata = constant('Akyos\\CmsBundle\\Entity\\RgpdOptions::SERVICE_SIRDATA') %}
 
 {% if rgpd_options is defined and rgpd_options and rgpd_options.serviceUsed %}
     {% if rgpd_options.serviceUsed is same as(tarteaucitron) %}

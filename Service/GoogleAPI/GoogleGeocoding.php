@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Services\GoogleAPI;
+namespace Akyos\CoreBundle\Service\GoogleAPI;
 
 use Exception;
 use RuntimeException;

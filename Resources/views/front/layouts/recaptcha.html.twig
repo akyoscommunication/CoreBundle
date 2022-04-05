@@ -1,9 +1,9 @@
-{% if core_options.recaptchaPublicKey and core_options.recaptchaPrivateKey %}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ core_options.recaptchaPublicKey }}"></script>
+{% if cms_options.recaptchaPublicKey and cms_options.recaptchaPrivateKey %}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ cms_options.recaptchaPublicKey }}"></script>
     <script>
 
         grecaptcha.ready(function () {
-            const key = '{{ core_options.recaptchaPublicKey }}';
+            const key = '{{ cms_options.recaptchaPublicKey }}';
             let path = '{{ path('recaptcha_v3_verify', { 'action' : 'verify', 'token' : 'tokenHash' }) }}';
 
             grecaptcha.execute(key, {action: 'verify'}).then(token => {

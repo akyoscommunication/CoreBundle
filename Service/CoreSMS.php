@@ -1,21 +1,21 @@
 <?php
 
-namespace Akyos\CoreBundle\Services;
+namespace Akyos\CoreBundle\Service;
 
-use Akyos\CoreBundle\Repository\CoreOptionsRepository;
-use Akyos\CoreBundle\Services\SMSApi\MailjetSMS;
-use Akyos\CoreBundle\Services\SMSApi\TwilioSMS;
+use Akyos\CoreBundle\Service\SMSApi\MailjetSMS;
+use Akyos\CoreBundle\Service\SMSApi\TwilioSMS;
 use Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CoreSMS
 {
-	private CoreOptionsRepository $coreOptionsRepository;
+    private ParameterBagInterface $parameterBag;
 	private MailjetSMS $mailjetSMS;
 	private TwilioSMS $twilioSMS;
 	
-	public function __construct(CoreOptionsRepository $coreOptionsRepository, MailjetSMS $mailjetSMS, TwilioSMS $twilioSMS)
+	public function __construct(ParameterBagInterface $parameterBag, MailjetSMS $mailjetSMS, TwilioSMS $twilioSMS)
 	{
-		$this->coreOptionsRepository = $coreOptionsRepository;
+		$this->parameterBag = $parameterBag;
 		$this->mailjetSMS = $mailjetSMS;
 		$this->twilioSMS = $twilioSMS;
 	}
@@ -28,16 +28,11 @@ class CoreSMS
      */
 	public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
 	{
-		$coreOptions = $this->coreOptionsRepository->findAll();
-		if ($coreOptions) {
-			$coreOptions = $coreOptions[0];
-		}
-		
-		if ($coreOptions->getSMSTransport() === "Mailjet SMS") {
+		if ($this->parameterBag->get('sms_transport') === "Mailjet SMS") {
 			return $this->mailjetSMS->sendSMS($phoneNumber, $body, $doNotFlush);
 		}
 		
-		if ($coreOptions->getSMSTransport() === "Twilio SMS") {
+		if ($this->parameterBag->get('sms_transport') === "Twilio SMS") {
 			return $this->twilioSMS->sendSMS($phoneNumber, $body, $doNotFlush);
 		}
 		

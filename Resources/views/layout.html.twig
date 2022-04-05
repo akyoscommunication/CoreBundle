@@ -2,7 +2,7 @@
 
  {% block body %}
      <div class="wrapper"
-          style="{{ core_options and core_options.backMaincolor ? "--color-back-main-color:"~core_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(core_options.backMaincolor)~";" : "" }}">
+          style="{{ cms_options and cms_options.backMaincolor ? "--color-back-main-color:"~cms_options.backMaincolor~";--color-back-main-contrast-color:"~blackOrWhite(cms_options.backMaincolor)~";" : "" }}">
          <!-- Sidebar  -->
          {{ render(controller('Akyos\\CoreBundle\\Controller\\Back\\CoreBundleController::sidebar', {'route': app.request.attributes.get('_route')})) }}
 

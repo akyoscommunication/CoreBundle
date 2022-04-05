@@ -17,7 +17,7 @@
                            id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general"
                            aria-selected="true">Général</a>
                     </li>
-                    {% if entity is defined and entity is same as ('Akyos\\CoreBundle\\Entity\\Post') and core_options.hasPostDocuments %}
+                    {% if entity is defined and entity is same as ('Akyos\\BlogBundle\\Entity\\Post') and cms_options.hasPostDocuments %}
                         <li class="nav-item">
                             <a class="nav-link {{ app.request.get('tab') == 'postdoc' ? 'active' : '' }}"
                                id="postdoc-tab" data-toggle="tab" href="#postdoc" role="tab" aria-controls="postdoc"
@@ -50,7 +50,7 @@
                         {{ form_end(form) }}
                     </div>
                     {# POSTDOCUMENT #}
-                    {% if entity is defined and entity is same as ('Akyos\\CoreBundle\\Entity\\Post')    and core_options.hasPostDocuments %}
+                    {% if entity is defined and entity is same as ('Akyos\\BlogBundle\\Entity\\Post')    and cms_options.hasPostDocuments %}
                         <div class="tab-pane fade {{ app.request.get('tab') == 'postdoc' ? 'show active' : '' }}"
                              id="postdoc" role="tabpanel" aria-labelledby="postdoc-tab">
                             <div class="aky-header-page">

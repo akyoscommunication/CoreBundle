@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Form;
+namespace Akyos\CoreBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -14,7 +14,7 @@ class ChangePasswordType extends AbstractType
 		$builder
 			->add('password', RepeatedType::class, [
 				'type' => PasswordType::class,
-				'invalid_message' => 'Les deux entrées doivent être identiques',
+				'invalid_message' => 'Les deux valeurs doivent être identiques',
 				'options' => ['attr' => ['class' => 'password-field']],
 				'required' => true
 			]);

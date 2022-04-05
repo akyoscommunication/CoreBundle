@@ -5,7 +5,7 @@
 {% block page_content %}
 
     {% set hasSearch = false %}
-    {% if (bundle is defined and (bundle == "CoreBundle" or bundle == "BuilderBundle" or bundle == "FormBundle" or bundle == "ShopBundle")) or (search is defined and search) %}
+    {% if search is defined and search %}
         {% set hasSearch = true %}
     {% endif %}
 

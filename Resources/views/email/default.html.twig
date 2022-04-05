@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>{{ core_options is not empty ? core_options.siteTitle }} - {{ title }}</title>
+    <title>{{ cms_options is not empty ? cms_options.siteTitle }} - {{ title }}</title>
     <meta name="viewport" content="width=device-width"/>
     <style type="text/css">
         @media only screen and (min-device-width: 601px) {
@@ -20,8 +20,8 @@
     <tr>
         <td align="center"
             style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
-            <img src="{{ absolute_url(asset(getImagePathById(core_options is not empty ? core_options.siteLogo))) }}"
-                 alt="{{ core_options is not empty ? core_options.siteTitle }}" width="auto" height="80"
+            <img src="{{ absolute_url(asset(getImagePathById(cms_options is not empty ? cms_options.siteLogo))) }}"
+                 alt="{{ cms_options is not empty ? cms_options.siteTitle }}" width="auto" height="80"
                  style="display:block;"/>
         </td>
     </tr>
@@ -40,13 +40,13 @@
         <td align="center"
             style="padding: 12px 10px 12px 10px; color: #808080; font-family: Arial, sans-serif; font-size: 12px; line-height: 18px;">
             {{ "now"|date('Y') }} &copy; <a href="{{ url(path('home')) }}" target="_blank"
-                                            style="color: #808080; text-decoration: none;"><b>{{ core_options is not empty ? core_options.siteTitle }}</b></a>
+                                            style="color: #808080; text-decoration: none;"><b>{{ cms_options is not empty ? cms_options.siteTitle }}</b></a>
         </td>
     </tr>
     <tr>
         <td style="padding: 20px 0 0 0; color: #808080; font-family: Arial, sans-serif; font-size: 10px;">
             <p>Cet e-mail à été envoyé automatiquement depuis le {{ title }} du
-                site {{ core_options is not empty ? core_options.siteTitle }}, merci de ne pas y répondre.</p>
+                site {{ cms_options is not empty ? cms_options.siteTitle }}, merci de ne pas y répondre.</p>
         </td>
     </tr>
 </table>

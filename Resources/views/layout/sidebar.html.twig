@@ -1,8 +1,8 @@
 <nav id="sidebar">
     {# LOGO #}
     <div class="sidebar-header">
-        {% if core_options and core_options.siteLogo %}
-            <img src="{{ asset(getImagePathById(core_options.siteLogo)) }}" alt="{{ core_options.siteTitle }}">
+        {% if cms_options and cms_options.siteLogo %}
+            <img src="{{ asset(getImagePathById(cms_options.siteLogo)) }}" alt="{{ cms_options.siteTitle }}">
         {% else %}
             <img src="{{ asset('/bundles/akyoscore/images/akyos.png') }}" alt="Akyos">
         {% endif %}
@@ -23,7 +23,7 @@
 
         {# BLOG #}
         {% if is_granted('liste-des-articles') or is_granted('etiquette-darticles') or is_granted('categories-darticles') %}
-            {% if core_options and core_options.hasPosts %}
+            {% if cms_options and cms_options.hasPosts %}
                 <li class="{{ 'post' in route ? "active" : "" }}">
                     <a href="#post" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Articles</a>
                     <ul class="collapse list-unstyled" id="post">
@@ -119,8 +119,8 @@
                     {% endif %}
                     {% if is_granted('options-du-core') %}
                         {# COREBUNDLE OPTIONS #}
-                        <li class="{{ 'core_options' in route ? "active" : "" }}">
-                            <a href="{{ path('core_options') }}">CoreBundle</a>
+                        <li class="{{ 'cms_options' in route ? "active" : "" }}">
+                            <a href="{{ path('cms_options') }}">CoreBundle</a>
                         </li>
                     {% endif %}
                     {% if is_granted('rgpd') %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Form;
+namespace Akyos\CoreBundle\Form\Type;
 
 use Akyos\CoreBundle\Entity\NewPasswordRequest;
 use Symfony\Component\Form\AbstractType;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Akyos\CoreBundle\Services\MailApi;
+namespace Akyos\CoreBundle\Service\MailApi;
 
-use Akyos\CoreBundle\Services\MessageLogger;
+use Akyos\CoreBundle\Service\MessageLogger;
 use Exception;
 use Mailjet\Client;
 use Mailjet\Resources;

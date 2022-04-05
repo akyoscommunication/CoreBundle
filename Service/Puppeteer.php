@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Services;
+namespace Akyos\CoreBundle\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,7 +26,7 @@ class Puppeteer
      * @param string $margin
      * @return false|string|Response
      */
-    public function generatePDF($fileName, $path, $dl = true, $pathOutput = false, $margin = '0')
+    public function generatePDF($fileName, $path, bool $dl = true, bool $pathOutput = false, string $margin = '0')
     {
         $linkTo = strtok($path, '?');
         $output = $this->kernel->getProjectDir().'/documents/'.$fileName;

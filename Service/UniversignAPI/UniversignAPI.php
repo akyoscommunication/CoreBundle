@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Services\UniversignAPI;
+namespace Akyos\CoreBundle\Service\UniversignAPI;
 
 use Globalis\Universign\Request\TransactionRequest;
 use Globalis\Universign\Request\TransactionSigner;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  * Need composer require phpxmlrpc/phpxmlrpc
  *
  * Class UniversignAPI
- * @package Akyos\CoreBundle\Services\UniversignAPI
+ * @package Akyos\CoreBundle\Service\UniversignAPI
  */
 class UniversignAPI
 {

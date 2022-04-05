@@ -1,9 +1,8 @@
 core_bundle:
-    user_roles:
-        'Utilisateur': 'ROLE_USER'
-        'Admin': 'ROLE_ADMIN'
-        'Super admin': 'ROLE_SUPER_ADMIN'
-        'Akyos': 'ROLE_AKYOS'
+    site_name: 'Nouveau site Akyos Communication'
+
+    email_transport: 'Symfony Mailer'
+    sms_transport: 'Mailjet SMS'
 
     # Twilio SMS
     twilio_accountSID: 'ACe745711c080f8ac90bcac210adff34ed'

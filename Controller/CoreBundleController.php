@@ -1,16 +1,13 @@
 <?php
 
-namespace Akyos\CoreBundle\Controller\Back;
+namespace Akyos\CoreBundle\Controller;
 
-use Akyos\CoreBundle\Entity\MenuArea;
 use App\Kernel;
 use Exception;
-use Gedmo\Translatable\Entity\Translation;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,8 +59,8 @@ class CoreBundleController extends AbstractController
 	 * permet de changer les positions des éléments enfant d'une entité,
 	 * doit prendre en paramètres :
 	 * route du parent
-	 * id de l'élement cible + namespace complet ("Akyos\\CoreBundle\\Entity\\PostDocument")
-	 * id du parent + namespace complet "Akyos\\CoreBundle\\Entity\\Post"
+	 * id de l'élement cible + namespace complet ("Akyos\\BlogBundle\\Entity\\PostDocument")
+	 * id du parent + namespace complet "Akyos\\BlogBundle\\Entity\\Post"
 	 * @Route("/change-position-sub/{route}/{id}/{namespace}/{parentId}/{namespaceParent}/{tab}", name="change_position_sub", methods={"POST"})
 	 * @param $route
 	 * @param $id
@@ -134,15 +131,16 @@ class CoreBundleController extends AbstractController
 		
 		return $this->redirect(urldecode($redirect));
 	}
-	
-	/**
-	 * @Route("/clear-cache", name="clear_cache", methods={"GET"})
-	 * @param string $env
-	 * @param bool $debug
-	 * @return RedirectResponse
-	 * @throws Exception
-	 */
-	public function clearCache($env = 'prod', $debug = false): RedirectResponse
+
+    /**
+     * @Route("/clear-cache", name="clear_cache", methods={"GET"})
+     * @param string $env
+     * @param bool $debug
+     * @param string $returnRoute
+     * @return RedirectResponse
+     * @throws Exception
+     */
+	public function clearCache(string $env = 'prod', bool $debug = false, string $returnRoute = 'cms_index'): RedirectResponse
 	{
 		$kernel = new Kernel($env, $debug);
 		$application = new Application($kernel);
@@ -154,17 +152,18 @@ class CoreBundleController extends AbstractController
 		$application->run($input, $output);
 		
 		$this->addFlash('success', 'Le cache serveur a bien été vidé.');
-		return $this->redirectToRoute('core_index');
+		return $this->redirectToRoute($returnRoute);
 	}
-	
-	/**
-	 * @Route("/restart-messenger", name="restart_messenger", methods={"GET"})
-	 * @param string $env
-	 * @param bool $debug
-	 * @return RedirectResponse
-	 * @throws Exception
-	 */
-	public function restartMessenger($env = 'prod', $debug = false): RedirectResponse
+
+    /**
+     * @Route("/restart-messenger", name="restart_messenger", methods={"GET"})
+     * @param string $env
+     * @param bool $debug
+     * @param string $returnRoute
+     * @return RedirectResponse
+     * @throws Exception
+     */
+	public function restartMessenger(string $env = 'prod', bool $debug = false, string $returnRoute = 'cms_index'): RedirectResponse
 	{
 		$kernel = new Kernel($env, $debug);
 		$application = new Application($kernel);
@@ -176,6 +175,6 @@ class CoreBundleController extends AbstractController
 		$application->run($input, $output);
 		
 		$this->addFlash('success', 'Les workers ont tous été stoppés.');
-		return $this->redirectToRoute('core_index');
+		return $this->redirectToRoute($returnRoute);
 	}
 }

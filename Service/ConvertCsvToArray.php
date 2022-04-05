@@ -1,6 +1,6 @@
 <?php
 
-namespace Akyos\CoreBundle\Services;
+namespace Akyos\CoreBundle\Service;
 
 class ConvertCsvToArray
 {
