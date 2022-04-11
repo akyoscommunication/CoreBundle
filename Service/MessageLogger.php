@@ -5,6 +5,7 @@ namespace Akyos\CoreBundle\Service;
 use Akyos\CoreBundle\Entity\MessageLog;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MessageLogger
@@ -26,9 +27,10 @@ class MessageLogger
      * @param string|null $type
      * @param bool|null $doNotFlush
      * @return bool
+     * @throws TransportExceptionInterface
      */
-	public function saveLog($message = null, $error = null, string $type = null, bool $doNotFlush = null)
-	{
+	public function saveLog($message = null, $error = null, string $type = null, bool $doNotFlush = null): bool
+    {
 		$messageLog = new MessageLog();
 		
 		if ($message) {
@@ -37,9 +39,7 @@ class MessageLogger
 		if($error) {
             try {
                 $messageLog->setError($this->serializer->serialize($error, 'json'));
-            } catch (Exception $e) {
-                return $this->catcher->catch($e);
-            }
+            } catch (Exception $e) {}
 		}
 		if ($type) {
 			$messageLog->setType($type);

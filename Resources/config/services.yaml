@@ -1,6 +1,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 
 parameters:
+    APP_ENV: '%env(APP_ENV)%'
 
 services:
     # default configuration for services in *this* file
