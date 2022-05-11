@@ -37,7 +37,7 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
 	{
 		$container->loadFromExtension('twig', [
 			'paths' => [
-				'lib/CoreBundle/Resources/views/bundles/TwigBundle/' => 'Twig',
+				__DIR__.'/../Resources/views/bundles/TwigBundle/' => 'Twig',
 			],
 		]);
 	}
