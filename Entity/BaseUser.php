@@ -62,13 +62,21 @@ class BaseUser implements UserInterface, PasswordAuthenticatedUserInterface
 		
 		return $this;
 	}
+	
+	/**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
 
     /**
      * @return string
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+	return (string)$this->email;
     }
 
     /**
