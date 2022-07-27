@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @MappedSuperclass
  * @UniqueEntity("email", message="email_already_used")
  */
-class BaseUser implements UserInterface
+class BaseUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
 	use TimestampableEntity;
 	
@@ -60,14 +60,6 @@ class BaseUser implements UserInterface
 		$this->email = $email;
 		
 		return $this;
-	}
-
-    /**
-     * @return string
-     */
-	public function getUsername(): string
-	{
-		return (string)$this->email;
 	}
 
     /**
