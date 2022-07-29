@@ -9,12 +9,9 @@ use Symfony\Component\Form\FormInterface;
 
 class CrudHandler extends AbstractController
 {
-	private EntityManagerInterface $em;
-
-	public function __construct(EntityManagerInterface $em)
-	{
-		$this->em = $em;
-	}
+	public function __construct(
+		private readonly EntityManagerInterface $entityManager
+	) {}
 
     /**
      * @param FormInterface $form
@@ -28,8 +25,8 @@ class CrudHandler extends AbstractController
 		if ($form->isSubmitted() && $form->isValid()) {
 			$entity = $form->getData();
 
-			$this->em->persist($entity);
-			$this->em->flush();
+			$this->entityManager->persist($entity);
+			$this->entityManager->flush();
 
 			if ($success) {
 				$this->addFlash('success', $success);
@@ -49,7 +46,7 @@ class CrudHandler extends AbstractController
 	{
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
-			$this->em->flush();
+			$this->entityManager->flush();
 
 			if ($success) {
 				$this->addFlash('success', $success);
@@ -68,8 +65,8 @@ class CrudHandler extends AbstractController
 	public function delete($entity, Request $request, string $success = "L'élément à bien été supprimé."): bool
 	{
 		if ($this->isCsrfTokenValid('delete' . $entity->getId(), $request->request->get('_token'))) {
-			$this->em->remove($entity);
-			$this->em->flush();
+			$this->entityManager->remove($entity);
+			$this->entityManager->flush();
 
 			if ($success) {
 				$this->addFlash('success', $success);
