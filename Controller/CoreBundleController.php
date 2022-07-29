@@ -4,6 +4,7 @@ namespace Akyos\CoreBundle\Controller;
 
 use App\Kernel;
 use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -23,15 +24,16 @@ class CoreBundleController extends AbstractController
 	 * @param $el
 	 * @param $id
 	 * @param Request $request
-	 * @param $bundle
+	 * @param EntityManagerInterface $entityManager
+	 * @param null $bundle
 	 * @return RedirectResponse
 	 */
-	public function changePosition($route, $el, $id, Request $request, $bundle = null): RedirectResponse
+	public function changePosition($route, $el, $id, Request $request, EntityManagerInterface $entityManager, $bundle = null): RedirectResponse
 	{
 		if ($bundle) {
-			$repository = $this->getDoctrine()->getRepository('Akyos\\' . $bundle . '\Entity\\' . $el);
+			$repository = $entityManager->getRepository('Akyos\\' . $bundle . '\Entity\\' . $el);
 		} else {
-			$repository = $this->getDoctrine()->getRepository('App\\Entity\\' . $el);
+			$repository = $entityManager->getRepository('App\\Entity\\' . $el);
 		}
 		
 		$entityOne = $repository->find($id);
@@ -48,7 +50,6 @@ class CoreBundleController extends AbstractController
 			}
 		}
 		
-		$entityManager = $this->getDoctrine()->getManager();
 		$entityOne->setPosition($request->get('position'));
 		$entityManager->flush();
 		
@@ -66,14 +67,15 @@ class CoreBundleController extends AbstractController
 	 * @param $id
 	 * @param $namespace
 	 * @param Request $request
-	 * @param $parentId
-	 * @param $namespaceParent
+	 * @param EntityManagerInterface $entityManager
+	 * @param null $parentId
+	 * @param null $namespaceParent
 	 * @param null $tab
 	 * @return RedirectResponse
 	 */
-	public function changePositionSub($route, $id, $namespace, Request $request, $parentId = null, $namespaceParent = null, $tab = null): RedirectResponse
+	public function changePositionSub($route, $id, $namespace, Request $request, EntityManagerInterface $entityManager, $parentId = null, $namespaceParent = null, $tab = null): RedirectResponse
 	{
-		$repository = $this->getDoctrine()->getRepository($namespace);
+		$repository = $entityManager->getRepository($namespace);
 		$entityOne = $repository->find($id);
 		$oldPosition = $entityOne->getPosition();
 		$newPosition = $request->get('position');
@@ -81,7 +83,7 @@ class CoreBundleController extends AbstractController
 			//Pour appeler la collection d'éléments depuis le parent à partir du nom de l'entité mise en param
 			$array = explode('\\', $namespace);
 			$command = 'get' . array_pop($array) . 's';
-			$repositoryParent = $this->getDoctrine()->getRepository($namespaceParent);
+			$repositoryParent = $entityManager->getRepository($namespaceParent);
 			$els = $repositoryParent->find($parentId)->$command();
 		} else {
 			$els = $repository->findAll();
@@ -99,7 +101,7 @@ class CoreBundleController extends AbstractController
 				}
 			}
 		}
-		$entityManager = $this->getDoctrine()->getManager();
+		
 		$entityOne->setPosition($request->get('position'));
 		$entityManager->flush();
 		if ($parentId && $namespaceParent) {
@@ -117,13 +119,13 @@ class CoreBundleController extends AbstractController
 	 * @param $redirect
 	 * @param $entity
 	 * @param $id
+	 * @param EntityManagerInterface $entityManager
 	 * @return RedirectResponse
 	 */
-	public function changeStatus($redirect, $entity, $id): RedirectResponse
+	public function changeStatus($redirect, $entity, $id, EntityManagerInterface $entityManager): RedirectResponse
 	{
-		$el = $this->getDoctrine()->getRepository($entity)->find($id);
+		$el = $entityManager->getRepository($entity)->find($id);
 		
-		$entityManager = $this->getDoctrine()->getManager();
 		if (property_exists($el, 'published')) {
 			$el->setPublished(!$el->getPublished());
 		}
