@@ -13,32 +13,31 @@ use Twig\TwigFunction;
 
 class CoreExtension extends AbstractExtension
 {
-	private EntityManagerInterface $em;
-	private CoreMailer $mailer;
+    private EntityManagerInterface $em;
+
+    private CoreMailer $mailer;
+
     private ParameterBagInterface $parameterBag;
 
     public function __construct(EntityManagerInterface $entityManager, CoreMailer $mailer, ParameterBagInterface $parameterBag)
-	{
-		$this->em = $entityManager;
-		$this->mailer = $mailer;
+    {
+        $this->em = $entityManager;
+        $this->mailer = $mailer;
         $this->parameterBag = $parameterBag;
     }
 
     /**
      * @return TwigFilter[]
      */
-	public function getFilters(): array
-	{
-		return [
-			// If your filter generates SAFE HTML, you should add a third
-			// parameter: ['is_safe' => ['html']]
-			// Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
-			new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']),
-			new TwigFilter('truncate', [$this, 'truncate']),
-			new TwigFilter('lcfirst', [$this, 'lcfirst']),
-		
-		];
-	}
+    public function getFilters(): array
+    {
+        return [// If your filter generates SAFE HTML, you should add a third
+            // parameter: ['is_safe' => ['html']]
+            // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
+            new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']), new TwigFilter('truncate', [$this, 'truncate']), new TwigFilter('lcfirst', [$this, 'lcfirst']),
+
+        ];
+    }
 
     /**
      * @param $value
@@ -48,7 +47,7 @@ class CoreExtension extends AbstractExtension
      */
     public function truncate($value, int $length, string $after)
     {
-        if(strlen($value) > $length) {
+        if (strlen($value) > $length) {
             return mb_substr($value, 0, $length, 'UTF-8') . $after;
         }
         return $value;
@@ -58,39 +57,31 @@ class CoreExtension extends AbstractExtension
      * @param $value
      * @return string
      */
-	public function lcfirst($value): string
+    public function lcfirst($value): string
     {
-		return lcfirst($value);
-	}
+        return lcfirst($value);
+    }
 
     /**
      * @return TwigFunction[]
      */
-	public function getFunctions(): array
-	{
-		return [
-			new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']),
-			new TwigFunction('instanceOf', [$this, 'isInstanceOf']),
-			new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']),
-			new TwigFunction('get_class', 'get_class'),
-			new TwigFunction('class_exists', 'class_exists'),
-			new TwigFunction('countElements', [$this, 'countElements']),
-			new TwigFunction('getParameter', [$this, 'getParameter']),
-		];
-	}
+    public function getFunctions(): array
+    {
+        return [new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']), new TwigFunction('instanceOf', [$this, 'isInstanceOf']), new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']), new TwigFunction('get_class', 'get_class'), new TwigFunction('class_exists', 'class_exists'), new TwigFunction('countElements', [$this, 'countElements']), new TwigFunction('getParameter', [$this, 'getParameter']),];
+    }
 
     /**
      * @param $str
      * @param $entity
      * @return bool
      */
-	public function matchSameEntity($str, $entity): bool
+    public function matchSameEntity($str, $entity): bool
     {
-		if (!is_object($entity)) {
-			return false;
-		}
-		return $str === get_class($entity);
-	}
+        if (!is_object($entity)) {
+            return false;
+        }
+        return $str === get_class($entity);
+    }
 
     /**
      * @param $object
@@ -98,53 +89,40 @@ class CoreExtension extends AbstractExtension
      * @return bool|string
      * @throws ReflectionException
      */
-	public function isInstanceOf($object, $class = null)
-	{
-		if(!$class) {
-			return gettype($object);
-		}
-		if (!is_object($object)) {
-			return false;
-		}
-		$reflectionClass = new \ReflectionClass($class);
-		return $reflectionClass->isInstance($object);
-	}
+    public function isInstanceOf($object, $class = null)
+    {
+        if (!$class) {
+            return gettype($object);
+        }
+        if (!is_object($object)) {
+            return false;
+        }
+        $reflectionClass = new \ReflectionClass($class);
+        return $reflectionClass->isInstance($object);
+    }
 
     /**
      * @param $exceptionMessage
      * @return bool|Exception
      */
-	public function sendExceptionMail($exceptionMessage)
-	{
-		try {
-			$this->mailer->sendMail(
-				["thomas.sebert.akyos@gmail.com"],
-				'Nouvelle erreur sur le site ' . $_SERVER['SERVER_NAME'],
-				$exceptionMessage,
-				'Nouvelle erreur sur le site ' . $_SERVER['SERVER_NAME'],
-				null,
-				null,
-				["lilian.akyos@gmail.com", "johan@akyos.com"],
-                null,
-                null,
-                null,
-                null,
-                'SMTP'
-			);
-			return true;
-		} catch (Exception $e) {
-			return $e;
-		}
-	}
+    public function sendExceptionMail($exceptionMessage)
+    {
+        try {
+            $this->mailer->sendMail(["thomas.sebert.akyos@gmail.com"], 'Nouvelle erreur sur le site ' . $_SERVER['SERVER_NAME'], $exceptionMessage, 'Nouvelle erreur sur le site ' . $_SERVER['SERVER_NAME'], null, null, ["lilian.akyos@gmail.com", "johan@akyos.com"], null, null, null, null, 'SMTP');
+            return true;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
 
     /**
      * @param string $entity
      * @return int
      */
-	public function countElements(string $entity): int
-	{
-		return $this->em->getRepository($entity)->count([]);
-	}
+    public function countElements(string $entity): int
+    {
+        return $this->em->getRepository($entity)->count([]);
+    }
 
     /**
      * @param string $parameterName

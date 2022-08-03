@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class Puppeteer
 {
     private KernelInterface $kernel;
+
     private ?Request $request;
 
     public function __construct(KernelInterface $kernel, RequestStack $requestStack)
@@ -29,16 +30,16 @@ class Puppeteer
     public function generatePDF($fileName, $path, bool $dl = true, bool $pathOutput = false, string $margin = '0')
     {
         $linkTo = strtok($path, '?');
-        $output = $this->kernel->getProjectDir().'/documents/'.$fileName;
-        $pup = $this->kernel->getProjectDir().'/puppeteer/generate.js';
+        $output = $this->kernel->getProjectDir() . '/documents/' . $fileName;
+        $pup = $this->kernel->getProjectDir() . '/puppeteer/generate.js';
 
-        shell_exec('node '.$pup.' '.$linkTo.' '.$output.' '.$this->request->cookies->get('PHPSESSID').' '.$this->request->getSchemeAndHttpHost().' '.$margin);
+        shell_exec('node ' . $pup . ' ' . $linkTo . ' ' . $output . ' ' . $this->request->cookies->get('PHPSESSID') . ' ' . $this->request->getSchemeAndHttpHost() . ' ' . $margin);
 
         $content = file_get_contents($output);
         if ($dl) {
             $response = new Response();
             $response->headers->set('Content-Type', 'mime/type');
-            $response->headers->set('Content-Disposition', 'attachment;filename='.$fileName);
+            $response->headers->set('Content-Disposition', 'attachment;filename=' . $fileName);
             $response->setContent($content);
             return $response;
         }

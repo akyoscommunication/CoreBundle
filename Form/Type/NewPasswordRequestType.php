@@ -10,17 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewPasswordRequestType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options)
-	{
-		$builder
-			->add('userEmail', EmailType::class)
-        ;
-	}
-	
-	public function configureOptions(OptionsResolver $resolver)
-	{
-		$resolver->setDefaults([
-			'data_class' => NewPasswordRequest::class,
-		]);
-	}
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('userEmail', EmailType::class);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(['data_class' => NewPasswordRequest::class,]);
+    }
 }

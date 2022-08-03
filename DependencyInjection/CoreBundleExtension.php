@@ -12,16 +12,13 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class CoreBundleExtension extends Extension implements PrependExtensionInterface
 {
-	public function load(array $configs, ContainerBuilder $container)
-	{
-	    /** @var ConfigurationInterface $configuration */
-		$configuration = $this->getConfiguration($configs, $container);
-		$config = $this->processConfiguration($configuration, $configs);
-		
-		$loader = new YamlFileLoader(
-			$container,
-			new FileLocator(__DIR__ . '/../Resources/config')
-		);
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        /** @var ConfigurationInterface $configuration */
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         try {
             $loader->load('services.yaml');
         } catch (Exception $e) {
@@ -29,16 +26,12 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
         }
 
         foreach ($config as $key => $value) {
-			$container->setParameter($key, $value);
-		}
-	}
-	
-	public function prepend(ContainerBuilder $container)
-	{
-		$container->loadFromExtension('twig', [
-			'paths' => [
-				__DIR__.'/../Resources/views/bundles/TwigBundle/' => 'Twig',
-			],
-		]);
-	}
+            $container->setParameter($key, $value);
+        }
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->loadFromExtension('twig', ['paths' => [__DIR__ . '/../Resources/views/bundles/TwigBundle/' => 'Twig',],]);
+    }
 }

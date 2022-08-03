@@ -1,84 +1,84 @@
 {
-	"name": "akyos/core-bundle",
-	"description": "Akyos for Symfony - Core",
-	"type": "symfony-bundle",
-	"require": {
-		"php": ">=7.4",
-		"ext-ctype": "*",
-		"ext-curl": "*",
-		"ext-iconv": "*",
-		"ext-json": "*",
-		"ext-intl": "*",
-		"ext-fileinfo": "*",
-		"league/csv": "^9.0",
-		"beberlei/doctrineextensions": "^1.2",
-		"friendsofsymfony/ckeditor-bundle": "^2.2",
-		"knplabs/knp-paginator-bundle": "^5.3",
-		"stof/doctrine-extensions-bundle": "^1.4",
-		"symfony/apache-pack": "^1.0",
-		"symfony/mailer": ">=5.3",
-		"symfony/webpack-encore-bundle": "^1.12",
-		"karser/karser-recaptcha3-bundle": "^0.1.0@dev"
-	},
-	"require-dev": {
-		"doctrine/doctrine-fixtures-bundle": "^3.3",
-		"liip/test-fixtures-bundle": "^1.0",
-		"theofidry/alice-data-fixtures": "^1.2"
-	},
-	"license": "proprietary",
-	"authors": [
-		{
-			"name": "Lilian Carneau",
-			"email": "lilian@akyos.com"
-		},
-		{
-			"name": "Johan JOULKVA",
-			"email": "johan@akyos.com"
-		},
-		{
-			"name": "Thomas Sebert",
-			"email": "thomas@akyos.com"
-		}
-	],
-	"scripts": {
-		"pre-autoload-dump": [
-			"composer config extra.symfony.allow-contrib true"
-		],
-		"after-install-dependencies": [
-			"mkdir src/Components",
-			"mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
-			"mkdir -p templates/bundles/AkyosCoreBundle/front/layouts",
-			"mv lib/CoreBundle/InstallFiles/Templates/front_layout.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
-			"mv lib/CoreBundle/InstallFiles/Templates/footer.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
-			"mv lib/CoreBundle/InstallFiles/Templates/content.html.twig templates/bundles/AkyosCoreBundle/front",
-			"mv lib/CoreBundle/InstallFiles/Publics/ckeditor public",
-			"mv lib/CoreBundle/InstallFiles/Config/fos_ck_editor.yaml config/packages",
-			"mv lib/CoreBundle/InstallFiles/Config/knp_paginator.yaml config/packages",
-			"mv lib/CoreBundle/InstallFiles/Config/twig.yaml config/packages",
-			"mv lib/CoreBundle/InstallFiles/Config/stof_doctrine_extensions.yaml config/packages",
-			"mv lib/CoreBundle/InstallFiles/Config/security.yaml config/packages",
-			"mv lib/CoreBundle/InstallFiles/Config/routes.yaml config",
-			"rm -rf assets/css",
-			"rm -rf assets/js",
-			"mv lib/CoreBundle/InstallFiles/assets/fonts assets",
-			"mv lib/CoreBundle/InstallFiles/assets/images assets",
-			"mv lib/CoreBundle/InstallFiles/assets/css assets",
-			"mv lib/CoreBundle/InstallFiles/assets/js assets",
-			"mv lib/CoreBundle/InstallFiles/assets/webpack.config.js .",
-			"mv lib/CoreBundle/InstallFiles/assets/package.json .",
-			"rm -rf lib/CoreBundle/InstallFiles",
-			"php bin/console ckeditor:install",
-			"yarn && yarn run encore dev",
-			"php bin/console asset:install --symlink",
-			"composer dump-autoload",
-			"php bin/console make:migration",
-			"php bin/console doctrine:migrations:migrate"
-		]
-	},
-	"minimum-stability": "dev",
-	"autoload": {
-		"psr-4": {
-			"Akyos\\CoreBundle\\": ""
-		}
-	}
+  "name": "akyos/core-bundle",
+  "description": "Akyos for Symfony - Core",
+  "type": "symfony-bundle",
+  "require": {
+    "php": ">=8.0",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-intl": "*",
+    "ext-fileinfo": "*",
+    "league/csv": "^9.0",
+    "beberlei/doctrineextensions": "^1.2",
+    "friendsofsymfony/ckeditor-bundle": "^2.2",
+    "knplabs/knp-paginator-bundle": "^5.3",
+    "stof/doctrine-extensions-bundle": "^1.4",
+    "symfony/apache-pack": "^1.0",
+    "symfony/mailer": ">=5.3",
+    "symfony/webpack-encore-bundle": "^1.12",
+    "karser/karser-recaptcha3-bundle": "^0.1.0@dev"
+  },
+  "require-dev": {
+    "doctrine/doctrine-fixtures-bundle": "^3.3",
+    "liip/test-fixtures-bundle": "^1.0",
+    "theofidry/alice-data-fixtures": "^1.2"
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Lilian Carneau",
+      "email": "lilian@akyos.com"
+    },
+    {
+      "name": "Johan JOULKVA",
+      "email": "johan@akyos.com"
+    },
+    {
+      "name": "Thomas Sebert",
+      "email": "thomas@akyos.com"
+    }
+  ],
+  "scripts": {
+    "pre-autoload-dump": [
+      "composer config extra.symfony.allow-contrib true"
+    ],
+    "after-install-dependencies": [
+      "mkdir src/Components",
+      "mv lib/CoreBundle/InstallFiles/Templates/base.html.twig templates",
+      "mkdir -p templates/bundles/AkyosCoreBundle/front/layouts",
+      "mv lib/CoreBundle/InstallFiles/Templates/front_layout.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
+      "mv lib/CoreBundle/InstallFiles/Templates/footer.html.twig templates/bundles/AkyosCoreBundle/front/layouts",
+      "mv lib/CoreBundle/InstallFiles/Templates/content.html.twig templates/bundles/AkyosCoreBundle/front",
+      "mv lib/CoreBundle/InstallFiles/Publics/ckeditor public",
+      "mv lib/CoreBundle/InstallFiles/Config/fos_ck_editor.yaml config/packages",
+      "mv lib/CoreBundle/InstallFiles/Config/knp_paginator.yaml config/packages",
+      "mv lib/CoreBundle/InstallFiles/Config/twig.yaml config/packages",
+      "mv lib/CoreBundle/InstallFiles/Config/stof_doctrine_extensions.yaml config/packages",
+      "mv lib/CoreBundle/InstallFiles/Config/security.yaml config/packages",
+      "mv lib/CoreBundle/InstallFiles/Config/routes.yaml config",
+      "rm -rf assets/css",
+      "rm -rf assets/js",
+      "mv lib/CoreBundle/InstallFiles/assets/fonts assets",
+      "mv lib/CoreBundle/InstallFiles/assets/images assets",
+      "mv lib/CoreBundle/InstallFiles/assets/css assets",
+      "mv lib/CoreBundle/InstallFiles/assets/js assets",
+      "mv lib/CoreBundle/InstallFiles/assets/webpack.config.js .",
+      "mv lib/CoreBundle/InstallFiles/assets/package.json .",
+      "rm -rf lib/CoreBundle/InstallFiles",
+      "php bin/console ckeditor:install",
+      "yarn && yarn run encore dev",
+      "php bin/console asset:install --symlink",
+      "composer dump-autoload",
+      "php bin/console make:migration",
+      "php bin/console doctrine:migrations:migrate"
+    ]
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Akyos\\CoreBundle\\": ""
+    }
+  }
 }

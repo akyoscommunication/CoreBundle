@@ -1,5 +1,4 @@
 import 'bootstrap'
-import Swiper from 'swiper';
 
 import Utils from './common/utils'
 import Sliders from './components/Sliders'

@@ -10,8 +10,8 @@ class GlobalsExtension extends AbstractExtension implements GlobalsInterface
     /**
      * @return array
      */
-	public function getGlobals(): array
-	{
-		return [];
-	}
+    public function getGlobals(): array
+    {
+        return [];
+    }
 }

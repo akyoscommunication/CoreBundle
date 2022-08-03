@@ -39,12 +39,12 @@ class Core {
             let options = {
                 width: '100%'
             };
-            
+
             const modalParent = $(this).parents('.modal');
             if (modalParent.length) {
-               options.dropdownParent = modalParent
+                options.dropdownParent = modalParent
             }
-            
+
             $(this).select2(options);
         })
 

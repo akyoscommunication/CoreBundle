@@ -13,30 +13,30 @@ class ConvertCsvToArray
      */
     public function convert($filename, $delimiter = ',', $hasHeader = false, $dropHeader = false)
     {
-        if(!file_exists($filename) || !is_readable($filename)) {
-            return FALSE;
+        if (!file_exists($filename) || !is_readable($filename)) {
+            return false;
         }
 
-        $header = NULL;
+        $header = null;
         $data = [];
 
-        if (($handle = fopen($filename, 'rb')) !== FALSE) {
-            while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
+        if (($handle = fopen($filename, 'rb')) !== false) {
+            while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
                 if ($hasHeader && !$dropHeader) {
-                	if(!$header) {
+                    if (!$header) {
                         $header = $row;
                     } else {
                         $data[] = array_combine($header, $row);
                     }
                 } else {
-					$data[] = str_getcsv($row);
+                    $data[] = str_getcsv($row);
                 }
             }
             fclose($handle);
         }
-        if($hasHeader && $dropHeader) {
-        	array_shift($data);
-		}
+        if ($hasHeader && $dropHeader) {
+            array_shift($data);
+        }
         return $data;
     }
 }

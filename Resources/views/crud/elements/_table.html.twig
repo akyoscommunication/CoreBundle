@@ -42,7 +42,8 @@
                                 'route' : route,
                                 'id' : el.id,
                                 'namespace': get_class(el), }) }}" class="not-submit" method="post">
-                                <input class="form-control" type="number" name="position" value="{{ el.position }}" min="0"
+                                <input class="form-control" type="number" name="position" value="{{ el.position }}"
+                                       min="0"
                                        max="{{ countElements(get_class(el)) }}">
                             </form>
                         </td>
@@ -87,16 +88,22 @@
                             {% set params = params|merge({ (''~k~'') : (instanceOf(p, 'Closure') ? useClosure(p, el)|raw : dynamicVariable(el, p)) }) %}
                         {% endfor %}
                         {% if details.button is defined and instanceOf(details.button, 'Closure') %}
-                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}" href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ useClosure(details.button, el)|raw }}</a>
+                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}"
+                               href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ useClosure(details.button, el)|raw }}</a>
                         {% else %}
-                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}" href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ details.button is defined and details.button ? details.button|raw : '<i class="fas fa-eye"></i>' }}</a>
+                            <a class="btn btn-secondary mr-1 btn-sm {{ details.class is defined ? details.class : '' }}"
+                               href="{{ path(details.route, params|merge(details.parameters is defined ? details.parameters : {})) }}">{{ details.button is defined and details.button ? details.button|raw : '<i class="fas fa-eye"></i>' }}</a>
                         {% endif %}
                     {% endif %}
                     {% if ((button_edit is defined and button_edit) or button_edit is not defined) and ((el.canBeEdited is defined and el.canBeEdited) or el.canBeEdited is not defined) %}
-                        <a class="btn btn-primary btn-sm mr-1" href="{{ path(route~'_edit', {'id': el.id}) }}" data-toggle ="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
+                        <a class="btn btn-primary btn-sm mr-1" href="{{ path(route~'_edit', {'id': el.id}) }}"
+                           data-toggle="tooltip" title="Editer"><i class="fas fa-pencil-alt"></i></a>
                     {% endif %}
                     {% if ((button_delete is defined and button_delete) or button_delete is not defined) and ((el.canBeDeleted is defined and el.canBeDeleted) or el.canBeDeleted is not defined) %}
-                        <form method="post" class="not-submit index-delete" action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle ="tooltip" title="Supprimer" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                        <form method="post" class="not-submit index-delete"
+                              action="{{ path(route~'_delete', {'id': el.id}) }}" data-toggle="tooltip"
+                              title="Supprimer"
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ el.id) }}">
                             <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>

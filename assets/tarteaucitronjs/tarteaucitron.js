@@ -1381,7 +1381,7 @@ var tarteaucitron = {
         }
 
         var lang = navigator.language || navigator.browserLanguage ||
-            navigator.systemLanguage || navigator.userLang || null,
+                navigator.systemLanguage || navigator.userLang || null,
             userLanguage = lang ? lang.substr(0, 2) : null;
 
         if (availableLanguages.indexOf(userLanguage) === -1) {
@@ -1396,7 +1396,7 @@ var tarteaucitron = {
         }
 
         var lang = navigator.language || navigator.browserLanguage ||
-            navigator.systemLanguage || navigator.userLang || null,
+                navigator.systemLanguage || navigator.userLang || null,
             userLanguage = lang ? lang.substr(0, 2) : null;
 
         if (userLanguage === 'fr') {

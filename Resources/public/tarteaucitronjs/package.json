@@ -7,10 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-//  "repository": {
-//    "type": "git",
-//    "url": "git+https://github.com/AmauriC/tarteaucitron.js.git"
-//  },
+  //  "repository": {
+  //    "type": "git",
+  //    "url": "git+https://github.com/AmauriC/tarteaucitron.js.git"
+  //  },
   "keywords": [
     "cookie",
     "law",

@@ -11,8 +11,8 @@ class initCollectionType {
             const buttonAddLabel = collectionHolder.data('button_add');
             const buttonDeleteLabel = collectionHolder.data('button_delete');
 
-            collectionHolder.after('<button id="add_component_'+index+'" type="button" class="add_component btn btn-sm btn-outline-primary ml-auto">' + (buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ') + ' <i class="fas fa-plus"></i></button>');
-            const addFieldLink = $('#add_component_'+index);
+            collectionHolder.after('<button id="add_component_' + index + '" type="button" class="add_component btn btn-sm btn-outline-primary ml-auto">' + (buttonAddLabel ? buttonAddLabel : 'Ajouter un champ ') + ' <i class="fas fa-plus"></i></button>');
+            const addFieldLink = $('#add_component_' + index);
             collectionHolder.attr('data-index', collectionHolder.children('.form-group').length);
 
             collectionHolder.children('.form-group').each(function () {
