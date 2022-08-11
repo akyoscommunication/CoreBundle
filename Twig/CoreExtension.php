@@ -67,7 +67,7 @@ class CoreExtension extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        return [new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']), new TwigFunction('instanceOf', [$this, 'isInstanceOf']), new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']), new TwigFunction('get_class', 'get_class'), new TwigFunction('class_exists', 'class_exists'), new TwigFunction('countElements', [$this, 'countElements']), new TwigFunction('getParameter', [$this, 'getParameter']),];
+        return [new TwigFunction('useClosure', [$this, 'useClosure']), new TwigFunction('dynamicVariable', [$this, 'dynamicVariable']), new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']), new TwigFunction('instanceOf', [$this, 'isInstanceOf']), new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']), new TwigFunction('get_class', 'get_class'), new TwigFunction('class_exists', 'class_exists'), new TwigFunction('countElements', [$this, 'countElements']), new TwigFunction('getParameter', [$this, 'getParameter']),];
     }
 
     /**
@@ -131,5 +131,43 @@ class CoreExtension extends AbstractExtension
     public function getParameter(string $parameterName)
     {
         return $this->parameterBag->get($parameterName);
+    }
+
+    /**
+     * @param \Closure $closure
+     * @param $params
+     * @return mixed
+     */
+    public function useClosure(\Closure $closure, $params)
+    {
+        return $closure($params);
+    }
+
+    /**
+     * @param $el
+     * @param $field
+     * @return mixed
+     */
+    public function dynamicVariable($el, $field)
+    {
+        $getter = 'get' . $field;
+        if (count(explode(';', $field)) > 1) {
+            $getter1 = 'get' . explode(';', $field)[0];
+            $getter2 = 'get' . explode(';', $field)[1];
+            $value = $el->$getter1() ? $el->$getter1()->$getter2() : '';
+        } else {
+            $value = $el->$getter();
+        }
+        if (is_array($value)) {
+            $arrayValue = "";
+            foreach ($value as $key => $item) {
+                $arrayValue .= $item;
+                if ($key !== (count($value) - 1)) {
+                    $arrayValue .= ", ";
+                }
+            }
+            return $arrayValue;
+        }
+        return $value;
     }
 }
