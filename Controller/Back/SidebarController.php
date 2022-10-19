@@ -14,14 +14,15 @@ class SidebarController extends AbstractController
 
 		$finder = new Finder();
 		$finder->depth('== 0');
-		foreach ($finder->directories()->in($this->getParameter('kernel.project_dir') . '/lib') as $bundleDirectory) {
-			if (class_exists('Akyos\\' . $bundleDirectory->getFilename() . '\Service\ExtendSidebar')) {
-				if (method_exists('Akyos\\' . $bundleDirectory->getFilename() . '\Service\ExtendSidebar', 'getTemplate')) {
-					$response = $this->forward('Akyos\\' . $bundleDirectory->getFilename() . '\Service\ExtendSidebar::getTemplate', ['route' => $route]);
+		if (file_exists($this->getParameter('kernel.project_dir') . '/vendor/akyos')) {
+            		foreach ($finder->directories()->in($this->getParameter('kernel.project_dir') . '/vendor/akyos') as $bundleDirectory) {
+				$bundleName = str_replace(' ', '', ucwords(str_replace('-', ' ', $bundleDirectory->getFilename())));
+				if (class_exists('Akyos\\' . $bundleName . '\Service\ExtendSidebar') && method_exists('Akyos\\' . $bundleName . '\Service\ExtendSidebar', 'getTemplate')) {
+					$response = $this->forward('Akyos\\' . $bundleName . '\Service\ExtendSidebar::getTemplate', ['route' => $route]);
 					$html .= $response->getContent();
 				}
-			}
-		}
+            		}
+        	}
 
 		return new Response($html);
 	}
