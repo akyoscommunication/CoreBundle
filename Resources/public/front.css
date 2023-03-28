@@ -168,10 +168,12 @@
 }
 
 #tarteaucitronRoot #tarteaucitronPersonalize,
+#tarteaucitronRoot #tarteaucitronPersonalize2,
 #tarteaucitronRoot #tarteaucitronCloseAlert,
 #tarteaucitronRoot #tarteaucitronPrivacyUrl,
 #tarteaucitronRoot #tarteaucitronAllAllowed,
 #tarteaucitronRoot #tarteaucitronAllDenied,
+#tarteaucitronRoot #tarteaucitronAllDenied2,
 #tarteaucitronRoot #tarteaucitronAllow,
 #tarteaucitronRoot #tarteaucitronDeny,
 #tarteaucitronRoot #tarteaucitron button {
@@ -199,7 +201,9 @@
     font-size: 1rem !important;
 }
 
-#tarteaucitronRoot #tarteaucitronPersonalize {
+#tarteaucitronRoot #tarteaucitronPersonalize,
+#tarteaucitronRoot #tarteaucitronPersonalize2,
+#tarteaucitronRoot #tarteaucitronAllDenied2 {
     background-color: #000;
     color: white;
 }

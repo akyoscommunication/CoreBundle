@@ -153,10 +153,12 @@
 
     #tarteaucitron {
         &Personalize,
+        &Personalize2,
         &CloseAlert,
         &PrivacyUrl,
         &AllAllowed,
         &AllDenied,
+        &AllDenied2,
         &Allow,
         &Deny,
         button {
@@ -182,7 +184,9 @@
             font-size: 1rem !important;
         }
 
-        &Personalize {
+        &Personalize,
+        &Personalize2,
+        &AllDenied2 {
             background-color: #000;
             color: $white;
         }
