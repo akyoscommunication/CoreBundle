@@ -42,7 +42,8 @@ class CustomFieldType extends AbstractType
 					'Select' => 'select',
 					'Booléen' => 'bool',
 					'Entité' => 'entity',
-					'Couleur' => 'color',
+                    'Entité multiple' => 'entity_multiple',
+                    'Couleur' => 'color',
 				],
 			])
 			->add('entity', ChoiceType::class, [

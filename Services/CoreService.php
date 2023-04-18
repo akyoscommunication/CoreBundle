@@ -174,6 +174,9 @@ class CoreService
 				case 'IN':
 					$customFieldValuesQuery->andWhere('cfv.value IN(:customFieldValue)');
 					break;
+                case 'REGEXP':
+                    $customFieldValuesQuery->andWhere('REGEXP(cfv.value, :customFieldValue) = 1');
+                    break;
 				default:
 					$customFieldValuesQuery->andWhere('cfv.value '.$operator.' :customFieldValue');
 					break;
