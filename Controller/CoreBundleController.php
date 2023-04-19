@@ -110,7 +110,7 @@ class CoreBundleController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse
      */
-    #[Route(path: '/change-status/{redirect}/{entity}/{id}', name: 'change_status', methods: ['POST'])]
+    #[Route(path: '/change-status/{redirect}/{entity}/{id}', name: 'change_status', methods: ['POST'], requirements: ['redirect' => '.+'])]
     public function changeStatus($redirect, $entity, $id, EntityManagerInterface $entityManager): RedirectResponse
     {
         $el = $entityManager->getRepository($entity)->find($id);
