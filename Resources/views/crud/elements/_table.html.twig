@@ -27,7 +27,7 @@
                     {% endif %}
                     {% if field == 'Published' %}
                         <td>
-                            <form action="{{ path('core_change_status', {'redirect' : app.request.uri|url_encode, 'entity' : get_class(el), 'id' : el.id}) }}"
+                            <form action="{{ path('core_change_status', {'redirect' : app.request.uri, 'entity' : get_class(el), 'id' : el.id}) }}"
                                   class="custom-switch-form" method="post">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input custom-switch-published"
