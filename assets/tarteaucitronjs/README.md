@@ -1,6 +1,6 @@
 
 [![](https://data.jsdelivr.com/v1/package/npm/tarteaucitronjs/badge)](https://www.jsdelivr.com/package/npm/tarteaucitronjs)
-[![npm](https://img.shields.io/npm/v/tarteaucitronjs.svg)](https://www.npmjs.com/package/tarteaucitronjs) [![GitHub contributors](https://img.shields.io/github/contributors/AmauriC/tarteaucitron.js.svg)](https://github.com/AmauriC/tarteaucitron.js/graphs/contributors) [![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/AmauriC)
+[![npm](https://img.shields.io/npm/v/tarteaucitronjs.svg)](https://www.npmjs.com/package/tarteaucitronjs) [![GitHub contributors](https://img.shields.io/github/contributors/AmauriC/tarteaucitron.js.svg)](https://github.com/AmauriC/tarteaucitron.js/graphs/contributors) [![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/AmauriC) [![Rate this package](https://badges.openbase.com/js/rating/tarteaucitronjs.svg?token=jS4mC7aXh9xcs1pAcB0roiEUU+mrW0GjxVICITIltSw=)](https://openbase.com/js/tarteaucitronjs?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge)
 
 
 ![alt text](https://tarteaucitron.io/tarteaucitron.png "tarteaucitron.io")
@@ -31,6 +31,7 @@ Bonus:
 <script>
 tarteaucitron.init({
     "privacyUrl": "", /* Privacy policy url */
+    "bodyPosition": "bottom", /* or top to bring it as first element for accessibility */
 
     "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
     "cookieName": "tarteaucitron", /* Cookie name */
@@ -38,6 +39,7 @@ tarteaucitron.init({
     "orientation": "middle", /* Banner position (top - bottom - middle - popup) */
 
     "groupServices": false, /* Group services by category */
+    "serviceDefaultState": "wait", /* Default state (true - wait - false) */
 
     "showAlertSmall": false, /* Show the small banner on bottom right */
     "cookieslist": false, /* Show the cookie list */
@@ -57,12 +59,14 @@ tarteaucitron.init({
     "removeCredit": false, /* Remove credit link */
     "moreInfoLink": true, /* Show more info link */
     "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
+    "useExternalJs": false, /* If false, the tarteaucitron.services.js file will be loaded */
 
     //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */
 
     "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */
     
-    "mandatory": true /* Show a message about mandatory cookies */
+    "mandatory": true, /* Show a message about mandatory cookies */
+    "mandatoryCta": true /* Show the disabled accept button when mandatory on */
 });
 </script>
 ```
@@ -95,13 +99,16 @@ tarteaucitron.services.mycustomservice = {
 ## Events
 
 The following events are available:
-* `tac.root_available`: the root element with panel has been created, services will be loaded
-* {SERVICE_KEY}`.added` for each enabled service
-* {SERVICE_KEY}`.loaded` for each enabled service
-* `tac.open_alert`
-* `tac.close_alert`
-* `tac.open_panel`
-* `tac.close_panel`
+* (document) `{SERVICE_KEY}_added` for each enabled service
+* (document) `{SERVICE_KEY}_loaded` for each enabled service
+* (document) `{SERVICE_KEY}_allowed` for each service when allowed
+* (document) `{SERVICE_KEY}_disallowed ` for each service when disallowed
+
+* (window) `tac.root_available`: the root element with panel has been created, services will be loaded
+* (window) `tac.open_alert`
+* (window) `tac.close_alert`
+* (window) `tac.open_panel`
+* (window) `tac.close_panel`
 
 ## Customize text
 
@@ -125,8 +132,11 @@ tarteaucitronCustomText = {
 
 # Thanks to the sponsors 😊
 
-| Be the first sponsor! |
-|:---:|
+| ![Amaury Cleuziou](https://avatars.githubusercontent.com/u/26336203?v=4&s=60) |   |   |
+|---|---|---|
+|  [Amaury Cleuziou](https://github.com/MoryCorp) - first sponsor 🎉 | |  |
+| |   |   |
+
 
 # 600M on the pro version
 
