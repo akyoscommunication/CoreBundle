@@ -7,10 +7,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class CoreBundleExtension extends Extension implements PrependExtensionInterface
+class CoreBundleExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -28,10 +27,5 @@ class CoreBundleExtension extends Extension implements PrependExtensionInterface
         foreach ($config as $key => $value) {
             $container->setParameter($key, $value);
         }
-    }
-
-    public function prepend(ContainerBuilder $container)
-    {
-        $container->loadFromExtension('twig', ['paths' => [__DIR__ . '/../Resources/views/bundles/TwigBundle/' => 'Twig',],]);
     }
 }
