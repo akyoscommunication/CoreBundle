@@ -1,7 +1,22 @@
 {
   "name": "akyos/core-bundle",
-  "description": "Akyos for Symfony - Core",
+  "description": "Akyos helpers for Symfony - Core",
   "type": "symfony-bundle",
+  "license": "MIT",
+	"authors": [
+	    {
+	      "name": "Lilian Carneau",
+	      "email": "lilian@akyos.com"
+	    },
+	    {
+	      "name": "Thomas Sebert",
+	      "email": "thomas@akyos.com"
+	    },
+	    {
+	      "name": "Akyos Communication",
+	       "homepage": "https://akyos.com"
+	    }
+	],
   "require": {
     "php": ">=8.0",
     "ext-ctype": "*",
@@ -25,21 +40,6 @@
     "liip/test-fixtures-bundle": "^1.0",
     "theofidry/alice-data-fixtures": "^1.2"
   },
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Lilian Carneau",
-      "email": "lilian@akyos.com"
-    },
-    {
-      "name": "Johan JOULKVA",
-      "email": "johan@akyos.com"
-    },
-    {
-      "name": "Thomas Sebert",
-      "email": "thomas@akyos.com"
-    }
-  ],
   "scripts": {
     "pre-autoload-dump": [
       "composer config extra.symfony.allow-contrib true"
