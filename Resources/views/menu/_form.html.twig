@@ -68,7 +68,7 @@
     {% if item.menuItemsChilds is not empty %}
         {% for childkey, itemChild in item.menuItemsChilds %}
             <li class="aky-menuitem" data-position="{{ childkey }}" data-id="{{ itemChild.id }}">
-                <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}">
+                <div class="aky-menuitem-el" data-id="{{ itemChild.id }}" data-menu="{{ form.vars.value.id }}" data-lang="{{ app.request.getLocale() is defined and app.request.defaultLocale != app.request.getLocale() ? '/'~app.request.getLocale() }}">
                     {{ itemChild.title }}
                     <button type="button" class="btn btn-primary btn-modal-menuitem" data-toggle="modal"
                             data-target="#modal">
