@@ -31,7 +31,7 @@ class NewPasswordRequestController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    #[Route(path: '/{type}/{route}', name: '', methods: ['GET', 'POST'])]
+    #[Route(path: '/{type}/{route}', name: '', methods: ['GET', 'POST'], requirements: ['route' => '.+'])]
     public function newPasswordRequest(string $type, string $route, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, TokenGeneratorInterface $tokenGenerator, CoreMailer $mailer, TranslatorInterface $translator, EntityManagerInterface $entityManager): Response
     {
         $types = explode(';', urldecode($type));
