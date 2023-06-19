@@ -51,7 +51,7 @@ class PDFFormFiller
      * @param bool $isFlatten
      * @return array
      */
-    public function catFiles($files, string $filename, bool $isFlatten = true): array
+    public function catFiles($files, string $filename, bool $isFlatten = true): string|array
     {
         $filename .= '.pdf';
         $pdf = new Pdf($files);
