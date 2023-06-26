@@ -21,6 +21,59 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class NewPasswordRequestController extends AbstractController
 {
     /**
+     * @param int $id
+     * @param string $token
+     * @param NewPasswordRequestRepository $newPasswordRequestRepository
+     * @param Request $request
+     * @param CoreMailer $mailer
+     * @param TranslatorInterface $translator
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route(path: '/reset/{id}/{token}', name: '_change', methods: ['GET', 'POST'])]
+    public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, TranslatorInterface $translator, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
+        $message = '';
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+        if (!$newPasswordRequest) {
+            $message = $translator->trans('unauthorized', [], 'new_password_request');
+        } else {
+            $now = new DateTime();
+            $interval = $now->getTimestamp() - $newPasswordRequest->getCreatedAt()->getTimestamp();
+            $isRequestedInTime = $interval < 1800;
+
+            if (!$isRequestedInTime) {
+                $message = $translator->trans('deadline_past', [], 'new_password_request');
+            }
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = null;
+            if (class_exists('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())) {
+                $user = $entityManager->getRepository('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+            }
+            if (!$user && class_exists('App\\Entity\\' . $newPasswordRequest->getUserType())) {
+                $user = $entityManager->getRepository('App\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
+            }
+
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
+
+            $newPasswordRequest->setIsPasswordChanged(true);
+            $entityManager->persist($newPasswordRequest);
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $mailer->sendMail($newPasswordRequest->getUserEmail(), $this->getParameter('site_name') . ' - Mot de passe réinitialisé', '', $this->getParameter('site_name') . ' - Mot de passe réinitialisé', '@AkyosCore/new_password_request/changed_password_email.html.twig', null, null, null, null, ['templateParams' => ['newPasswordRequest' => $newPasswordRequest]]);
+            $newPasswordRequest->setIsConfirmationSent(true);
+
+            $entityManager->flush();
+        }
+        return $this->render('@AkyosCore/new_password_request/change_password.html.twig', ['new_password_request' => $newPasswordRequest, 'form' => $form->createView(), 'message' => $message]);
+    }
+    
+    /**
      * @param string $type
      * @param string $route
      * @param NewPasswordRequestRepository $newPasswordRequestRepository
@@ -81,58 +134,5 @@ class NewPasswordRequestController extends AbstractController
             }
         }
         return $this->render('@AkyosCore/new_password_request/index.html.twig', ['new_password_request' => $newPasswordRequest, 'form' => $form->createView(), 'message' => $message]);
-    }
-
-    /**
-     * @param int $id
-     * @param string $token
-     * @param NewPasswordRequestRepository $newPasswordRequestRepository
-     * @param Request $request
-     * @param CoreMailer $mailer
-     * @param TranslatorInterface $translator
-     * @param UserPasswordHasherInterface $passwordHasher
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    #[Route(path: '/reset/{id}/{token}', name: '_change', methods: ['GET', 'POST'])]
-    public function changePassword(int $id, string $token, NewPasswordRequestRepository $newPasswordRequestRepository, Request $request, CoreMailer $mailer, TranslatorInterface $translator, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
-    {
-        $newPasswordRequest = $newPasswordRequestRepository->findOneBy(['userId' => $id, 'token' => $token], ['createdAt' => 'DESC']);
-        $message = '';
-        $form = $this->createForm(ChangePasswordType::class);
-        $form->handleRequest($request);
-        if (!$newPasswordRequest) {
-            $message = $translator->trans('unauthorized', [], 'new_password_request');
-        } else {
-            $now = new DateTime();
-            $interval = $now->getTimestamp() - $newPasswordRequest->getCreatedAt()->getTimestamp();
-            $isRequestedInTime = $interval < 1800;
-
-            if (!$isRequestedInTime) {
-                $message = $translator->trans('deadline_past', [], 'new_password_request');
-            }
-        }
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = null;
-            if (class_exists('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())) {
-                $user = $entityManager->getRepository('Akyos\\CmsBundle\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-            }
-            if (!$user && class_exists('App\\Entity\\' . $newPasswordRequest->getUserType())) {
-                $user = $entityManager->getRepository('App\\Entity\\' . $newPasswordRequest->getUserType())->findOneBy(['email' => $newPasswordRequest->getUserEmail()]);
-            }
-
-            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
-
-            $newPasswordRequest->setIsPasswordChanged(true);
-            $entityManager->persist($newPasswordRequest);
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $mailer->sendMail($newPasswordRequest->getUserEmail(), $this->getParameter('site_name') . ' - Mot de passe réinitialisé', '', $this->getParameter('site_name') . ' - Mot de passe réinitialisé', '@AkyosCore/new_password_request/changed_password_email.html.twig', null, null, null, null, ['templateParams' => ['newPasswordRequest' => $newPasswordRequest]]);
-            $newPasswordRequest->setIsConfirmationSent(true);
-
-            $entityManager->flush();
-        }
-        return $this->render('@AkyosCore/new_password_request/change_password.html.twig', ['new_password_request' => $newPasswordRequest, 'form' => $form->createView(), 'message' => $message]);
     }
 }
