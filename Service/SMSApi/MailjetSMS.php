@@ -35,8 +35,9 @@ class MailjetSMS
         $phone = self::transformNum($phoneNumber);
         // IF ERROR
         if (is_array($phone)) {
-            $this->requestStack->getSession()->getFlashbag()->add('danger', 'Le format du numéro de téléphone est invalide, il doit correspondre au format international E.164 (exemple +33612345678 pour la France)');
-            return $phone;
+            // $this->requestStack->getSession()->getFlashbag()->add('danger', 'Le format du numéro de téléphone est invalide, il doit correspondre au format international E.164 (exemple +33612345678 pour la France)');
+            // return $phone;
+            return true;
         }
 
         $mailjet = new Client($this->smsToken, null, true, ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]);
