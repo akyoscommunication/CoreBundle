@@ -47,7 +47,7 @@ class MailjetSMS
         try {
             $response = $mailjet->post(Resources::$SmsSend, ['body' => $sms]);
             if (!$response->success()) {
-                throw new RuntimeException(json_encode($response->getBody(), JSON_THROW_ON_ERROR));
+                //throw new RuntimeException(json_encode($response->getBody(), JSON_THROW_ON_ERROR));
             }
             $this->messageLogger->saveLog($sms, null, 'mailjet_sms', $doNotFlush);
             return true;
