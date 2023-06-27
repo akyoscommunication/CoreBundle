@@ -106,7 +106,7 @@ class MailjetEmail
         try {
             $response = $mailjet->post(Resources::$Email, ['body' => $email]);
             if (!$response->success()) {
-                throw new RuntimeException(json_encode($response->getData(), JSON_THROW_ON_ERROR));
+                // throw new RuntimeException(json_encode($response->getData(), JSON_THROW_ON_ERROR));
             }
             $this->messageLogger->saveLog($email, null, 'mailjet_email', $doNotFlush);
             return true;
