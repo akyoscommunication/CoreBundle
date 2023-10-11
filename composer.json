@@ -27,7 +27,7 @@
     "ext-fileinfo": "*",
     "league/csv": "^9.0",
     "beberlei/doctrineextensions": "^1.2",
-    "friendsofsymfony/ckeditor-bundle": "^2.2",
+    "friendsofsymfony/ckeditor-bundle": "2.4.0",
     "knplabs/knp-paginator-bundle": "^5.3",
     "stof/doctrine-extensions-bundle": "^1.4",
     "symfony/apache-pack": "^1.0",
