@@ -18,7 +18,9 @@ class Configuration implements ConfigurationInterface
             // Nom du site utilisé notamment pour l'envoi des mails
             ->scalarNode('site_name')->defaultValue('Nouveau site Akyos')->end()
             // Email transport: "Symfony Mailer" ou "Mailjet API"
-            ->scalarNode('email_transport')->defaultValue('Nouveau site Akyos')->end()
+            ->scalarNode('email_transport')->defaultValue('Symfony Mailer')->end()
+            // Set dev mode on "Mailjet API" to force usage of mailjet in dev mode
+            ->scalarNode('email_dev_mode')->defaultValue('Symfony Mailer')->end()
             // SMS transport: "Mailjet SMS" ou "Twilio SMS
             ->scalarNode('sms_transport')->defaultValue('Nouveau site Akyos')->end()
             // ID pour l'utilisation du service Twilio
