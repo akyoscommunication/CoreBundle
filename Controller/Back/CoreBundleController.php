@@ -125,7 +125,7 @@ class CoreBundleController extends AbstractController
 	}
 	
 	/**
-	 * @Route("/change-status/{redirect}/{entity}/{id}", name="change_status", methods={"POST"})
+	 * @Route("/change-status/{redirect}/{entity}/{id}", name="change_status", methods={"POST"}, requirements={"redirect"=".+", "entity"=".+"})
 	 * @param $redirect
 	 * @param $entity
 	 * @param $id
