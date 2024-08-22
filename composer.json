@@ -18,7 +18,7 @@
 	    }
 	],
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.2",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-iconv": "*",
@@ -26,17 +26,17 @@
     "ext-intl": "*",
     "ext-fileinfo": "*",
     "league/csv": "^9.0",
-    "beberlei/doctrineextensions": "^1.2",
-    "friendsofsymfony/ckeditor-bundle": ">=2.4",
-    "knplabs/knp-paginator-bundle": "^5.3",
-    "stof/doctrine-extensions-bundle": "^1.4",
+    "beberlei/doctrineextensions": "^1.5",
+    "friendsofsymfony/ckeditor-bundle": "*",
+    "knplabs/knp-paginator-bundle": "*",
+    "stof/doctrine-extensions-bundle": "^1.9",
     "symfony/apache-pack": "^1.0",
-    "symfony/mailer": ">=5.3",
-    "symfony/webpack-encore-bundle": ">=1.12",
+    "symfony/mailer": ">=7.0",
+    "symfony/webpack-encore-bundle": ">=2.1",
     "karser/karser-recaptcha3-bundle": "^0.1.0@dev"
   },
   "require-dev": {
-    "doctrine/doctrine-fixtures-bundle": "^3.3",
+    "doctrine/doctrine-fixtures-bundle": "^3.4",
     "liip/test-fixtures-bundle": "^1.0",
     "theofidry/alice-data-fixtures": "^1.2"
   },
