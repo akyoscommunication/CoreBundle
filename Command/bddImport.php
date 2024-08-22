@@ -28,7 +28,7 @@ class bddImport extends Command
         $this->setDescription('')->setHelp('');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $finder = new Finder();
         $finder->files()->in(__DIR__ . '/../../../src/Dump/');
