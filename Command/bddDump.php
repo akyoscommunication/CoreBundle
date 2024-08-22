@@ -3,6 +3,7 @@
 namespace Akyos\CoreBundle\Command;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,10 +12,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 // TODO => A revoir il y a trop de trucs qui ne fonctionnent plus.
+#[AsCommand(
+    name: 'app:bdd-dump',
+)]
 class bddDump extends Command
 {
-    protected static $defaultName = 'app:bdd-dump';
-
     private Connection $connection;
 
     public function __construct(Connection $connection)
