@@ -32,7 +32,7 @@
     "stof/doctrine-extensions-bundle": "^1.4",
     "symfony/apache-pack": "^1.0",
     "symfony/mailer": ">=5.3",
-    "symfony/webpack-encore-bundle": "^1.12",
+    "symfony/webpack-encore-bundle": ">=1.12",
     "karser/karser-recaptcha3-bundle": "^0.1.0@dev"
   },
   "require-dev": {
