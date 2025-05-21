@@ -25,7 +25,7 @@ class CoreBundleController extends AbstractController
      * @param null $bundle
      * @return RedirectResponse
      */
-    #[Route(path: '/change-position/{route}/{el}/{id}/{bundle}', name: 'change_position', requirements: ['route' => '.+'], methods: ['POST'])]
+    #[Route(path: '/change-position/{route}/{el}/{id}/{bundle}', name: 'change_position', methods: ['POST'])]
     public function changePosition($route, $el, $id, Request $request, EntityManagerInterface $entityManager, $bundle = null): RedirectResponse
     {
         if ($bundle) {
@@ -66,7 +66,7 @@ class CoreBundleController extends AbstractController
      * @param null $tab
      * @return RedirectResponse
      */
-    #[Route(path: '/change-position-sub/{route}/{id}/{namespace}/{parentId}/{namespaceParent}/{tab}', name: 'change_position_sub', requirements: ['route' => '.+'], methods: ['POST'])]
+    #[Route(path: '/change-position-sub/{route}/{id}/{namespace}/{parentId}/{namespaceParent}/{tab}', name: 'change_position_sub', methods: ['POST'])]
     public function changePositionSub($route, $id, $namespace, Request $request, EntityManagerInterface $entityManager, $parentId = null, $namespaceParent = null, $tab = null): RedirectResponse
     {
         $repository = $entityManager->getRepository($namespace);
