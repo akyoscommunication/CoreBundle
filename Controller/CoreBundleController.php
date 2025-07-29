@@ -95,7 +95,7 @@ class CoreBundleController extends AbstractController
                 }
             }
         }
-        $entityOne->setPosition($request->get('position'));
+        $entityOne->setPosition((int) $request->get('position'));
         $entityManager->flush();
         if ($parentId && $namespaceParent) {
             return $this->redirectToRoute($route . '_edit', ['id' => $parentId, 'tab' => $tab]);
