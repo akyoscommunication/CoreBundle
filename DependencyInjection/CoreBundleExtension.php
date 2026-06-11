@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class CoreBundleExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         /** @var ConfigurationInterface $configuration */
         $configuration = $this->getConfiguration($configs, $container);

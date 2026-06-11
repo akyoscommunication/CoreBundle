@@ -3,22 +3,22 @@
   "description": "Akyos helpers for Symfony - Core",
   "type": "symfony-bundle",
   "license": "MIT",
-	"authors": [
-	    {
-	      "name": "Lilian Carneau",
-	      "email": "lilian@akyos.com"
-	    },
-	    {
-	      "name": "Thomas Sebert",
-	      "email": "thomas@akyos.com"
-	    },
-	    {
-	      "name": "Akyos Communication",
-	       "homepage": "https://akyos.com"
-	    }
-	],
+  "authors": [
+    {
+      "name": "Lilian Carneau",
+      "email": "lilian@akyos.com"
+    },
+    {
+      "name": "Thomas Sebert",
+      "email": "thomas@akyos.com"
+    },
+    {
+      "name": "Akyos Communication",
+      "homepage": "https://akyos.com"
+    }
+  ],
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.4",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-iconv": "*",
@@ -31,8 +31,9 @@
     "knplabs/knp-paginator-bundle": "*",
     "stof/doctrine-extensions-bundle": "^1.9",
     "symfony/apache-pack": "^1.0",
-    "symfony/mailer": ">=6.0",
-    "symfony/webpack-encore-bundle": "^1.7|^2.1",
+    "symfony/framework-bundle": "^8.0",
+    "symfony/mailer": "^8.0",
+    "symfony/webpack-encore-bundle": "^2.0",
     "karser/karser-recaptcha3-bundle": "^0.1.0@dev"
   },
   "require-dev": {
@@ -76,6 +77,7 @@
     ]
   },
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Akyos\\CoreBundle\\": ""
