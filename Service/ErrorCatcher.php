@@ -26,8 +26,8 @@ class ErrorCatcher
             dd($e);
         } else {
             try {
-                $this->mailer->send((new Email())->to("thomas.sebert.akyos@gmail.com")->subject('Nouvelle erreur sur le site ' . $this->parameterBag->get('site_name'))->text($e)->addBcc("lilian.akyos@gmail.com")->addBcc("johan@akyos.com"));
-            } catch (Exception $e) {
+                $this->mailer->send(new Email()->to("thomas.sebert.akyos@gmail.com")->subject('Nouvelle erreur sur le site ' . $this->parameterBag->get('site_name'))->text($e)->addBcc("lilian.akyos@gmail.com")->addBcc("johan@akyos.com"));
+            } catch (Exception) {
             }
         }
         $this->requestStack->getSession()->getFlashbag()->add('danger', 'Une erreur est survenue, veuillez réessayer. Si le problème persiste, veuillez contacter l\'équipe technique.');

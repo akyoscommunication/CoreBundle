@@ -23,7 +23,7 @@ class UniversignAPI
 
     private string $urlProd = 'https://ws.universign.eu/sign/rpc';
 
-    private ParameterBagInterface $parameterBag;
+    private readonly ParameterBagInterface $parameterBag;
 
     public function __construct(ParameterBagInterface $parameterBag)
     {
@@ -103,7 +103,7 @@ class UniversignAPI
             if ($response->status === TransactionInfo::STATUS_COMPLETED) {
                 $docs = $requester->getDocuments($transactionId);
                 foreach ($docs as $doc) {
-                    $return[] = ['doc' => $doc, 'name' => $doc->name, 'content' => base64_encode($doc->content),];
+                    $return[] = ['doc' => $doc, 'name' => $doc->name, 'content' => base64_encode((string) $doc->content),];
                 }
             }
         }

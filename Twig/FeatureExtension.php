@@ -14,7 +14,7 @@ class FeatureExtension extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        return [new TwigFunction('blackOrWhite', [$this, 'blackOrWhite']),];
+        return [new TwigFunction('blackOrWhite', $this->blackOrWhite(...)),];
     }
 
     /**
@@ -25,7 +25,7 @@ class FeatureExtension extends AbstractExtension
      */
     public function blackOrWhite(string $color): string
     {
-        $color = self::_checkHex($color);
+        $color = $this->_checkHex($color);
         // Convert HEX to DEC
         $R = hexdec($color[0] . $color[1]);
         $G = hexdec($color[2] . $color[3]);
@@ -44,7 +44,7 @@ class FeatureExtension extends AbstractExtension
      * @return string Color
      * @throws Exception "Bad color format"
      */
-    private static function _checkHex(string $hex): string
+    private function _checkHex(string $hex): string
     {
         // Strip # sign is present
         $color = str_replace("#", "", $hex);

@@ -16,20 +16,14 @@ class TwilioSMS
 
     private $authToken;
 
-    private MessageLogger $messageLogger;
-
-    private ErrorCatcher $catcher;
-
-    public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, ErrorCatcher $catcher)
+    public function __construct(ParameterBagInterface $params, private readonly MessageLogger $messageLogger, private readonly ErrorCatcher $catcher)
     {
         $this->accountSID = $params->get('twilio_accountSID');
         $this->authToken = $params->get('twilio_authToken');
         $this->sender = $params->get('twilio_sender');
-        $this->messageLogger = $messageLogger;
-        $this->catcher = $catcher;
     }
 
-    public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
+    public function sendSMS(string $phoneNumber, string $body, ?bool $doNotFlush = null): true
     {
         $phone = self::transformNum($phoneNumber);
         if (is_array($phone)) {
@@ -54,14 +48,14 @@ class TwilioSMS
      * @param $number
      * @return array|string|string[]
      */
-    public static function transformNum($number)
+    public static function transformNum($number): array|string
     {
-        preg_match_all("/^0([0-9].?){9}/", $number, $matches);
+        preg_match_all("/^0(\\d.?){9}/", (string) $number, $matches);
         if (count($matches[0])) {
-            $number = preg_replace('/0/', '+33', $number, 1);
+            $number = preg_replace('/0/', '+33', (string) $number, 1);
             $number = str_replace([".", " "], "", $number);
         } else {
-            preg_match_all('/^\+33([0-9].?){9}/', $number, $matches);
+            preg_match_all('/^\+33(\d.?){9}/', (string) $number, $matches);
             if (count($matches[0]) === 0) {
                 return ["status" => false, "message" => "Format du numéro de téléphone invalide", "errorcode" => "ERRNUMFORMAT"];
             }

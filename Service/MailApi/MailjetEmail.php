@@ -17,16 +17,10 @@ class MailjetEmail
 
     private $secretKey;
 
-    private MessageLogger $messageLogger;
-
-    private ErrorCatcher $catcher;
-
-    public function __construct(ParameterBagInterface $params, MessageLogger $messageLogger, ErrorCatcher $catcher)
+    public function __construct(ParameterBagInterface $params, private readonly MessageLogger $messageLogger, private readonly ErrorCatcher $catcher)
     {
         $this->apiKey = $params->get('mailjet_apiKey');
         $this->secretKey = $params->get('mailjet_secretKey');
-        $this->messageLogger = $messageLogger;
-        $this->catcher = $catcher;
     }
 
     /**
@@ -40,7 +34,7 @@ class MailjetEmail
      * @param bool|null $doNotFlush
      * @return bool
      */
-    public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, array $options = null, bool $doNotFlush = null): bool
+    public function sendEmail($to, $subject, $body, $from, $bcc = null, $attachment = null, ?array $options = null, ?bool $doNotFlush = null): bool
     {
         if (is_array($from) && count($from)) {
             if (array_values($from) !== $from) {
@@ -93,9 +87,9 @@ class MailjetEmail
         if (isset($options['attachments']) && !empty($options['attachments']) && !is_null($options['attachments'])) {
             foreach ($options['attachments'] as $attached) {
                 if (is_array($attached)) {
-                    $attachmentsArray[] = ['ContentType' => mime_content_type($attached['path']), 'Filename' => $attached['name'], 'Base64Content' => base64_encode($attached['path'])];
+                    $attachmentsArray[] = ['ContentType' => mime_content_type($attached['path']), 'Filename' => $attached['name'], 'Base64Content' => base64_encode((string) $attached['path'])];
                 } else {
-                    $attachmentsArray[] = ['ContentType' => mime_content_type($attached), 'Filename' => explode('/', $attached)[count(explode('/', $attached)) - 1], 'Base64Content' => base64_encode($attached)];
+                    $attachmentsArray[] = ['ContentType' => mime_content_type($attached), 'Filename' => explode('/', (string) $attached)[count(explode('/', (string) $attached)) - 1], 'Base64Content' => base64_encode((string) $attached)];
                 }
             }
         }

@@ -10,17 +10,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MessageLogger
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
-    private SerializerInterface $serializer;
+    private readonly SerializerInterface $serializer;
 
-    private ErrorCatcher $catcher;
-
-    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer, ErrorCatcher $catcher)
+    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer, private readonly ErrorCatcher $catcher)
     {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
-        $this->catcher = $catcher;
     }
 
     /**
@@ -31,7 +28,7 @@ class MessageLogger
      * @return bool
      * @throws TransportExceptionInterface
      */
-    public function saveLog($message = null, $error = null, string $type = null, bool $doNotFlush = null): bool
+    public function saveLog($message = null, $error = null, ?string $type = null, ?bool $doNotFlush = null): bool
     {
         $messageLog = new MessageLog();
 
@@ -41,7 +38,7 @@ class MessageLogger
         if ($error) {
             try {
                 $messageLog->setError($this->serializer->serialize($error, 'json'));
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
         if ($type) {

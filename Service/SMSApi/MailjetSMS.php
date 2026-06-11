@@ -30,7 +30,7 @@ class MailjetSMS
      * @param bool|null $doNotFlush
      * @return array|bool|string[]
      */
-    public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null): array|bool
+    public function sendSMS(string $phoneNumber, string $body, ?bool $doNotFlush = null): array|bool
     {
         $phone = self::transformNum($phoneNumber);
         // IF ERROR
@@ -63,7 +63,7 @@ class MailjetSMS
      */
     public static function transformNum($number): array|string
     {
-        preg_match_all('/^\+[1-9]\d{1,14}$/', $number, $matches);
+        preg_match_all('/^\+[1-9]\d{1,14}$/', (string) $number, $matches);
         if (count($matches[0]) === 0) {
             return ["status" => false, "message" => "Format du numéro de téléphone invalide", "errorcode" => "ERRNUMFORMAT"];
         }

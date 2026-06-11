@@ -17,7 +17,7 @@ use Symfony\Component\Process\Process;
 )]
 class bddDump extends Command
 {
-    private Connection $connection;
+    private readonly Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -25,8 +25,7 @@ class bddDump extends Command
         parent::__construct();
     }
 
-    protected function configure()
-    {
+    protected function configure(): void    {
         $this->setDescription('')->setHelp('');
 
         $this->addArgument('name', InputArgument::OPTIONAL, 'Name of User');

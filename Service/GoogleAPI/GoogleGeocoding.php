@@ -10,19 +10,16 @@ class GoogleGeocoding
 {
     private $googleApiKey;
 
-    private ErrorCatcher $catcher;
-
-    public function __construct(ParameterBagInterface $params, ErrorCatcher $catcher)
+    public function __construct(ParameterBagInterface $params, private readonly ErrorCatcher $catcher)
     {
         $this->googleApiKey = $params->get('google_apiKey');
-        $this->catcher = $catcher;
     }
 
     /**
      * @param $address
      * @return array|bool
      */
-    public function geocodeAddress($address)
+    public function geocodeAddress($address): array|bool
     {
         $address = urlencode($address);
         $url = 'https://maps.google.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->googleApiKey;

@@ -9,9 +9,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class Puppeteer
 {
-    private KernelInterface $kernel;
+    private readonly KernelInterface $kernel;
 
-    private ?Request $request;
+    private readonly ?Request $request;
 
     public function __construct(KernelInterface $kernel, RequestStack $requestStack)
     {
@@ -27,7 +27,7 @@ class Puppeteer
      * @param string $margin
      * @return false|string|Response
      */
-    public function generatePDF($fileName, $path, bool $dl = true, bool $pathOutput = false, string $margin = '0')
+    public function generatePDF(string $fileName, $path, bool $dl = true, bool $pathOutput = false, string $margin = '0'): \Symfony\Component\HttpFoundation\Response|string|false
     {
         $linkTo = strtok($path, '?');
         $output = $this->kernel->getProjectDir() . '/documents/' . $fileName;

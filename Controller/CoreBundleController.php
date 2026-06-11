@@ -75,7 +75,7 @@ class CoreBundleController extends AbstractController
         $newPosition = $request->get('position');
         if ($parentId && $namespaceParent) {
             //Pour appeler la collection d'éléments depuis le parent à partir du nom de l'entité mise en param
-            $array = explode('\\', $namespace);
+            $array = explode('\\', (string) $namespace);
             $command = 'get' . array_pop($array) . 's';
             $repositoryParent = $entityManager->getRepository($namespaceParent);
             $els = $repositoryParent->find($parentId)->$command();
@@ -118,7 +118,7 @@ class CoreBundleController extends AbstractController
             $el->setPublished(!$el->getPublished());
         }
         $entityManager->flush();
-        return $this->redirect(urldecode($redirect));
+        return $this->redirect(urldecode((string) $redirect));
     }
 
     /**

@@ -13,16 +13,13 @@ use Twig\TwigFunction;
 
 class CoreExtension extends AbstractExtension
 {
-    private EntityManagerInterface $em;
+    private readonly EntityManagerInterface $em;
 
-    private CoreMailer $mailer;
+    private readonly ParameterBagInterface $parameterBag;
 
-    private ParameterBagInterface $parameterBag;
-
-    public function __construct(EntityManagerInterface $entityManager, CoreMailer $mailer, ParameterBagInterface $parameterBag)
+    public function __construct(EntityManagerInterface $entityManager, private readonly CoreMailer $mailer, ParameterBagInterface $parameterBag)
     {
         $this->em = $entityManager;
-        $this->mailer = $mailer;
         $this->parameterBag = $parameterBag;
     }
 
@@ -34,7 +31,7 @@ class CoreExtension extends AbstractExtension
         return [// If your filter generates SAFE HTML, you should add a third
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
-            new TwigFilter('dynamicVariable', [$this, 'dynamicVariable']), new TwigFilter('truncate', [$this, 'truncate']), new TwigFilter('lcfirst', [$this, 'lcfirst']),
+            new TwigFilter('dynamicVariable', $this->dynamicVariable(...)), new TwigFilter('truncate', $this->truncate(...)), new TwigFilter('lcfirst', $this->lcfirst(...)),
 
         ];
     }
@@ -47,8 +44,8 @@ class CoreExtension extends AbstractExtension
      */
     public function truncate($value, int $length, string $after)
     {
-        if (strlen($value) > $length) {
-            return mb_substr($value, 0, $length, 'UTF-8') . $after;
+        if (strlen((string) $value) > $length) {
+            return mb_substr((string) $value, 0, $length, 'UTF-8') . $after;
         }
         return $value;
     }
@@ -59,7 +56,7 @@ class CoreExtension extends AbstractExtension
      */
     public function lcfirst($value): string
     {
-        return lcfirst($value);
+        return lcfirst((string) $value);
     }
 
     /**
@@ -67,7 +64,7 @@ class CoreExtension extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        return [new TwigFunction('useClosure', [$this, 'useClosure']), new TwigFunction('dynamicVariable', [$this, 'dynamicVariable']), new TwigFunction('matchSameEntity', [$this, 'matchSameEntity']), new TwigFunction('instanceOf', [$this, 'isInstanceOf']), new TwigFunction('sendExceptionMail', [$this, 'sendExceptionMail']), new TwigFunction('get_class', 'get_class'), new TwigFunction('class_exists', 'class_exists'), new TwigFunction('countElements', [$this, 'countElements']), new TwigFunction('getParameter', [$this, 'getParameter']),];
+        return [new TwigFunction('useClosure', $this->useClosure(...)), new TwigFunction('dynamicVariable', $this->dynamicVariable(...)), new TwigFunction('matchSameEntity', $this->matchSameEntity(...)), new TwigFunction('instanceOf', $this->isInstanceOf(...)), new TwigFunction('sendExceptionMail', $this->sendExceptionMail(...)), new TwigFunction('get_class', 'get_class'), new TwigFunction('class_exists', 'class_exists'), new TwigFunction('countElements', $this->countElements(...)), new TwigFunction('getParameter', $this->getParameter(...)),];
     }
 
     /**
@@ -80,7 +77,7 @@ class CoreExtension extends AbstractExtension
         if (!is_object($entity)) {
             return false;
         }
-        return $str === get_class($entity);
+        return $str === $entity::class;
     }
 
     /**
@@ -151,9 +148,9 @@ class CoreExtension extends AbstractExtension
     public function dynamicVariable($el, $field)
     {
         $getter = 'get' . $field;
-        if (count(explode(';', $field)) > 1) {
-            $getter1 = 'get' . explode(';', $field)[0];
-            $getter2 = 'get' . explode(';', $field)[1];
+        if (count(explode(';', (string) $field)) > 1) {
+            $getter1 = 'get' . explode(';', (string) $field)[0];
+            $getter2 = 'get' . explode(';', (string) $field)[1];
             $value = $el->$getter1() ? $el->$getter1()->$getter2() : '';
         } else {
             $value = $el->$getter();

@@ -124,18 +124,9 @@ class BaseUser implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return string|void|null
      */
-    public function getSalt()
+    public function getSalt(): void
     {
         // not needed when using the "bcrypt" algorithm in security.yaml
-    }
-
-    /**
-     * @return void
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     /**
@@ -155,5 +146,10 @@ class BaseUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->image = $image;
 
         return $this;
+    }
+    public function serialize(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }

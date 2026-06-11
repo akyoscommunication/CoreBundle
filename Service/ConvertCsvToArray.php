@@ -11,7 +11,7 @@ class ConvertCsvToArray
      * @param false $dropHeader
      * @return array|false
      */
-    public function convert($filename, $delimiter = ',', $hasHeader = false, $dropHeader = false)
+    public function convert($filename, $delimiter = ',', $hasHeader = false, $dropHeader = false): false|array
     {
         if (!file_exists($filename) || !is_readable($filename)) {
             return false;
@@ -21,7 +21,7 @@ class ConvertCsvToArray
         $data = [];
 
         if (($handle = fopen($filename, 'rb')) !== false) {
-            while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
+            while (($row = fgetcsv($handle, 0, $delimiter, escape: '\\')) !== false) {
                 if ($hasHeader && !$dropHeader) {
                     if (!$header) {
                         $header = $row;
@@ -29,7 +29,7 @@ class ConvertCsvToArray
                         $data[] = array_combine($header, $row);
                     }
                 } else {
-                    $data[] = str_getcsv($row);
+                    $data[] = str_getcsv($row, escape: '\\');
                 }
             }
             fclose($handle);

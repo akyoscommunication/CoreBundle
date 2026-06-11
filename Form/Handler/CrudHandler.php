@@ -28,7 +28,7 @@ class CrudHandler extends AbstractController
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            if ($success) {
+            if ($success !== '' && $success !== '0') {
                 $this->addFlash('success', $success);
             }
             return true;
@@ -48,7 +48,7 @@ class CrudHandler extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            if ($success) {
+            if ($success !== '' && $success !== '0') {
                 $this->addFlash('success', $success);
             }
             return true;
@@ -68,7 +68,7 @@ class CrudHandler extends AbstractController
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
 
-            if ($success) {
+            if ($success !== '' && $success !== '0') {
                 $this->addFlash('success', $success);
             }
             return true;

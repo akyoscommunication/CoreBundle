@@ -15,26 +15,17 @@ use Twig\Error\SyntaxError;
 
 class CoreMailer
 {
-    private MailerInterface $mailer;
+    private readonly MailerInterface $mailer;
 
-    private Environment $twig;
+    private readonly Environment $twig;
 
-    private MessageLogger $messageLogger;
+    private readonly ParameterBagInterface $parameterBag;
 
-    private MailjetEmail $mailjetEmail;
-
-    private ParameterBagInterface $parameterBag;
-
-    private ErrorCatcher $catcher;
-
-    public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, MailjetEmail $mailjetEmail, MessageLogger $messageLogger, ErrorCatcher $catcher)
+    public function __construct(MailerInterface $mailer, Environment $twig, ParameterBagInterface $parameterBag, private readonly MailjetEmail $mailjetEmail, private readonly MessageLogger $messageLogger, private readonly ErrorCatcher $catcher)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
-        $this->messageLogger = $messageLogger;
-        $this->mailjetEmail = $mailjetEmail;
         $this->parameterBag = $parameterBag;
-        $this->catcher = $catcher;
     }
 
     /**
@@ -55,11 +46,11 @@ class CoreMailer
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, array $options = null, bool $doNotFlush = null, $backupSendMail = null)
+    public function sendMail($to, $subject, $body, $title, $template = null, $from = null, $bcc = null, $replyTo = null, $attachment = null, ?array $options = null, ?bool $doNotFlush = null, $backupSendMail = null): true
     {
         $email = new Email();
-        $from = (is_null($from)) ? ($this->parameterBag->get('site_name') . ' <' . ($_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@' . $_SERVER['SERVER_NAME']) . '>') : $from;
-        $replyTo = (is_null($replyTo)) ? ($this->parameterBag->get('site_name') . ' <' . ($_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@' . $_SERVER['SERVER_NAME']) . '>') : $replyTo;
+        $from ??= ($this->parameterBag->get('site_name') . ' <' . $_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@' . $_SERVER['SERVER_NAME'] . '>');
+        $replyTo ??= ($this->parameterBag->get('site_name') . ' <' . $_SERVER['SERVER_NAME'] === "localhost" ? "thomas.sebert.akyos@gmail.com" : 'noreply@' . $_SERVER['SERVER_NAME'] . '>');
 
         $bodyParams = ['subject' => $subject, 'title' => $title, 'body' => $body,];
         if (isset($options['templateParams'])) {

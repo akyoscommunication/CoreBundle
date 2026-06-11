@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 // Needs composer require mikehaertl/php-pdftk
 class PDFFormFiller
 {
-    private KernelInterface $kernel;
+    private readonly KernelInterface $kernel;
 
     public function __construct(KernelInterface $kernel)
     {
@@ -88,7 +88,7 @@ class PDFFormFiller
             throw new RuntimeException(sprintf('Directory "%s" was not created', $filledPdfDir));
         }
         $absoluteFlattenDir = $filledPdfDir . '/flatten' . $filename;
-        $file = file_put_contents($absoluteFlattenDir, base64_decode($b64File));
+        $file = file_put_contents($absoluteFlattenDir, base64_decode((string) $b64File));
         $pdf = new Pdf($absoluteFlattenDir);
         $result = $pdf->flatten()->saveAs($absoluteFlattenDir);
 

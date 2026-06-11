@@ -9,17 +9,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CoreSMS
 {
-    private ParameterBagInterface $parameterBag;
+    private readonly ParameterBagInterface $parameterBag;
 
-    private MailjetSMS $mailjetSMS;
-
-    private TwilioSMS $twilioSMS;
-
-    public function __construct(ParameterBagInterface $parameterBag, MailjetSMS $mailjetSMS, TwilioSMS $twilioSMS)
+    public function __construct(ParameterBagInterface $parameterBag, private readonly MailjetSMS $mailjetSMS, private readonly TwilioSMS $twilioSMS)
     {
         $this->parameterBag = $parameterBag;
-        $this->mailjetSMS = $mailjetSMS;
-        $this->twilioSMS = $twilioSMS;
     }
 
     /**
@@ -28,7 +22,7 @@ class CoreSMS
      * @param bool|null $doNotFlush
      * @return array|bool|Exception|string|string[]
      */
-    public function sendSMS(string $phoneNumber, string $body, bool $doNotFlush = null)
+    public function sendSMS(string $phoneNumber, string $body, ?bool $doNotFlush = null): bool|array
     {
         if ($this->parameterBag->get('sms_transport') === "Mailjet SMS") {
             return $this->mailjetSMS->sendSMS($phoneNumber, $body, $doNotFlush);
@@ -48,7 +42,7 @@ class CoreSMS
     {
         try {
             return random_int(10000000, 99999999);
-        } catch (Exception $e) {
+        } catch (Exception) {
 //            dd($e);
             return 10000000;
         }
