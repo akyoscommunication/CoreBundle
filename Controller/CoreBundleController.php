@@ -34,18 +34,19 @@ class CoreBundleController extends AbstractController
             $repository = $entityManager->getRepository('App\\Entity\\' . $el);
         }
         $entityOne = $repository->find($id);
-        if ($entityOne->getPosition() < $request->get('position')) {
-            for ($i = $entityOne->getPosition() + 1; $i <= $request->get('position'); $i++) {
+        $position = $request->query->get('position') ?? $request->request->get('position');
+        if ($entityOne->getPosition() < $position) {
+            for ($i = $entityOne->getPosition() + 1; $i <= $position; $i++) {
                 $entityTwo = $repository->findOneBy(['position' => $i]);
                 $entityTwo->setPosition($i - 1);
             }
-        } elseif ($entityOne->getPosition() > $request->get('position')) {
-            for ($i = $request->get('position'); $i < $entityOne->getPosition(); $i++) {
+        } elseif ($entityOne->getPosition() > $position) {
+            for ($i = $position; $i < $entityOne->getPosition(); $i++) {
                 $entityTwo = $repository->findOneBy(['position' => $i]);
                 $entityTwo->setPosition($i + 1);
             }
         }
-        $entityOne->setPosition($request->get('position'));
+        $entityOne->setPosition($position);
         $entityManager->flush();
         return $this->redirectToRoute($route . '_index');
     }
@@ -72,7 +73,7 @@ class CoreBundleController extends AbstractController
         $repository = $entityManager->getRepository($namespace);
         $entityOne = $repository->find($id);
         $oldPosition = $entityOne->getPosition();
-        $newPosition = $request->get('position');
+        $newPosition = $request->query->get('position') ?? $request->request->get('position');
         if ($parentId && $namespaceParent) {
             //Pour appeler la collection d'éléments depuis le parent à partir du nom de l'entité mise en param
             $array = explode('\\', (string) $namespace);
@@ -95,7 +96,7 @@ class CoreBundleController extends AbstractController
                 }
             }
         }
-        $entityOne->setPosition((int) $request->get('position'));
+        $entityOne->setPosition((int) $newPosition);
         $entityManager->flush();
         if ($parentId && $namespaceParent) {
             return $this->redirectToRoute($route . '_edit', ['id' => $parentId, 'tab' => $tab]);
